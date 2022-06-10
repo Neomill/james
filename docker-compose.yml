@@ -1,0 +1,43 @@
+version: '3.8'
+services:
+  mysqldb:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=shydan
+    ports:
+      - '3306:3306'
+    volumes:
+      - db:/var/lib/mysql
+  backend:
+    depends_on:
+      - mysqldb
+    build: ./backend
+    container_name: backend_c
+    ports: 
+      - '3001:3001'
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    environment:
+      - DB_HOST=mysqldb
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=shydan
+      - DB_PORT=3306
+      - DATABASE_URL=mysql://root:root@mysqldb:3306/shydan
+  frontend:
+    depends_on:
+      - backend
+    build: ./frontend
+    container_name: frontend_c
+    ports:
+      - '3000:3000'
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+volumes:
+  db:

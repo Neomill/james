@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.env
+
+
+!public/
+public/*
+!public/uploads/
+public/uploads/*
+!public/menuItem/
+public/menuItem/*
+!.gitkeep

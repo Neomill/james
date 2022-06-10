@@ -1,0 +1,18 @@
+.border-outline {
+  outline: none !important;
+  border-radius: 0px !important;
+  &:focus {
+    outline: none !important;
+    border-radius: 0px !important;
+  }
+}
+.border-bottom {
+  border: none !important;
+  border-bottom: 1px solid grey !important;
+  border-radius: 0px !important;
+  &:focus {
+    border-radius: 0px !important;
+    outline: none !important;
+    border-bottom: 2.5px solid rgb(183, 230, 248) !important;
+  }
+}

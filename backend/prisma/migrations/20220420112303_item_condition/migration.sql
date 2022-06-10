@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `Item` ADD COLUMN `condition` ENUM('EXPIRED', 'GOOD') NOT NULL DEFAULT 'GOOD';
