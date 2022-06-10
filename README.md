@@ -1,6 +1,6 @@
-# PROJECT SHYDAN
+# Poultry Database
 
-Shydan Inventory and Ordering System
+Jame Poultry Inventory and Ordering System
 
 **NOTE: (Backend documentation & how to contribute --- under construction... )**
 
