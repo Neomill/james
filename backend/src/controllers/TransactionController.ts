@@ -116,7 +116,6 @@ class TransactionController {
                   },
                 },
               },
-              table: true,
             },
           },
         },

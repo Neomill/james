@@ -28,7 +28,6 @@ class InvoiceController {
       createdAt,
       updatedAt = 1,
       id,
-      table_name,
       status,
       payment_status,
     } = req.query;
@@ -43,15 +42,7 @@ class InvoiceController {
         payment_status,
       });
     let where: any = {
-      OR: [
-        {
-          table: {
-            name: {
-              contains: query + "",
-            },
-          },
-        },
-      ],
+
       AND: filters,
     };
 
@@ -59,12 +50,6 @@ class InvoiceController {
     if (updatedAt) {
       Object.assign(orderBy, {
         updatedAt: Number(updatedAt) ? "desc" : "asc",
-      });
-    } else if (table_name) {
-      Object.assign(orderBy, {
-        table: {
-          name: Number(table_name) ? "desc" : "asc",
-        },
       });
     } else if (id) {
       Object.assign(orderBy, {
@@ -83,11 +68,6 @@ class InvoiceController {
           take: TAKE,
           include: {
             orders: true,
-            table: {
-              select: {
-                name: true,
-              },
-            },
           },
           where,
           orderBy,
@@ -120,7 +100,6 @@ class InvoiceController {
               menu_item: true,
             },
           },
-          table: true,
         },
       });
       return res.status(200).send(data);
@@ -166,11 +145,6 @@ class InvoiceController {
               mname,
               phone,
               address,
-            },
-          },
-          table: {
-            connect: {
-              id: Number(table_id),
             },
           },
           orders: {

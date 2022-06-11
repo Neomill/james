@@ -177,10 +177,6 @@ const Invoices = (props: Props) => {
         accessor: "id",
       },
       {
-        Header: "Table",
-        accessor: "table.name",
-      },
-      {
         Header: "Status",
         accessor: "status",
         Cell: (props: any) => (

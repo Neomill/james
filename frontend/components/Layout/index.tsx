@@ -64,7 +64,13 @@ export const links = [
       {
         icon: <BsPlusCircle />,
         label: "Add New Order",
-        href: "/pos/add-order",
+        href: "/pos/add-order/1",
+        permission: "create-order",
+      },
+      {
+        icon: <BsPlusCircle />,
+        label: "Add New Order2",
+        href: "/pos/bulk-add",
         permission: "create-order",
       },
       {
@@ -77,7 +83,7 @@ export const links = [
   },
   {
     icon: <BsCardList />,
-    label: "Menu",
+    label: "Product",
     href: "/menu",
     disabled: true,
     permission: "read-menu-item",
@@ -149,18 +155,6 @@ export const links = [
     permission: "read-po-request",
   },
   {
-    icon: <BsBuilding />,
-    label: "Suppliers",
-    href: "/companies",
-    permission: "read-supplier",
-  },
-  {
-    icon: <BsGeo />,
-    label: "Storage Locations",
-    href: "/storage-locations",
-    permission: "read-storage-location",
-  },
-  {
     icon: <BsPeople />,
     label: "Employees",
     href: "/employees",
@@ -181,7 +175,7 @@ export const links = [
 ];
 
 const Layout: React.FC<Props> = ({
-  title = "Shydan",
+  title = "James Hatchery",
   icon = <BsBoxSeam />,
   children,
   bg = "white",
@@ -209,7 +203,7 @@ const Layout: React.FC<Props> = ({
             <div className={`${styles["calculated-width"]} fixed top-0`}>
               <Header title={title} icon={icon} name={user?.username} />
             </div>
-            <div className="mt-20 overflow-y-auto md:mt-20 bg-gray-50 h-auto min-h-content p-6">
+            <div className="mt-20 overflow-y-auto md:mt-20 bg-gray-100 h-auto min-h-content p-6">
               <div className={`bg-${bg} w-full flex flex-col gap-3 rounded-lg`}>
                 {children}
               </div>
