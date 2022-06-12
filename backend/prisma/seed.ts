@@ -71,6 +71,14 @@ const permissions = [
   "create-invoice",
   "update-invoice",
   "delete-invoice",
+  "read-equipment-item",
+  "create-equipment-item",
+  "delete-equipment-item",
+  "update-equipment-item",
+  "read-equipment-item-category",
+  "create-equipment-item-category",
+  "update-equipment-item-category",
+  "delete-equipment-item-category",
 ];
 
 const rolesData: Prisma.RoleCreateInput[] = [
@@ -426,6 +434,41 @@ async function main() {
     });
     console.log(`Created menuItem with id: ${menuItem.id}`);
   }
+
+  // equipment Item Faker
+  for (let i = 0; i < 20; i++) {
+    let qty = faker.datatype.number({ max: 100 });
+    let category = faker.commerce.productMaterial();
+    let cost_price = faker.datatype.number({ precision: 0.01, max: 1000 });
+    let remarks = faker.random.arrayElement([
+      "OVERSTOCKING",
+      "EXPIRED",
+      "BAD_ORDER",
+      "OTHERS",
+    ])
+    let selling_price = cost_price + cost_price * 0.25;
+    const equipment = await prisma.equipment.create({
+      data: {
+        qty,
+        cost_price,
+        selling_price,
+        image_url: faker.image.imageUrl(640, 480, "food"),
+        name: faker.commerce.productName() + ` - ${i}`,
+        equipment_category: {
+          connectOrCreate: {
+            where: {
+              name: category,
+            },
+            create: {
+              name: category,
+            },
+          },
+        },
+      },
+    });
+    console.log(`Created Equipment Item with id: ${equipment.id}`);
+  }
+
 
   for (let i = 0; i < 10; i++) {
     const table = await prisma.table.create({

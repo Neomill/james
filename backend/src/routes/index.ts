@@ -21,6 +21,8 @@ import transaction from "./transaction";
 import menuitemstock from "./menuItemStock";
 import invoice from "./invoice";
 import table from "./table";
+import equipmentItem from "./equipmentItem"
+import equipmentItemCategory from "./equipmentItemCategory"
 
 const routes = Router();
 routes.use("/auth", auth);
@@ -105,5 +107,17 @@ routes.use(
   invoice
 );
 routes.use("/tables", passport.authenticate("jwt", { session: false }), table);
+
+routes.use(
+  "/equipment-item",
+  passport.authenticate("jwt", { session: false }),
+  equipmentItem
+);
+
+routes.use(
+  "/equipment-item-category",
+  passport.authenticate("jwt", { session: false }),
+  equipmentItemCategory
+);
 
 export default routes;
