@@ -79,10 +79,12 @@ const InvoiceDetails = ({ id, onClose }: Props) => {
 
   const handlePayment = async (formVal: any) => {
     //payment
+    console.log("id:",id)
+    console.log("form Val:",formVal)
     await toast.promise(
       createTransaction({
         invoice_id: id,
-        transaction_code: data.table?.name + Date.now() + id,
+        transaction_code: "JMH_"+ Date.now() + id,
         cash: formVal.cash,
       }).unwrap(),
       {
@@ -104,7 +106,7 @@ const InvoiceDetails = ({ id, onClose }: Props) => {
     <div className="h-full bg-white border rounded-lg   overflow-hidden  sm:grid-cols-3 lg:grid-cols-4 gap-4  w-96 max-w-lg mx-auto">
       <div className="px-4 py-5 sm:px-6">
         <h3 className="text-base leading-6 font-medium text-gray-900">
-          Table {data.table.name}
+         table {/* Table {data.table.name} */}
         </h3>
       </div>
       <div className="h-full  text-xs border-t border-gray-300 flex-col ">

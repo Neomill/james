@@ -60,14 +60,6 @@ class TableController {
         model.findMany({
           skip: Number(page) * 10,
           take: TAKE,
-          include: {
-            invoices: {
-              select: {
-                status: true,
-                payment_status: true,
-              },
-            },
-          },
           where,
           orderBy,
         }),

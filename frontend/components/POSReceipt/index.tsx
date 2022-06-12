@@ -36,11 +36,7 @@ const POSReceipt = (props: Props) => {
   };
   return (
     <div className="h-full bg-white shadow-md  overflow-hidden  sm:grid-cols-3 lg:grid-cols-4 gap-4  w-full max-w-lg mx-auto">
-      <div className="px-4 py-5 sm:px-6">
-        <h3 className="text-base leading-6 font-medium text-gray-900">
-          Table {router.query.table}
-        </h3>
-      </div>
+
       <div className="h-full  text-xs border-t border-gray-300 flex-col ">
         <dl style={{ height: "450px" }} className=" overflow-y-auto">
           {orders.map((order, idx) => {
