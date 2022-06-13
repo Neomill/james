@@ -35,21 +35,21 @@ const RawSideBarLinkItem: React.FC<SidebarItemProps> = ({
     isActive = true;
   }
   const [toggle, setToggle] = useState(false);
-  const mode = isActive ? "text-blue-400" : "text-neutral-400";
+  const mode = isActive ? "text-white bg-blue-600" : "text-neutral-400";
   const toggleMode = toggle
-    ? "cursor-pointer text-blue-500 font-bold"
+    ? "cursor-pointer text-white font-bold"
     : "transition my-3 duration-200 ease-in cursor-pointer text-neutral-400 font-bold";
   return (
-    <div>
+    <div >
       <a
         {...props}
-        className={`${mode}  transition duration-150 ease-linear cursor-pointer hover:text-blue-400  flex flex-row items-center w-full gap-3 text-sm font-semibold`}
+        className={`${mode} p-3 transition duration-150 ease-linear cursor-pointer hover:text-blue-400 flex flex-row items-center w-full gap-3 text-sm font-semibold`}
       >
         {isActive ? (
-          <div className="transition duration-200 ease-in bg-blue-50 p-3 rounded-full">
+          <div className="bg-zinc-500 transition duration-200 ease-in bg-blue-50 p-3 rounded-full">
             <IconContext.Provider
               value={{
-                className: "cursor-pointer text-blue-500",
+                className: "cursor-pointer text-white",
                 size: `${size}`,
               }}
             >
@@ -90,7 +90,7 @@ const RawSideBarLinkItem: React.FC<SidebarItemProps> = ({
         toggle ? (
           Array.isArray(children) ? (
             children.length > 0 ? (
-              <ul className="bg-white h-full overflow-y-auto  pt-5 flex flex-col gap-6 pl-4 ">
+              <ul className="bg-zinc-900 h-full overflow-y-auto  pt-5 flex flex-col gap-6 pl-4 ">
                 {children.map((link, index) => {
                   return <SidebarLinkItem key={link.href} {...link} />;
                 })}

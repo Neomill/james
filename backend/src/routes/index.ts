@@ -21,6 +21,7 @@ import transaction from "./transaction";
 import menuitemstock from "./menuItemStock";
 import invoice from "./invoice";
 import table from "./table";
+import branch from "./branch";
 
 const routes = Router();
 routes.use("/auth", auth);
@@ -106,4 +107,9 @@ routes.use(
 );
 routes.use("/tables", passport.authenticate("jwt", { session: false }), table);
 
+routes.use(
+  "/branch",
+  passport.authenticate("jwt", { session: false }),
+  branch
+);
 export default routes;

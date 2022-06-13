@@ -172,6 +172,8 @@ model Employee {
   po_request_as_attendant PO_Request[]  @relation("po_request_as_attendant")
   user                    User?
   transaction             Transaction[]
+  branch                  Branch?         @relation(fields: [branch_id], references: [id],onDelete: Cascade)
+  branch_id               Int
 }
 
 model Position {
@@ -303,3 +305,14 @@ model Invoice{
   table           Table          @relation(fields: [table_id], references: [id])
   table_id        Int
 }
+
+model Branch {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  address   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  employees     Employee[]
+
+}
+

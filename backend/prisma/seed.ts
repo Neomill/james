@@ -71,6 +71,10 @@ const permissions = [
   "create-invoice",
   "update-invoice",
   "delete-invoice",
+  "create-branch", 
+  "read-branch", 
+  "update-branch", 
+  "delete-branch",
 ];
 
 const rolesData: Prisma.RoleCreateInput[] = [
@@ -112,6 +116,12 @@ const userData: Prisma.UserCreateInput[] = [
         lname: "Bot",
         mname: "Developer",
         phone: "520-666-555",
+        branch: {
+          create: {
+            name: "BRANCH-1",
+            address: "Fake Address, Unknown City"
+          }
+        },
         position: {
           create: {
             name: "Shydan Bot",
@@ -135,6 +145,12 @@ const userData: Prisma.UserCreateInput[] = [
         lname: "Montana",
         mname: "Gabriel",
         phone: "520-666-555",
+        branch: {
+          create: {
+            name: "BRANCH-2",
+            address: "Fake Address, Unknown City"
+          }
+        },
         position: {
           create: {
             name: "CEO",
@@ -158,6 +174,12 @@ const userData: Prisma.UserCreateInput[] = [
         lname: "Loberto",
         mname: "Andie",
         phone: "520-666-333",
+        branch: {
+          create: {
+            name: "BRANCH-3",
+            address: "Fake Address 3, Unknown City"
+          }
+        },
         position: {
           create: {
             name: "Human Resource",
@@ -181,6 +203,12 @@ const userData: Prisma.UserCreateInput[] = [
         lname: "Tillaman",
         mname: "Ben",
         phone: "520-111-555",
+        branch: {
+          create: {
+            name: "BRANCH-4",
+            address: "Fake Address, Unknown City"
+          }
+        },
         position: {
           create: {
             name: "Web Developer",
@@ -204,6 +232,12 @@ const userData: Prisma.UserCreateInput[] = [
         lname: "Lambor",
         mname: "Jin",
         phone: "520-222-555",
+        branch: {
+          create: {
+            name: "BRANCH-5",
+            address: "Fake Address, Unknown City"
+          }
+        },
         position: {
           create: {
             name: "Janitor",
@@ -339,8 +373,12 @@ async function main() {
     });
     console.log(`Created item with id: ${item.id}`);
   }
+
+
   for (let i = 0; i < 20; i++) {
     const position_name = faker.name.jobType();
+    const brand_name = `BRANCH-${faker.datatype.number({ min: 1, max: 5 })}`
+    console.log(brand_name)
     const po = await prisma.pO_Request.create({
       data: {
         remarks: faker.commerce.productDescription(),
@@ -380,6 +418,17 @@ async function main() {
             lname: faker.name.lastName(),
             mname: faker.name.middleName(),
             phone: faker.phone.phoneNumber("+639#########"),
+            branch: {
+              connectOrCreate: {
+                where: {
+                  name: brand_name,
+                },
+                create: {
+                  name: brand_name,
+                  address: "Fake Address"
+                },
+              },
+            },
             position: {
               connectOrCreate: {
                 where: {
@@ -426,6 +475,22 @@ async function main() {
     });
     console.log(`Created menuItem with id: ${menuItem.id}`);
   }
+
+  const branchlength = 5;
+
+  for (let i = 0; i < branchlength; i++) {
+    let name = `BRANCH-${i}`;
+    let address = `${faker.address.cityName()}, ${faker.address.state()}, ${faker.address.country()}`
+    const branch = await prisma.branch.create({
+      data: {
+        name,
+        address,
+      },
+    });
+    console.log(`Created banc with id: ${branch.id}`);
+  }
+
+
 
   for (let i = 0; i < 10; i++) {
     const table = await prisma.table.create({
