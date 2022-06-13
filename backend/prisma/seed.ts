@@ -476,22 +476,6 @@ async function main() {
     console.log(`Created menuItem with id: ${menuItem.id}`);
   }
 
-  const branchlength = 5;
-
-  for (let i = 0; i < branchlength; i++) {
-    let name = `BRANCH-${i}`;
-    let address = `${faker.address.cityName()}, ${faker.address.state()}, ${faker.address.country()}`
-    const branch = await prisma.branch.create({
-      data: {
-        name,
-        address,
-      },
-    });
-    console.log(`Created banc with id: ${branch.id}`);
-  }
-
-
-
   for (let i = 0; i < 10; i++) {
     const table = await prisma.table.create({
       data: {
