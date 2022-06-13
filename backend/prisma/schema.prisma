@@ -173,7 +173,7 @@ model Employee {
   user                    User?
   transaction             Transaction[]
   branch                  Branch?         @relation(fields: [branch_id], references: [id],onDelete: Cascade)
-  branch_id               Int
+  branch_id               Int?
 }
 
 model Position {
