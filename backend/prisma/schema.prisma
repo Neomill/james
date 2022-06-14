@@ -287,7 +287,6 @@ model Table{
   createdAt            DateTime         @default(now())
   updatedAt            DateTime         @updatedAt
   capacity Int
-  invoices                Invoice[]
   name String @unique
   desc String?
 }
@@ -302,8 +301,6 @@ model Invoice{
   transaction         Transaction?
   customer            Customer          @relation(fields: [customer_id], references: [id])
   customer_id         Int
-  table           Table          @relation(fields: [table_id], references: [id])
-  table_id        Int
 }
 
 model Branch {
@@ -315,4 +312,5 @@ model Branch {
   employees     Employee[]
 
 }
+
 

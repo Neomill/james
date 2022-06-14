@@ -64,10 +64,13 @@ const ReceiptPDF = ({ transaction }) => {
     <Document>
       <Page style={styles.page}>
         <View style={styles.section}>
-          <Image style={styles.logo} src={"/receiptlogo.jpg"} />
-          <Text style={styles.title}>ShyDan's Beach Resort {"&"} Spa</Text>
+          <Image style={styles.logo } src={"/a.png"} />
+          <Text style={styles.title}>James Hatchery</Text>
           <Text style={styles.title}>
-            6505 Pan-Philippine Hwy, Dulag, Leyte
+            Brgy 19, Vildu Tacloban 
+          </Text>
+          <Text style={styles.title}>
+            +6390192837465
           </Text>
           <Text style={styles.title}>Sales Invoice</Text>
           <Text style={styles.title}>
@@ -75,6 +78,7 @@ const ReceiptPDF = ({ transaction }) => {
             {dayjs(transaction?.createdAt).format("MM/DD/YYYY HH:mm:ss")}
           </Text>
           <Text style={styles.title}>{transaction?.transaction_code}</Text>
+          <Text style={styles.title}> </Text>
           <Text style={styles.title}>
             Table {transaction?.invoice?.table?.name}
           </Text>
