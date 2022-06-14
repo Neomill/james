@@ -30,7 +30,7 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <Head>
-          <title>Shydan</title>
+          <title>James Hatchery</title>
           <meta
             name="viewport"
             content="initial-scale=1.0, width=device-width"

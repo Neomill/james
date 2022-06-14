@@ -49,8 +49,8 @@ const SignIn = () => {
             <MdOutlineLock className="w-9 h-9 text-white" />
           </div>
           <div>
-            <h4 className="text-blue-500 font-bold">shydan</h4>
-            <h1 className="font-bold text-2xl">Log In to Shydan</h1>
+            <h4 className="text-blue-500 font-bold">Poultry</h4>
+            <h1 className="font-bold text-2xl">Log In to James Poultry</h1>
           </div>
           <FormProvider {...methods}>
             <form onSubmit={methods.handleSubmit(onLogin)}>
