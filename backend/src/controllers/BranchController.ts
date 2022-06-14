@@ -2,19 +2,13 @@ import { NextFunction, Request, Response } from "express";
 import { validationResult } from "express-validator";
 import { TAKE } from "../lib/constants";
 import prisma from "../lib/prisma";
-const model = prisma.employee;
+const model = prisma.branch;
 
-class EmployeeController {
+class BranchController {
   static getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
       let [data, totalData] = await prisma.$transaction([
-        model.findMany({
-          where: {
-            NOT: {
-              id: 1, //SHYDAN BOT
-            },
-          },
-        }),
+        model.findMany(),
         model.count(),
       ]);
       return res.status(200).send({ body: data, totalData });
@@ -25,57 +19,19 @@ class EmployeeController {
 
   static search = async (req: Request, res: Response) => {
     const {
-      position,
       query = "",
       page = 0,
-      address,
-      createdAt,
+      sortById,
+      name,
       updatedAt = 1,
-      user,
-      fname,
-      lname,
+      createdAt,
       id,
     } = req.query;
-    const filters: any = [
-      {
-        NOT: {
-          id: 1, //SHYDAN BOT
-        },
-      },
-    ];
-    position &&
-      filters.push({
-        position: {
-          id: Number(position),
-        },
-      });
-
-    address &&
-      filters.push({
-        address: {
-          contains: address,
-        },
-      });
-    user &&
-      filters.push({
-        user: {
-          id: Number(user),
-        },
-      });
+    const filters: any = [];
     let where: any = {
       OR: [
         {
-          fname: {
-            contains: query + "",
-          },
-        },
-        {
-          lname: {
-            contains: query + "",
-          },
-        },
-        {
-          mname: {
+          name: {
             contains: query + "",
           },
         },
@@ -83,6 +39,7 @@ class EmployeeController {
       AND: filters,
     };
     let orderBy: any = {};
+
     if (updatedAt) {
       Object.assign(orderBy, {
         updatedAt: Number(updatedAt) ? "desc" : "asc",
@@ -91,13 +48,13 @@ class EmployeeController {
       Object.assign(orderBy, {
         id: Number(id) ? "desc" : "asc",
       });
-    } else if (fname) {
+    } else if (name) {
       Object.assign(orderBy, {
-        fname: Number(fname) ? "desc" : "asc",
+        name: Number(name) ? "desc" : "asc",
       });
-    } else if (lname) {
+    } else if (sortById) {
       Object.assign(orderBy, {
-        lname: Number(lname) ? "desc" : "asc",
+        id: Number(sortById) ? "desc" : "asc",
       });
     } else {
       Object.assign(orderBy, {
@@ -110,18 +67,14 @@ class EmployeeController {
           skip: Number(page) * 10,
           take: TAKE,
           include: {
-            position: {
-              select: {
-                name: true,
-              },
-            },
+            employees: true,
           },
-
           where,
           orderBy,
         }),
         model.count({ where }),
       ]);
+
       let totalPages = Math.ceil(Number(totalData) / Number(TAKE)) - 1;
       return res.status(200).send({ body: data, totalPages });
     } catch (e: any) {
@@ -134,70 +87,60 @@ class EmployeeController {
         where: {
           id: Number(req.params.id),
         },
-        include: {
-          position: {
-            select: {
-              name: true,
-              id: true,
-            },
+      });
+      return res.status(200).send(data);
+    } catch (error: any) {
+      return res.status(400).send(error.message);
+    }
+  };
+
+  static createBranch = async (req: Request, res: Response) => {
+    const { name, address } = req.body;
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    try {
+      const branch_exist = await model.findFirst({
+        where: {
+          name: {
+            contains: name,
           },
         },
       });
-      return res.status(200).json(data);
-    } catch (error: any) {
-      return res.status(404).send(error.message);
-    }
-  };
-
-  static createEmployee = async (req: Request, res: Response) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
-    }
-    const { fname, lname, mname, phone, address, position_id,branch_id = "N/A" } = req.body;
-    try {
+      if (branch_exist) {
+        return res.status(400).send("Branch Already Existed");
+      }
       const data = await model.create({
         data: {
-          fname,
-          lname,
-          mname,
-          phone,
-          address, 
-          branch_id,
-          position_id: Number(position_id),
+          name,
+          address
         },
       });
-      return res.status(200).json(data);
+      return res.status(200).send(data);
     } catch (e: any) {
       return res.status(400).send(e.message);
     }
   };
-  static update = async (req: Request, res: Response) => {
+  static updateBranch = async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
     try {
-      const { fname, lname, mname, phone, address, position_id } = req.body;
-      const updating = await model.update({
-        where: {
-          id: Number(req.params.id),
-        },
+      const { name } = req.body;
+      const id = req.params.id;
+      const branch = await model.update({
+        where: { id: Number(id) },
         data: {
-          fname,
-          lname,
-          mname,
-          phone,
-          address,
-          position_id: position_id ? Number(position_id) : undefined,
+          name,
         },
       });
-      return res.status(200).json(updating);
+      return res.json(branch);
     } catch (e: any) {
       return res.status(400).send(e.message);
     }
   };
-
   static delete = async (req: Request, res: Response) => {
     try {
       const data = await model.delete({
@@ -229,4 +172,4 @@ class EmployeeController {
     }
   };
 }
-export default EmployeeController;
+export default BranchController;
