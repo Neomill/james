@@ -154,7 +154,7 @@ class EmployeeController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const { fname, lname, mname, phone, address, position_id,branch_id } = req.body;
+    const { fname, lname, mname, phone, address, position_id,branch_id = "N/A" } = req.body;
     try {
       const data = await model.create({
         data: {
