@@ -10,7 +10,7 @@ const invoicesAPI = reduxAPI.injectEndpoints({
       query: (arg) => {
         const { page = 0 } = arg;
         return {
-          url: "/invoices",
+          url: "/order",
           params: { page },
         };
       },
