@@ -303,6 +303,8 @@ class ItemController {
 
   static update = async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
+    //this is for debuging
+    const randomVar = true;
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
