@@ -75,34 +75,6 @@ export const links = [
       },
     ],
   },
-
-  {
-    icon: <BsCardList />,
-    label: "Product",
-    href: "/menu",
-    disabled: true,
-    permission: "read-menu-item",
-    children: [
-      {
-        icon: <BsBox />,
-        label: "Items",
-        href: "/menu/items",
-        permission: "read-menu-item",
-      },
-      {
-        icon: <BsPlusCircle />,
-        label: "Add Menu",
-        href: "/menu/bulk-add",
-        permission: "read-menu-item",
-      },
-      {
-        icon: <BsListUl />,
-        label: "Categories",
-        href: "/menu/categories",
-        permission: "read-menu-item-category",
-      },
-    ],
-  },
   
   {
     icon: <BsCardList />,
@@ -113,7 +85,7 @@ export const links = [
     children: [
       {
         icon: <BsBox />,
-        label: "Items",
+        label: "Equipments",
         href: "/equipment-inventory/items",
         permission: "read-menu-item",
       },
