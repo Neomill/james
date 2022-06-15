@@ -3,19 +3,19 @@ import AppModal from "@/components/AppModal";
 import { Button } from "@/components/Button";
 import Forbidden from "@/components/Forbidden";
 import Layout from "@/components/Layout";
-import { MenuItemForm } from "@/components/MenuItem/MenuItemForm";
+import { EquipmentItemForm } from "@/components/EquipmentItems/EquipmentItemForm";
 import StyledTable from "@/components/StyledTable";
 import { useAuth } from "@/hooks/useAuth";
 import { removeItem } from "@/redux/features/itemSlice";
 import {
-  removeMenuItem,
-  resetMenuItemState,
-} from "@/redux/features/menuItemSlice";
+  removeEquipmentItem,
+  resetEquipmentItemState,
+} from "@/redux/features/equipmentItemSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {
-  useCreateManyMenuItemMutation,
-  useCreateMenuItemMutation,
-} from "@/redux/services/menuItemsAPI";
+  useCreateManyEquipmentItemMutation,
+  useCreateEquipmentItemMutation,
+} from "@/redux/services/equipmentItemsAPI";
 import checkPermissions from "@/utils/checkPermissions";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -25,13 +25,13 @@ import { toast } from "react-toastify";
 
 type Props = {};
 
-const BulkCreateMenuItem = (props: Props) => {
+const BulkCreateEquipmentItem = (props: Props) => {
   const dispatch = useAppDispatch();
-  const { data } = useAppSelector((state) => state.menuItems);
+  const { data } = useAppSelector((state) => state.equipmentItems);
   const [modal, setModal] = useState<string>("");
   const [selectedId, setSelectedId] = useState("");
-  const [createManyMenuItem] = useCreateManyMenuItemMutation();
-  const [createMenuItem] = useCreateMenuItemMutation();
+  const [createManyMenuItem] = useCreateManyEquipmentItemMutation();
+  const [createEquipmentItem] = useCreateEquipmentItemMutation();
   const { user } = useAuth();
   const router = useRouter();
 
@@ -69,20 +69,20 @@ const BulkCreateMenuItem = (props: Props) => {
       },
       {
         Header: "Category",
-        accessor: "menu_item_category_id.label",
+        accessor: "equipment_category_id.label",
       },
       {
         Header: "Actions",
         Cell: (props: any) => (
           <div className="flex flex-row gap-3 min-w-fit ">
             <ActionButton
-              data-modal="edit-virtual-menu-item-modal"
+              data-modal="edit-virtual-equipment-item-modal"
               onClick={(e) => onModalOpen(e, props.row.original.id)}
               action="edit"
             />
             <ActionButton
               onClick={(e) =>
-                dispatch(removeMenuItem(Number(props.row.original.id)))
+                dispatch(removeEquipmentItem(Number(props.row.original.id)))
               }
               action="delete"
             />
@@ -93,13 +93,13 @@ const BulkCreateMenuItem = (props: Props) => {
     []
   );
 
-  if (!checkPermissions(["create-menu-item"], user.roles)) {
+  if (!checkPermissions(["create-equipment-item"], user.roles)) {
     return <Forbidden />;
   }
   return (
     <div className="px-6 py-6 flex flex-col gap-6">
       <div className=" max-w-fit">
-        <Link href="/menu/items" passHref>
+        <Link href="/equipment-inventory/items" passHref>
           <a>
             <Button
               icon={<BsArrowLeft />}
@@ -111,7 +111,7 @@ const BulkCreateMenuItem = (props: Props) => {
         </Link>
       </div>
       <hr />
-      <MenuItemForm className=" flex flex-col lg:flex-row gap-6" isBulkAdd>
+      <EquipmentItemForm className=" flex flex-col lg:flex-row gap-6" isBulkAdd>
         <div className="border lg:w-7/12 h-12/12 bg-white rounded-lg flex flex-col justify-between">
           <div className=" text-xs mt-3 overflow-y-auto">
             <StyledTable
@@ -138,24 +138,27 @@ const BulkCreateMenuItem = (props: Props) => {
                     const formData = new FormData();
                     formData.append("image", d.image[0]);
                     formData.append(
-                      "menu_item_category_id",
-                      d.menu_item_category_id.value
+                      "equipment_category_id",
+                      d.equipment_category_id.value
                     );
                     for (var key in d) {
                       formData.append(key, d[key]);
                     }
                     return formData;
                   });
+
+                  console.log(parsedData.entries())
                   try {
-                    for (const menuItem of parsedData) {
-                      await createMenuItem(menuItem).unwrap();
+                    for (const equipmentItem of parsedData) {
+                      await createEquipmentItem(equipmentItem).unwrap();
                     }
                     toast.success("Items added successfully!");
                   } catch (error) {
+                    console.log(error)
                     toast.error("Error adding items.");
                   }
-                  dispatch(resetMenuItemState());
-                  router.push("/menu/items");
+                  dispatch(resetEquipmentItemState());
+                  router.push("/equipment-inventory/items");
                 } else {
                   toast.error("Please add an item to submit.", {
                     toastId: "no-menu-item-added",
@@ -165,22 +168,22 @@ const BulkCreateMenuItem = (props: Props) => {
             />
           </div>
         </div>
-      </MenuItemForm>
+      </EquipmentItemForm>
       <AppModal
         title="Edit Item"
         onClose={onModalClose}
-        isOpen={modal === "edit-virtual-menu-item-modal"}
+        isOpen={modal === "edit-virtual-equipment-item-modal"}
       >
-        <MenuItemForm virtualId={selectedId} onClose={onModalClose} />
+        <EquipmentItemForm virtualId={selectedId} onClose={onModalClose} />
       </AppModal>
     </div>
   );
 };
 
-export default BulkCreateMenuItem;
-BulkCreateMenuItem.getLayout = function getLayout(page: ReactElement) {
+export default BulkCreateEquipmentItem;
+BulkCreateEquipmentItem.getLayout = function getLayout(page: ReactElement) {
   return (
-    <Layout icon={<BsPlusCircle />} title="Add Menu">
+    <Layout icon={<BsPlusCircle />} title="Add Equipment">
       {page}
     </Layout>
   );

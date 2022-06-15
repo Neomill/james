@@ -1,0 +1,40 @@
+.invertory-header {
+  padding: 0px 10px 0;
+  display: flex;
+  background-color: #ffffff;
+}
+.category-container {
+  display: flex;
+  justify-content: space-between;
+}
+.form-group-storybook {
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.inventory-full-container {
+  background-color: #ffffff;
+  padding: 20px;
+}
+@media (max-width: 780px) {
+  .category-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    & > * {
+      width: 100% !important;
+    }
+  }
+  .form-group-storybook {
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    align-items: flex-start;
+    padding: 6px !important;
+    & > * {
+      width: 98% !important;
+    }
+  }
+}

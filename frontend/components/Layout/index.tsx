@@ -103,6 +103,34 @@ export const links = [
       },
     ],
   },
+  
+  {
+    icon: <BsCardList />,
+    label: "Equipment Inventory",
+    href: "/equipment-inventory",
+    disabled: true,
+    permission: "read-menu-item", 
+    children: [
+      {
+        icon: <BsBox />,
+        label: "Items",
+        href: "/equipment-inventory/items",
+        permission: "read-menu-item",
+      },
+      {
+        icon: <BsPlusCircle />,
+        label: "Add Equipment",
+        href: "/equipment-inventory/bulk-add",
+        permission: "read-menu-item",
+      },
+      {
+        icon: <BsListUl />,
+        label: "Categories",
+        href: "/equipment-inventory/categories",
+        permission: "read-menu-item-category",
+      },
+    ],
+  },
 
   {
     icon: <BsBoxSeam />,

@@ -36,7 +36,7 @@ const Dashboard = ({}) => {
   return (
     <div className="flex flex-col gap-6">
       <div className="grid grid-cols-2 gap-6">
-        <StatGroup title="Inventory Summary">
+        <StatGroup title="Total Product Inventory">
           <Stat
             color="text-violet-500"
             bg="bg-violet-50"
@@ -74,7 +74,235 @@ const Dashboard = ({}) => {
             {data.totalOutOfStockItems}
           </Stat>
         </StatGroup>
-        <StatGroup title="Sales Overview ">
+        <StatGroup title="Total Equipment Inventory">
+          <Stat
+            color="text-violet-500"
+            bg="bg-violet-50"
+            variant="clean"
+            label="Revenue"
+            icon={<BsGraphUp />}
+          >
+            ₱{numberWithCommas(Number(data.totalRevenue).toFixed(2))}
+          </Stat>
+          <Stat
+            color={data.totalProfit > 0 ? "text-emerald-500" : "text-red-500"}
+            bg={data.totalProfit > 0 ? "bg-emerald-50" : "bg-red-50"}
+            variant="clean"
+            label="Profit"
+            icon={<BsCash />}
+          >
+            ₱{numberWithCommas(Number(data.totalProfit).toFixed(2))}
+          </Stat>
+          <Stat
+            variant="clean"
+            label="Cost"
+            icon={<BsGraphDown />}
+            color="text-amber-500"
+            bg="bg-amber-50"
+          >
+            ₱{numberWithCommas(Number(data.totalCost).toFixed(2))}
+          </Stat>
+          <Stat
+            label="Transactions"
+            color="text-blue-500"
+            bg="bg-blue-50"
+            variant="clean"
+            icon={<BsReceipt />}
+          >
+            {data.totalTransactions}
+          </Stat>
+        </StatGroup>
+        <StatGroup title="Total Sales Order">
+          <Stat
+            color="text-violet-500"
+            bg="bg-violet-50"
+            variant="clean"
+            label="Revenue"
+            icon={<BsGraphUp />}
+          >
+            ₱{numberWithCommas(Number(data.totalRevenue).toFixed(2))}
+          </Stat>
+          <Stat
+            color={data.totalProfit > 0 ? "text-emerald-500" : "text-red-500"}
+            bg={data.totalProfit > 0 ? "bg-emerald-50" : "bg-red-50"}
+            variant="clean"
+            label="Profit"
+            icon={<BsCash />}
+          >
+            ₱{numberWithCommas(Number(data.totalProfit).toFixed(2))}
+          </Stat>
+          <Stat
+            variant="clean"
+            label="Cost"
+            icon={<BsGraphDown />}
+            color="text-amber-500"
+            bg="bg-amber-50"
+          >
+            ₱{numberWithCommas(Number(data.totalCost).toFixed(2))}
+          </Stat>
+          <Stat
+            label="Transactions"
+            color="text-blue-500"
+            bg="bg-blue-50"
+            variant="clean"
+            icon={<BsReceipt />}
+          >
+            {data.totalTransactions}
+          </Stat>
+        </StatGroup>
+        <StatGroup title="Total invoices">
+          <Stat
+            color="text-violet-500"
+            bg="bg-violet-50"
+            variant="clean"
+            label="Revenue"
+            icon={<BsGraphUp />}
+          >
+            ₱{numberWithCommas(Number(data.totalRevenue).toFixed(2))}
+          </Stat>
+          <Stat
+            color={data.totalProfit > 0 ? "text-emerald-500" : "text-red-500"}
+            bg={data.totalProfit > 0 ? "bg-emerald-50" : "bg-red-50"}
+            variant="clean"
+            label="Profit"
+            icon={<BsCash />}
+          >
+            ₱{numberWithCommas(Number(data.totalProfit).toFixed(2))}
+          </Stat>
+          <Stat
+            variant="clean"
+            label="Cost"
+            icon={<BsGraphDown />}
+            color="text-amber-500"
+            bg="bg-amber-50"
+          >
+            ₱{numberWithCommas(Number(data.totalCost).toFixed(2))}
+          </Stat>
+          <Stat
+            label="Transactions"
+            color="text-blue-500"
+            bg="bg-blue-50"
+            variant="clean"
+            icon={<BsReceipt />}
+          >
+            {data.totalTransactions}
+          </Stat>
+        </StatGroup>
+        <StatGroup title="Total Received Po">
+          <Stat
+            color="text-violet-500"
+            bg="bg-violet-50"
+            variant="clean"
+            label="Revenue"
+            icon={<BsGraphUp />}
+          >
+            ₱{numberWithCommas(Number(data.totalRevenue).toFixed(2))}
+          </Stat>
+          <Stat
+            color={data.totalProfit > 0 ? "text-emerald-500" : "text-red-500"}
+            bg={data.totalProfit > 0 ? "bg-emerald-50" : "bg-red-50"}
+            variant="clean"
+            label="Profit"
+            icon={<BsCash />}
+          >
+            ₱{numberWithCommas(Number(data.totalProfit).toFixed(2))}
+          </Stat>
+          <Stat
+            variant="clean"
+            label="Cost"
+            icon={<BsGraphDown />}
+            color="text-amber-500"
+            bg="bg-amber-50"
+          >
+            ₱{numberWithCommas(Number(data.totalCost).toFixed(2))}
+          </Stat>
+          <Stat
+            label="Transactions"
+            color="text-blue-500"
+            bg="bg-blue-50"
+            variant="clean"
+            icon={<BsReceipt />}
+          >
+            {data.totalTransactions}
+          </Stat>
+        </StatGroup>
+        <StatGroup title="Total Pull Out Request">
+          <Stat
+            color="text-violet-500"
+            bg="bg-violet-50"
+            variant="clean"
+            label="Revenue"
+            icon={<BsGraphUp />}
+          >
+            ₱{numberWithCommas(Number(data.totalRevenue).toFixed(2))}
+          </Stat>
+          <Stat
+            color={data.totalProfit > 0 ? "text-emerald-500" : "text-red-500"}
+            bg={data.totalProfit > 0 ? "bg-emerald-50" : "bg-red-50"}
+            variant="clean"
+            label="Profit"
+            icon={<BsCash />}
+          >
+            ₱{numberWithCommas(Number(data.totalProfit).toFixed(2))}
+          </Stat>
+          <Stat
+            variant="clean"
+            label="Cost"
+            icon={<BsGraphDown />}
+            color="text-amber-500"
+            bg="bg-amber-50"
+          >
+            ₱{numberWithCommas(Number(data.totalCost).toFixed(2))}
+          </Stat>
+          <Stat
+            label="Transactions"
+            color="text-blue-500"
+            bg="bg-blue-50"
+            variant="clean"
+            icon={<BsReceipt />}
+          >
+            {data.totalTransactions}
+          </Stat>
+        </StatGroup>
+        <StatGroup title="Completed Orders">
+          <Stat
+            color="text-violet-500"
+            bg="bg-violet-50"
+            variant="clean"
+            label="Revenue"
+            icon={<BsGraphUp />}
+          >
+            ₱{numberWithCommas(Number(data.totalRevenue).toFixed(2))}
+          </Stat>
+          <Stat
+            color={data.totalProfit > 0 ? "text-emerald-500" : "text-red-500"}
+            bg={data.totalProfit > 0 ? "bg-emerald-50" : "bg-red-50"}
+            variant="clean"
+            label="Profit"
+            icon={<BsCash />}
+          >
+            ₱{numberWithCommas(Number(data.totalProfit).toFixed(2))}
+          </Stat>
+          <Stat
+            variant="clean"
+            label="Cost"
+            icon={<BsGraphDown />}
+            color="text-amber-500"
+            bg="bg-amber-50"
+          >
+            ₱{numberWithCommas(Number(data.totalCost).toFixed(2))}
+          </Stat>
+          <Stat
+            label="Transactions"
+            color="text-blue-500"
+            bg="bg-blue-50"
+            variant="clean"
+            icon={<BsReceipt />}
+          >
+            {data.totalTransactions}
+          </Stat>
+        </StatGroup>
+        <StatGroup title="Total Current Sales">
           <Stat
             color="text-violet-500"
             bg="bg-violet-50"
@@ -113,8 +341,8 @@ const Dashboard = ({}) => {
           </Stat>
         </StatGroup>
       </div>
-      <div className="grid grid-cols-3 gap-6">
-        <StatGroup title="Inventory Condition">
+      <div className="grid grid-cols-1 gap-6">
+        <StatGroup title="All Branches">
           <Stat
             color="text-emerald-500"
             bg="bg-emerald-50"
@@ -132,43 +360,6 @@ const Dashboard = ({}) => {
             icon={<BsClockFill />}
           >
             {data.totalExpiredItems}
-          </Stat>
-        </StatGroup>
-
-        <StatGroup title="No. of Users">
-          <Stat
-            color="text-blue-500"
-            variant="solid"
-            label="Total Customers"
-            icon={<BsPeopleFill />}
-          >
-            {data.totalCustomers}
-          </Stat>
-          <Stat
-            color="text-blue-500"
-            variant="solid"
-            label="Total Suppliers"
-            icon={<BsPeopleFill />}
-          >
-            {data.totalSuppliers}
-          </Stat>
-        </StatGroup>
-        <StatGroup title="Inventory Purchase Overview">
-          <Stat
-            color="text-emerald-500"
-            variant="solid"
-            label="No. of Purchase"
-            icon={<BsPlusCircleFill />}
-          >
-            {data.totalNoOfPurchase}
-          </Stat>
-          <Stat
-            color="text-orange-500"
-            variant="solid"
-            label="Pull-out"
-            icon={<BsBoxArrowLeft />}
-          >
-            {data.totalPullout}
           </Stat>
         </StatGroup>
       </div>

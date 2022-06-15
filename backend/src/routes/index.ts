@@ -22,6 +22,8 @@ import menuitemstock from "./menuItemStock";
 import invoice from "./invoice";
 import table from "./table";
 import branch from "./branch";
+import equipmentItem from "./equipmentItem"
+import equipmentItemCategory from "./equipmentItemCategory"
 
 const routes = Router();
 routes.use("/auth", auth);
@@ -112,4 +114,17 @@ routes.use(
   passport.authenticate("jwt", { session: false }),
   branch
 );
+
+routes.use(
+  "/equipment-item",
+  passport.authenticate("jwt", { session: false }),
+  equipmentItem
+);
+
+routes.use(
+  "/equipment-item-category",
+  passport.authenticate("jwt", { session: false }),
+  equipmentItemCategory
+);
+
 export default routes;
