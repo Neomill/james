@@ -30,12 +30,12 @@ const RawSideBarLinkItem: React.FC<SidebarItemProps> = ({
   ...props
 }) => {
   const router = useRouter();
-  let isActive = router.pathname.includes(href) && href !== "/";
+  let isActive = router.pathname.includes(href) && href !== "/" && disabled === false
   if (href == "/" && href == router.pathname) {
     isActive = true;
   }
   const [toggle, setToggle] = useState(false);
-  const mode = isActive ? "text-white bg-blue-600" : "text-neutral-400";
+  const mode = isActive ? "text-orange-600" : "text-neutral-400";
   const toggleMode = toggle
     ? "cursor-pointer text-white font-bold"
     : "transition my-3 duration-200 ease-in cursor-pointer text-neutral-400 font-bold";
@@ -43,13 +43,13 @@ const RawSideBarLinkItem: React.FC<SidebarItemProps> = ({
     <div >
       <a
         {...props}
-        className={`${mode} p-3 transition duration-150 ease-linear cursor-pointer hover:text-blue-400 flex flex-row items-center w-full gap-3 text-sm font-semibold`}
+        className={`${mode} p-3 transition duration-150 ease-linear cursor-pointer hover:text-orange-400 flex flex-row items-center w-full gap-3 text-sm font-semibold`}
       >
         {isActive ? (
-          <div className="bg-zinc-500 transition duration-200 ease-in bg-blue-50 p-3 rounded-full">
+          <div className=" transition duration-200 ease-in border-2 border-orange-600 p-3 rounded-full">
             <IconContext.Provider
               value={{
-                className: "cursor-pointer text-white",
+                className: "cursor-pointer text-orange-600",
                 size: `${size}`,
               }}
             >
@@ -77,9 +77,9 @@ const RawSideBarLinkItem: React.FC<SidebarItemProps> = ({
             Array.isArray(children) ? (
               children.length > 0 ? (
                 toggle ? (
-                  <BsCaretDownFill className={toggleMode} size={12} />
-                ) : (
                   <BsCaretUpFill className={toggleMode} size={12} />
+                ) : (
+                  <BsCaretDownFill className={toggleMode} size={12} />
                 )
               ) : null
             ) : null

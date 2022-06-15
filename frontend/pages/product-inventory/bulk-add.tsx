@@ -155,7 +155,7 @@ const BulkCreateMenuItem = (props: Props) => {
                     toast.error("Error adding items.");
                   }
                   dispatch(resetMenuItemState());
-                  router.push("/menu/items");
+                  router.push("/product-inventory/items");
                 } else {
                   toast.error("Please add an item to submit.", {
                     toastId: "no-menu-item-added",
@@ -180,7 +180,7 @@ const BulkCreateMenuItem = (props: Props) => {
 export default BulkCreateMenuItem;
 BulkCreateMenuItem.getLayout = function getLayout(page: ReactElement) {
   return (
-    <Layout icon={<BsPlusCircle />} title="Add Menu">
+    <Layout icon={<BsPlusCircle />} title="Add Product">
       {page}
     </Layout>
   );

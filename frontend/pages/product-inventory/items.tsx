@@ -288,7 +288,7 @@ export default MenuItem;
 
 MenuItem.getLayout = function getLayout(page: ReactElement) {
   return (
-    <Layout icon={<BsCardList />} title="Menu">
+    <Layout icon={<BsCardList />} title="Products">
       {page}
     </Layout>
   );

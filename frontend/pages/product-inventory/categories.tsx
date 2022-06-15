@@ -232,7 +232,7 @@ const MenuItemCategories = () => {
 export default MenuItemCategories;
 MenuItemCategories.getLayout = function getLayout(page: ReactElement) {
   return (
-    <Layout icon={<BsListUl />} title="Menu Categories">
+    <Layout icon={<BsListUl />} title="Product Categories">
       {page}
     </Layout>
   );
