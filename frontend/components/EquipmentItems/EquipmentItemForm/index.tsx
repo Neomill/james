@@ -140,7 +140,6 @@ export const EquipmentItemForm: React.FC<Props> = ({
     );
     useEffect(() => {
       if (virtualItem) {
-        console.log(virtualItem);
         setValue("name", virtualItem.name);
         setValue("qty", virtualItem.qty);
         setValue("cost_price", virtualItem.cost_price);
@@ -156,7 +155,6 @@ export const EquipmentItemForm: React.FC<Props> = ({
     if (!virtualId && !isBulkAdd) {
       data.equipment_category_id = data.equipment_category_id.value;
     }
-    console.log(data)
     try {
       if (id) {
         if (typeof data.image === "string") {

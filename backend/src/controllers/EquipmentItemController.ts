@@ -147,7 +147,7 @@ class EquipmentController {
       selling_price,
       qty,
     } = req.body;
-    console.log(equipment_category_id)
+
     try {
       if (!process.env.API_URL) {
         await unlink("public/" + req.file?.filename + "");
@@ -170,7 +170,6 @@ class EquipmentController {
         image_url: API_URL + req.file?.filename
       };
 
-      console.log(data)
       if (equipment_category_id) {
         Object.assign(data, {
           equipment_category: {
@@ -189,7 +188,6 @@ class EquipmentController {
         });
       }
 
-      console.log(data)
       const transaction = await model.create({
         data: {
           ...data
@@ -207,7 +205,6 @@ class EquipmentController {
     res: Response,
     next: NextFunction
   ) => {
-    console.log(req.body)
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
