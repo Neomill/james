@@ -70,7 +70,6 @@ routes.use(
 );
 routes.use(
   "/customer",
-  passport.authenticate("jwt", { session: false }),
   customer
 );
 routes.use("/order", passport.authenticate("jwt", { session: false }), order);

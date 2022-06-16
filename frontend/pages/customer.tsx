@@ -1,52 +1,52 @@
 import ActionButton from "@/components/ActionButton";
 import ActionTableMenu from "@/components/ActionTableMenu";
 import BulkOperations from "@/components/BulkOperations";
-import Forbidden from "@/components/Forbidden";
 import { Button } from "@/components/Button";
-import { BsPeople, BsPlusCircle } from "react-icons/bs";
-import InvoiceModalmanager from "@/components/Invoice/InvoiceModalManager";
+import CustomerModalManager from "@/components/Customer/CustomerModalManager";
+import Forbidden from "@/components/Forbidden";
 import Layout from "@/components/Layout";
 import Loading from "@/components/Loading";
 import Pagination from "@/components/Pagination";
 import StyledTable from "@/components/StyledTable";
-import Tag from "@/components/Tag";
 import { useAuth } from "@/hooks/useAuth";
 import { useAppSelector } from "@/redux/hooks";
-import { useSearchInvoiceQuery } from "@/redux/services/invoicesAPI";
-import { useDeletePORequestMutation } from "@/redux/services/poRequestAPI";
-import { useCreateCustomerMutation } from "@/redux/services/customersAPI";
-import CustomerModalManager from "@/components/Customer/CustomerModalManager";
-
-import checkPermissions from "@/utils/checkPermissions";
 import {
-  invoicePaymentStatusColorPicker,
-  invoicePaymentStatusText,
-  invoiceStatusColorPicker,
-  invoiceStatusText,
-} from "@/utils/invoiceHelper";
+  useDeleteCustomerMutation,
+  useSearchCustomersQuery,
+} from "@/redux/services/customersAPI";
+import { useSearchPositionsQuery } from "@/redux/services/positionsAPI";
+import checkPermissions from "@/utils/checkPermissions";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
 import { ReactElement, useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { BsCart } from "react-icons/bs";
+import { BsPeople, BsPlusCircle } from "react-icons/bs";
 import { toast } from "react-toastify";
-
-type Props = {};
-
-const Invoices = (props: Props) => {
+const Customer = ({}) => {
   const [page, setPage] = useState(0);
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [modal, setModal] = useState<string>("");
+  const [deleteCustomer] = useDeleteCustomerMutation();
+  const [selectedId, setSelectedId] = useState("");
   const { user } = useAuth();
   const { filters, sortBy } = useAppSelector((state) => state.filters);
 
+  // const [positionPage, setPositionPage] = useState(0);
+  // const [positionQuery, setPositionQuery] = useState("");
+
+  // const { data: positions } = useSearchPositionsQuery({
+  //   page: positionPage,
+  //   query: positionQuery,
+  // });
+
   //---SEARCH FUNCTIONS
   const [query, setQuery] = useState("");
-  const { data, error, isLoading } = useSearchInvoiceQuery({
+  const { data, error, isLoading } = useSearchCustomersQuery({
     page,
     query,
     ...filters,
     ...sortBy,
   });
-
   useEffect(() => {
     if (data?.totalPages < 0) {
       setPage(0);
@@ -56,7 +56,6 @@ const Invoices = (props: Props) => {
 
     return () => {};
   }, [filters, data]);
-
   const methods = useForm();
   const onSubmitSearch = (data) => {
     setPage(0);
@@ -64,11 +63,6 @@ const Invoices = (props: Props) => {
   };
   //---
   const router = useRouter();
-
-  const [deletePORequest] = useDeletePORequestMutation();
-  const [selectedItems, setSelectedItems] = useState([]);
-  const [modal, setModal] = useState<string>("");
-  const [selectedId, setSelectedId] = useState("");
 
   const onModalOpen = (event, id?) => {
     event.preventDefault();
@@ -82,61 +76,36 @@ const Invoices = (props: Props) => {
   const onModalClose = () => {
     setModal("");
   };
+
   const onConfirmDelete = async () => {
-    toast.promise(deletePORequest(selectedId).unwrap(), {
-      success: "Request deleted successfully!",
-      error: "Error deleting request!",
-      pending: "Deleting request...",
+    toast.promise(deleteCustomer(selectedId).unwrap(), {
+      success: "Customer deleted successfully!",
+      error: "Error deleting customer!",
+      pending: "Deleting customer...",
     });
     setSelectedId("");
     onModalClose();
   };
-  
-  const filterOptions = useMemo(
-    () => [
-      // {
-      //   title: "Status",
-      //   selector: "status",
-      //   sub_options: [
-      //     {
-      //       title: "All",
-      //       value: "",
-      //     },
-      //     {
-      //       title: "In Progress",
-      //       value: "IN_PROGRESS",
-      //     },
-      //     {
-      //       title: "Ready",
-      //       value: "READY",
-      //     },
-      //     {
-      //       title: "Void",
-      //       value: "VOID",
-      //     },
-      //   ],
-      // },
-      {
-        title: "Payment",
-        selector: "payment_status",
-        sub_options: [
-          {
-            title: "All",
-            value: "",
-          },
-          {
-            title: "Pending",
-            value: "PENDING",
-          },
-          {
-            title: "Paid",
-            value: "PAID",
-          },
-        ],
-      },
-    ],
-    []
-  );
+
+  // TODO POSITION
+  // const filterOptions = useMemo(
+  //   () => [
+  //     {
+  //       title: "Position",
+  //       selector: "position",
+  //       sub_options: [
+  //         {
+  //           title: "All",
+  //           value: "",
+  //         },
+  //         ...positions.body.map((position) => {
+  //           return { title: position.name, value: position.id };
+  //         }),
+  //       ],
+  //     },
+  //   ],
+  //   [positions]
+  // );
 
   const sortOptions = useMemo(
     () => [
@@ -154,12 +123,20 @@ const Invoices = (props: Props) => {
             value: { selector: "id", value: 1 },
           },
           {
-            title: "Table Name: A-Z",
-            value: { selector: "table_name", value: 0 },
+            title: "First Name: A-Z",
+            value: { selector: "fname", value: 0 },
           },
           {
-            title: "Table Name: Z-A",
-            value: { selector: "table_name", value: 1 },
+            title: "First Name: Z-A",
+            value: { selector: "fname", value: 1 },
+          },
+          {
+            title: "Last Name: A-Z",
+            value: { selector: "lname", value: 0 },
+          },
+          {
+            title: "Last Name: Z-A",
+            value: { selector: "lname", value: 1 },
           },
           {
             title: "Last Created",
@@ -174,7 +151,6 @@ const Invoices = (props: Props) => {
     ],
     []
   );
-
   const columns = useMemo<any>(
     () => [
       {
@@ -182,31 +158,20 @@ const Invoices = (props: Props) => {
         accessor: "id",
       },
       {
-        Header: "Status",
-        accessor: "status",
-        Cell: (props: any) => (
-          <Tag tailwindColor={invoiceStatusColorPicker(props.value)}>
-            {invoiceStatusText(props.value)}
-          </Tag>
-        ),
+        Header: "First Name",
+        accessor: "fname",
       },
       {
-        Header: "Payment",
-        accessor: "payment_status",
-        Cell: (props: any) => (
-          <Tag tailwindColor={invoicePaymentStatusColorPicker(props.value)}>
-            {invoicePaymentStatusText(props.value)}
-          </Tag>
-        ),
+        Header: "Last name",
+        accessor: "lname",
       },
       {
-        Header: "Payment",
-        accessor: "payment_status",
-        Cell: (props: any) => (
-          <Tag tailwindColor={invoicePaymentStatusColorPicker(props.value)}>
-            {invoicePaymentStatusText(props.value)}
-          </Tag>
-        ),
+        Header: "Phone",
+        accessor: "phone",
+      },
+      {
+        Header: "Address",
+        accessor: "address",
       },
       {
         Header: "Date created",
@@ -218,41 +183,39 @@ const Invoices = (props: Props) => {
       {
         Header: "Actions",
         Cell: (props: any) => (
-          <div className="flex flex-row gap-4 items-center">
+          <div className="flex flex-row gap-3">
             <ActionButton
-              data-modal="view-invoice-modal"
+              data-modal="view-customer-modal"
               onClick={(e) => onModalOpen(e, props.row.original.id)}
-              action="receipt"
+              action="view"
             />
-            {checkPermissions(["update-invoice"], user.roles) && (
+            {checkPermissions(["update-customer"], user.roles) && (
               <ActionButton
-                data-modal="edit-invoice-modal"
+                data-modal="edit-customer-modal"
                 onClick={(e) => onModalOpen(e, props.row.original.id)}
                 action="edit"
               />
             )}
-            {/* {checkPermissions(["delete-invoice"], user.roles) && (
+
+            {checkPermissions(["delete-customer"], user.roles) && (
               <ActionButton
-                data-modal="delete-invoice-modal"
+                data-modal="delete-customer-modal"
                 onClick={(e) => onModalOpen(e, props.row.original.id)}
                 action="delete"
               />
-            )} */}
+            )}
           </div>
         ),
       },
     ],
     []
   );
-
-  if (!checkPermissions(["read-order"], user.roles)) {
+  if (!checkPermissions(["read-customer"], user.roles)) {
     return <Forbidden />;
   }
-
   if (error) return <p>Ooops. Something went wrong!</p>;
 
   if (isLoading) return <Loading />;
-
   return (
     <>
       <FormProvider {...methods}>
@@ -261,15 +224,15 @@ const Invoices = (props: Props) => {
             operations={
               <BulkOperations
                 bulkDelete={selectedItems.length > 0}
-                model="invoice"
+                model="customer"
                 onModalOpen={onModalOpen}
                 page={page}
                 totalPages={data.totalPages}
               />
             }
-            filterOptions={filterOptions}
+            // filterOptions={filterOptions}
             sortOptions={sortOptions}
-            title="List of Orders"
+            title="List of Customers"
             onSubmit={onSubmitSearch}
           >
             {checkPermissions(["create-customer"], user.roles) && (
@@ -283,17 +246,6 @@ const Invoices = (props: Props) => {
                 />
               </>
             )}
-            {/* {checkPermissions(["create-order"], user.roles) && (
-              <Button
-                data-modal="bulk-pull-out-item-modal"
-                onClick={(e) => {
-                  router.push("/po-requests/bulk-add");
-                }}
-                icon={<BsBoxArrowLeft />}
-                size="medium"
-                label="Pull out items"
-              />
-            )} */}
           </ActionTableMenu>
         </form>
       </FormProvider>
@@ -312,21 +264,22 @@ const Invoices = (props: Props) => {
       ) : (
         "No data available."
       )}
-      <InvoiceModalmanager
-        closeFn={onModalClose}
+      <CustomerModalManager
         selectedId={selectedId}
         selectedItems={selectedItems}
-        onConfirmDelete={onConfirmDelete}
         modal={modal}
+        onConfirmDelete={onConfirmDelete}
+        closeFn={onModalClose}
       />
     </>
   );
 };
 
-export default Invoices;
-Invoices.getLayout = function getLayout(page: ReactElement) {
+export default Customer;
+
+Customer.getLayout = function getLayout(page: ReactElement) {
   return (
-    <Layout icon={<BsCart />} title="Orders">
+    <Layout icon={<BsPeople />} title="Customer">
       {page}
     </Layout>
   );
