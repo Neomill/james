@@ -37,14 +37,14 @@ const InventoryModalManager: React.FC<Props> = ({
   return (
     <>
       <AppModal
-        title="Menu Item Details"
+        title="Product Item Details"
         onClose={closeFn}
         isOpen={modal === "view-menu-item-modal"}
       >
         <MenuItemDetails id={selectedId} onClose={closeFn} />
       </AppModal>
       <AppModal
-        title="New Menu"
+        title="New Product"
         onClose={closeFn}
         isOpen={modal === "new-menu-item-modal"}
       >
@@ -52,7 +52,7 @@ const InventoryModalManager: React.FC<Props> = ({
       </AppModal>
 
       <AppModal
-        title="Edit Menu"
+        title="Edit Equipment"
         onClose={closeFn}
         isOpen={modal === "edit-menu-item-modal"}
       >

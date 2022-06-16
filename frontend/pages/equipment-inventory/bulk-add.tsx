@@ -147,7 +147,6 @@ const BulkCreateEquipmentItem = (props: Props) => {
                     return formData;
                   });
 
-                  console.log(parsedData.entries())
                   try {
                     for (const equipmentItem of parsedData) {
                       await createEquipmentItem(equipmentItem).unwrap();

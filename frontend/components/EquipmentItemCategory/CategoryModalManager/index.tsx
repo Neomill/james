@@ -2,10 +2,10 @@ import AppModal from "@/components/AppModal";
 import { Button } from "@/components/Button";
 import { useDeleteManyCategoryMutation } from "@/redux/services/categoriesAPI";
 import { toast } from "react-toastify";
-import MenuItemCategoryDetails from "../CategoryDetails";
-import { MenuItemCategoryForm } from "../CategoryForm";
+import EquipmentItemCategoryDetails from "../CategoryDetails";
+import { EquipmentItemCategoryForm } from "../CategoryForm";
 
-const MenuItemCategoryModalManager = ({
+const EquipmentItemCategoryModalManager = ({
   closeFn = () => null,
   modal = "",
   selectedId,
@@ -26,30 +26,30 @@ const MenuItemCategoryModalManager = ({
       <AppModal
         title="Category Details"
         onClose={closeFn}
-        isOpen={modal === "view-menu-item-category-modal"}
+        isOpen={modal === "view-equipment-item-category-modal"}
       >
-        <MenuItemCategoryDetails id={selectedId} onClose={closeFn} />
+        <EquipmentItemCategoryDetails id={selectedId} onClose={closeFn} />
       </AppModal>
       <AppModal
         title="New Category"
         onClose={closeFn}
-        isOpen={modal === "new-menu-item-category-modal"}
+        isOpen={modal === "new-equipment-item-category-modal"}
       >
-        <MenuItemCategoryForm onClose={closeFn} />
+        <EquipmentItemCategoryForm onClose={closeFn} />
       </AppModal>
 
       <AppModal
         title="Edit Category"
         onClose={closeFn}
-        isOpen={modal === "edit-menu-item-category-modal"}
+        isOpen={modal === "edit-equipment-item-category-modal"}
       >
-        <MenuItemCategoryForm id={selectedId} onClose={closeFn} />
+        <EquipmentItemCategoryForm id={selectedId} onClose={closeFn} />
       </AppModal>
 
       <AppModal
         title="Delete Category"
         onClose={closeFn}
-        isOpen={modal === "delete-menu-item-category-modal"}
+        isOpen={modal === "delete-equipment-item-category-modal"}
       >
         <div className="flex flex-col gap-6">
           <p>Are you sure you want to delete category id:{selectedId} ?</p>
@@ -74,7 +74,7 @@ const MenuItemCategoryModalManager = ({
         <AppModal
           title="Delete Category"
           onClose={closeFn}
-          isOpen={modal === "bulk-delete-menu-item-category-modal"}
+          isOpen={modal === "bulk-delete-equipment-item-category-modal"}
         >
           <div className="flex flex-col gap-6">
             <p>Are you sure you want to delete the selected categories?</p>
@@ -99,4 +99,4 @@ const MenuItemCategoryModalManager = ({
   );
 };
 
-export default MenuItemCategoryModalManager;
+export default EquipmentItemCategoryModalManager;

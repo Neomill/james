@@ -6,7 +6,7 @@ import CategoryModalManager from "@/components/Category/CategoryModalManager";
 import Forbidden from "@/components/Forbidden";
 import Layout from "@/components/Layout";
 import Loading from "@/components/Loading";
-import MenuItemCategoryModalManager from "@/components/MenuItemCategory/CategoryModalManager";
+import EquipmentItemCategoryModalManager from "@/components/EquipmentItemCategory/CategoryModalManager";
 import Pagination from "@/components/Pagination";
 import StyledTable from "@/components/StyledTable";
 import { useAuth } from "@/hooks/useAuth";
@@ -16,9 +16,9 @@ import {
   useSearchCategoryQuery,
 } from "@/redux/services/categoriesAPI";
 import {
-  useDeleteMenuItemCategoryMutation,
-  useSearchMenuItemCategoryQuery,
-} from "@/redux/services/menuItemCategoriesAPI";
+  useDeleteEquipmentItemCategoryMutation,
+  useSearchEquipmentItemCategoryQuery,
+} from "@/redux/services/equipmentItemCategoriesAPI";
 import checkPermissions from "@/utils/checkPermissions";
 import dayjs from "dayjs";
 import { ReactElement, useEffect, useMemo, useState } from "react";
@@ -26,9 +26,9 @@ import { FormProvider, useForm } from "react-hook-form";
 import { BsListUl, BsPlusCircle } from "react-icons/bs";
 import { toast } from "react-toastify";
 
-const MenuItemCategories = () => {
+const EquipmentItemCategories = () => {
   const [page, setPage] = useState(0);
-  const [deleteCategory] = useDeleteMenuItemCategoryMutation();
+  const [deleteCategory] = useDeleteEquipmentItemCategoryMutation();
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectedId, setSelectedId] = useState("");
   const [modal, setModal] = useState<string>("");
@@ -37,7 +37,7 @@ const MenuItemCategories = () => {
 
   //---SEARCH FUNCTIONS
   const [query, setQuery] = useState("");
-  const { data, error, isLoading } = useSearchMenuItemCategoryQuery({
+  const { data, error, isLoading } = useSearchEquipmentItemCategoryQuery({
     page,
     query,
     ...filters,
@@ -140,20 +140,20 @@ const MenuItemCategories = () => {
         Cell: (props: any) => (
           <div className=" flex flex-row gap-4 items-center">
             <ActionButton
-              data-modal="view-menu-item-category-modal"
+              data-modal="view-equipment-item-category-modal"
               onClick={(e) => onModalOpen(e, props.row.original.id)}
               action="view"
             />
-            {checkPermissions(["update-menu-item-category"], user.roles) && (
+            {checkPermissions(["update-equipment-item-category"], user.roles) && (
               <ActionButton
-                data-modal="edit-menu-item-category-modal"
+                data-modal="edit-equipment-item-category-modal"
                 onClick={(e) => onModalOpen(e, props.row.original.id)}
                 action="edit"
               />
             )}
-            {checkPermissions(["delete-menu-item-category"], user.roles) && (
+            {checkPermissions(["delete-equipment-item-category"], user.roles) && (
               <ActionButton
-                data-modal="delete-menu-item-category-modal"
+                data-modal="delete-equipment-item-category-modal"
                 onClick={(e) => onModalOpen(e, props.row.original.id)}
                 action="delete"
               />
@@ -164,7 +164,7 @@ const MenuItemCategories = () => {
     ],
     []
   );
-  if (!checkPermissions(["read-menu-item-category"], user.roles)) {
+  if (!checkPermissions(["read-equipment-item-category"], user.roles)) {
     return <Forbidden />;
   }
   if (error) return <p>Ooops. Something went wrong!</p>;
@@ -180,19 +180,19 @@ const MenuItemCategories = () => {
             operations={
               <BulkOperations
                 bulkDelete={selectedItems.length > 0}
-                model="menu-item-category"
+                model="menu-equipment-category"
                 onModalOpen={onModalOpen}
                 page={page}
                 totalPages={data.totalPages}
               />
             }
-            title="List of Menu Categories"
+            title="List of Equipment Categories"
             onSubmit={onSubmitSearch}
           >
-            {checkPermissions(["create-menu-item-category"], user.roles) && (
+            {checkPermissions(["create-equipment-item-category"], user.roles) && (
               <>
                 <Button
-                  data-modal="new-menu-item-category-modal"
+                  data-modal="new-equipment-item-category-modal"
                   onClick={onModalOpen}
                   icon={<BsPlusCircle />}
                   size="medium"
@@ -218,7 +218,7 @@ const MenuItemCategories = () => {
       ) : (
         "No data available."
       )}
-      <MenuItemCategoryModalManager
+      <EquipmentItemCategoryModalManager
         closeFn={onModalClose}
         selectedItems={selectedItems}
         onConfirmDelete={onConfirmDelete}
@@ -229,10 +229,10 @@ const MenuItemCategories = () => {
   );
 };
 
-export default MenuItemCategories;
-MenuItemCategories.getLayout = function getLayout(page: ReactElement) {
+export default EquipmentItemCategories;
+EquipmentItemCategories.getLayout = function getLayout(page: ReactElement) {
   return (
-    <Layout icon={<BsListUl />} title="Menu Categories">
+    <Layout icon={<BsListUl />} title="Equipment Categories">
       {page}
     </Layout>
   );

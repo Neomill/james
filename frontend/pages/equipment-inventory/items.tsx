@@ -70,9 +70,9 @@ const EquipmentItem = () => {
 
   const onConfirmDelete = async () => {
     toast.promise(deletMenuItem(selectedId).unwrap(), {
-      pending: "Deleting menu...",
-      error: "Error deleting menu!",
-      success: "Menu deleted successfully!",
+      pending: "Deleting Equipment...",
+      error: "Error deleting equipment!",
+      success: "Equipment deleted successfully!",
     });
     setSelectedId("");
     onModalClose();
@@ -155,7 +155,7 @@ const EquipmentItem = () => {
       {
         Header: "Category",
         accessor: "equipment_category.name",
-        Cell: (props: any) => <div>{props.value || "N/A"}</div>,
+        Cell: (props: any) => <div>{props.value}</div>,
       },
       {
         Header: "Qty",
@@ -221,11 +221,11 @@ const EquipmentItem = () => {
     ],
     []
   );
-  if (!checkPermissions(["read-menu-item"], user.roles)) {
+  if (!checkPermissions(["read-equipment-item"], user.roles)) {
+    console.log(user.roles)
     return <Forbidden />;
   }
   if (error){
-    console.log(error)
     return <p>Ooops. Something went wrong!</p>;
   }
   if (isLoading) return <Loading />;
@@ -235,22 +235,22 @@ const EquipmentItem = () => {
         <form onSubmit={methods.handleSubmit(onSubmitSearch)}>
           <ActionTableMenu
             sortOptions={sortOptions}
-            title="Menu"
+            title="Equipment Inventory"
             onSubmit={onSubmitSearch}
             operations={
               <BulkOperations
                 bulkDelete={selectedItems.length > 0}
-                model="menu-item"
+                model="equipment-item"
                 onModalOpen={onModalOpen}
                 page={page}
                 totalPages={data.totalPages}
               />
             }
           >
-            {checkPermissions(["create-menu-item"], user.roles) && (
+            {checkPermissions(["create-equipment-item"], user.roles) && (
               <>
                 <Button
-                  onClick={() => router.push("/menu/bulk-add")}
+                  onClick={() => router.push("/equipment-inventory/bulk-add")}
                   icon={<BsPlusCircle />}
                   size="medium"
                   label="Add Equipment"

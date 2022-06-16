@@ -230,7 +230,7 @@ const MenuItem = () => {
         <form onSubmit={methods.handleSubmit(onSubmitSearch)}>
           <ActionTableMenu
             sortOptions={sortOptions}
-            title="Menu"
+            title="Product inventory"
             onSubmit={onSubmitSearch}
             operations={
               <BulkOperations

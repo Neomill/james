@@ -11,12 +11,12 @@ import { Button } from "@/components/Button";
 import Input from "@/components/Input";
 import { toast } from "react-toastify";
 import {
-  useCreateMenuItemCategoryMutation,
-  useGetMenuItemCategoryByIdQuery,
-  useUpdateMenuItemCategoryMutation,
-} from "@/redux/services/menuItemCategoriesAPI";
+  useCreateEquipmentItemCategoryMutation,
+  useGetEquipmentItemCategoryByIdQuery,
+  useUpdateEquipmentItemCategoryMutation,
+} from "@/redux/services/equipmentItemCategoriesAPI";
 
-const MenuItemCategorySchema = yup
+const EquipmentItemCategorySchema = yup
   .object({
     name: yup.string().required(),
   })
@@ -27,17 +27,17 @@ interface Props {
   id?: string;
 }
 
-export const MenuItemCategoryForm: React.VFC<Props> = ({ onClose, id }) => {
+export const EquipmentItemCategoryForm: React.VFC<Props> = ({ onClose, id }) => {
   const methods = useForm({
-    resolver: yupResolver(MenuItemCategorySchema),
+    resolver: yupResolver(EquipmentItemCategorySchema),
   });
   const [create, { isLoading: isCreating }] =
-    useCreateMenuItemCategoryMutation();
-  const [update, result] = useUpdateMenuItemCategoryMutation();
+    useCreateEquipmentItemCategoryMutation();
+  const [update, result] = useUpdateEquipmentItemCategoryMutation();
 
   if (id) {
     const { data: category, isLoading: isUpdating } =
-      useGetMenuItemCategoryByIdQuery(id, {
+      useGetEquipmentItemCategoryByIdQuery(id, {
         pollingInterval: 3000,
         refetchOnMountOrArgChange: true,
         skip: false,

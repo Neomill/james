@@ -24,6 +24,7 @@ router.post(
   body("cost_price").isNumeric().toFloat().notEmpty(),
   body("selling_price").isNumeric().toFloat().notEmpty(),
   body("qty").isInt().toInt().notEmpty(),
+  body("equipment_category_id").isInt().toInt().notEmpty(),
   equipmentItemController.create
 );
 

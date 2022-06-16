@@ -112,6 +112,7 @@ export const EquipmentItemForm: React.FC<Props> = ({
       },
     };
   }
+
   if (id) {
     const { data: item, isLoading: isUpdating } = useGetEquipmentItemByIdQuery(id, {
       // pollingInterval: 3000,
@@ -155,6 +156,7 @@ export const EquipmentItemForm: React.FC<Props> = ({
     if (!virtualId && !isBulkAdd) {
       data.equipment_category_id = data.equipment_category_id.value;
     }
+    console.log(data)
     try {
       if (id) {
         if (typeof data.image === "string") {
@@ -165,16 +167,16 @@ export const EquipmentItemForm: React.FC<Props> = ({
           }
           delete data.image;
           toast.promise(updateEquipmentItem({ id, ...data }), {
-            pending: "Updating Menu...",
-            success: "Menu updated successfully!",
-            error: "Error updating menu!",
+            pending: "Updating Equipment...",
+            success: "Equipment updated successfully!",
+            error: "Error updating Equipment!",
           });
         } else {
           console.log("dids");
           toast.promise(updateEquipmentItem({ id, ...data }), {
-            pending: "Updating Menu...",
-            success: "Menu updated successfully!",
-            error: "Error updating menu!",
+            pending: "Updating Equipment...",
+            success: "Equipment updated successfully!",
+            error: "Error updating Equipment!",
           });
         }
       } else if (virtualId) {

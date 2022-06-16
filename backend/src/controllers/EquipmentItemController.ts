@@ -169,6 +169,8 @@ class EquipmentController {
         qty: Number(qty),
         image_url: API_URL + req.file?.filename
       };
+
+      console.log(data)
       if (equipment_category_id) {
         Object.assign(data, {
           equipment_category: {
@@ -187,12 +189,13 @@ class EquipmentController {
         });
       }
 
+      console.log(data)
       const transaction = await model.create({
         data: {
           ...data
         },
       });
-      return res.status(200).send(transaction);
+      return res.status(200).send(data);
     } catch (error: any) {
       await unlink("public/" + req.file?.filename + "");
       return res.status(404).send(error.message);
@@ -294,7 +297,7 @@ class EquipmentController {
             id: Number(req.params.id),
           },
           data: {
-            image_url: encodedImgUrlBToA,  
+            image_url: API_URL + req.file?.filename  
           },
         });
       }
