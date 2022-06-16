@@ -2,42 +2,35 @@ import ActionButton from "@/components/ActionButton";
 import ActionTableMenu from "@/components/ActionTableMenu";
 import BulkOperations from "@/components/BulkOperations";
 import { Button } from "@/components/Button";
-import CategoryModalManager from "@/components/Category/CategoryModalManager";
 import Forbidden from "@/components/Forbidden";
 import Layout from "@/components/Layout";
 import Loading from "@/components/Loading";
-import MenuItemCategoryModalManager from "@/components/MenuItemCategory/CategoryModalManager";
+import EquipmentItemModalManager from "@/components/EquipmentItems/EquipmentItemModalManager";
 import Pagination from "@/components/Pagination";
 import StyledTable from "@/components/StyledTable";
 import { useAuth } from "@/hooks/useAuth";
 import { useAppSelector } from "@/redux/hooks";
 import {
-  useDeleteCategoryMutation,
-  useSearchCategoryQuery,
-} from "@/redux/services/categoriesAPI";
-import {
-  useDeleteMenuItemCategoryMutation,
-  useSearchMenuItemCategoryQuery,
-} from "@/redux/services/menuItemCategoriesAPI";
+  useDeleteEquipmentItemMutation,
+  useSearchEquipmentItemsQuery,
+} from "@/redux/services/equipmentItemsAPI";
 import checkPermissions from "@/utils/checkPermissions";
-import dayjs from "dayjs";
+import { numberWithCommas } from "@/utils/numberWithCommas";
+import Image from "next/image";
+import { useRouter } from "next/router";
 import { ReactElement, useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { BsListUl, BsPlusCircle } from "react-icons/bs";
+import { BsCardList, BsPlusCircle } from "react-icons/bs";
 import { toast } from "react-toastify";
-
-const MenuItemCategories = () => {
+const EquipmentItem = () => {
   const [page, setPage] = useState(0);
-  const [deleteCategory] = useDeleteMenuItemCategoryMutation();
-  const [selectedItems, setSelectedItems] = useState([]);
-  const [selectedId, setSelectedId] = useState("");
   const [modal, setModal] = useState<string>("");
-  const { user } = useAuth();
+  const [selectedId, setSelectedId] = useState("");
   const { filters, sortBy } = useAppSelector((state) => state.filters);
-
-  //---SEARCH FUNCTIONS
+  const router = useRouter();
+  const { user } = useAuth();
   const [query, setQuery] = useState("");
-  const { data, error, isLoading } = useSearchMenuItemCategoryQuery({
+  const { data, error, isLoading } = useSearchEquipmentItemsQuery({
     page,
     query,
     ...filters,
@@ -53,16 +46,17 @@ const MenuItemCategories = () => {
 
     return () => {};
   }, [filters, data]);
+
   const methods = useForm();
   const onSubmitSearch = (data) => {
     setPage(0);
     setQuery(data.search);
   };
   //---
-
   const onModalOpen = (event, id?) => {
     event.preventDefault();
     const modal = event.currentTarget.getAttribute("data-modal");
+
     if (id) {
       setSelectedId(id);
     }
@@ -71,12 +65,14 @@ const MenuItemCategories = () => {
   const onModalClose = () => {
     setModal("");
   };
+  const [deletMenuItem] = useDeleteEquipmentItemMutation();
+  const [selectedItems, setSelectedItems] = useState([]);
 
   const onConfirmDelete = async () => {
-    toast.promise(deleteCategory(selectedId).unwrap(), {
-      success: "Category deleted successfully!",
-      error: "Error deleting category!",
-      pending: "Deleting category...",
+    toast.promise(deletMenuItem(selectedId).unwrap(), {
+      pending: "Deleting Equipment...",
+      error: "Error deleting equipment!",
+      success: "Equipment deleted successfully!",
     });
     setSelectedId("");
     onModalClose();
@@ -106,6 +102,22 @@ const MenuItemCategories = () => {
             value: { selector: "name", value: 1 },
           },
           {
+            title: "Quantity: Low to High",
+            value: { selector: "qty", value: 0 },
+          },
+          {
+            title: "Quantity: High to Low",
+            value: { selector: "qty", value: 1 },
+          },
+          {
+            title: "Cost Price: Low to High",
+            value: { selector: "price", value: 0 },
+          },
+          {
+            title: "Cost Price: High to Low",
+            value: { selector: "price", value: 1 },
+          },
+          {
             title: "Last Created",
             value: { selector: "createdAt", value: 1 },
           },
@@ -118,6 +130,7 @@ const MenuItemCategories = () => {
     ],
     []
   );
+
   const columns = useMemo<any>(
     () => [
       {
@@ -125,35 +138,79 @@ const MenuItemCategories = () => {
         accessor: "id",
       },
       {
+        Header: "Image",
+        accessor: "image_url",
+        Cell: (props: any) => (
+          <img
+            className="rounded-lg w-20 h-20 object-cover"
+            src={props.value ? props.value : "/shydan.jpg"}
+            alt="No Image Available"
+          />
+        ),
+      },
+      {
         Header: "Name",
         accessor: "name",
       },
       {
-        Header: "Date created",
-        accessor: "createdAt",
+        Header: "Category",
+        accessor: "equipment_category.name",
+        Cell: (props: any) => <div>{props.value}</div>,
+      },
+      {
+        Header: "Qty",
+        accessor: "qty",
+      },
+      {
+        Header: "Cost Price",
+        accessor: "cost_price",
         Cell: (props: any) => (
-          <div>{dayjs(props.value).format("MM-DD-YYYY")}</div>
+          <div>
+            &#8369;
+            {numberWithCommas(props.value)}
+          </div>
         ),
+      },
+      {
+        Header: "Selling Price",
+        accessor: "selling_price",
+        Cell: (props: any) => (
+          <div>
+            &#8369;
+            {numberWithCommas(props.value)}
+          </div>
+        ),
+      },
+      {
+        Header: "Remark",
+        accessor: "remark",
       },
       {
         Header: "Actions",
         Cell: (props: any) => (
-          <div className=" flex flex-row gap-4 items-center">
+          <div className="flex items-center flex-row gap-4 min-w-fit">
+            {/* {checkPermissions(["update-menu-item"], user.roles) && (
+              <ActionButton
+                data-modal="restock-menu-item-modal"
+                onClick={(e) => onModalOpen(e, props.row.original.id)}
+                action="add"
+              />
+            )} */}
             <ActionButton
-              data-modal="view-menu-item-category-modal"
+              data-modal="view-equipment-item-modal"
               onClick={(e) => onModalOpen(e, props.row.original.id)}
               action="view"
             />
-            {checkPermissions(["update-menu-item-category"], user.roles) && (
+            {checkPermissions(["update-equipment-item"], user.roles) && (
               <ActionButton
-                data-modal="edit-menu-item-category-modal"
+                data-modal="edit-equipment-item-modal"
                 onClick={(e) => onModalOpen(e, props.row.original.id)}
                 action="edit"
               />
             )}
-            {checkPermissions(["delete-menu-item-category"], user.roles) && (
+            {checkPermissions(["delete-equipment-item"], user.roles) && (
               <ActionButton
-                data-modal="delete-menu-item-category-modal"
+                data-modal="delete-equipment-item-modal"
                 onClick={(e) => onModalOpen(e, props.row.original.id)}
                 action="delete"
               />
@@ -164,39 +221,39 @@ const MenuItemCategories = () => {
     ],
     []
   );
-  if (!checkPermissions(["read-menu-item-category"], user.roles)) {
+  if (!checkPermissions(["read-equipment-item"], user.roles)) {
+    console.log(user.roles)
     return <Forbidden />;
   }
-  if (error) return <p>Ooops. Something went wrong!</p>;
-
+  if (error){
+    return <p>Ooops. Something went wrong!</p>;
+  }
   if (isLoading) return <Loading />;
-
   return (
     <>
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmitSearch)}>
           <ActionTableMenu
             sortOptions={sortOptions}
+            title="Equipment Inventory"
+            onSubmit={onSubmitSearch}
             operations={
               <BulkOperations
                 bulkDelete={selectedItems.length > 0}
-                model="menu-item-category"
+                model="equipment-item"
                 onModalOpen={onModalOpen}
                 page={page}
                 totalPages={data.totalPages}
               />
             }
-            title="List of Menu Categories"
-            onSubmit={onSubmitSearch}
           >
-            {checkPermissions(["create-menu-item-category"], user.roles) && (
+            {checkPermissions(["create-equipment-item"], user.roles) && (
               <>
                 <Button
-                  data-modal="new-menu-item-category-modal"
-                  onClick={onModalOpen}
+                  onClick={() => router.push("/equipment-inventory/bulk-add")}
                   icon={<BsPlusCircle />}
                   size="medium"
-                  label="Add Category"
+                  label="Add Equipment"
                 />
               </>
             )}
@@ -204,35 +261,39 @@ const MenuItemCategories = () => {
         </form>
       </FormProvider>
       {data ? (
-        <StyledTable
-          setSelectedItems={setSelectedItems}
-          columns={columns}
-          data={data.body}
-        >
-          <Pagination
-            page={page}
-            setPage={setPage}
-            totalPages={data.totalPages}
-          />
-        </StyledTable>
+        <>
+          <StyledTable
+            setSelectedItems={setSelectedItems}
+            columns={columns}
+            data={data.body}
+          >
+            <Pagination
+              page={page}
+              setPage={setPage}
+              totalPages={data.totalPages}
+            />
+          </StyledTable>
+        </>
       ) : (
         "No data available."
       )}
-      <MenuItemCategoryModalManager
+
+      <EquipmentItemModalManager
         closeFn={onModalClose}
         selectedItems={selectedItems}
         onConfirmDelete={onConfirmDelete}
         selectedId={selectedId}
         modal={modal}
-      />
+      ></EquipmentItemModalManager>
     </>
   );
 };
 
-export default MenuItemCategories;
-MenuItemCategories.getLayout = function getLayout(page: ReactElement) {
+export default EquipmentItem;
+
+EquipmentItem.getLayout = function getLayout(page: ReactElement) {
   return (
-    <Layout icon={<BsListUl />} title="Menu Categories">
+    <Layout icon={<BsCardList />} title="Equipment Items">
       {page}
     </Layout>
   );

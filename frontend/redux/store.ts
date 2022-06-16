@@ -17,6 +17,7 @@ import poRequestSlice from "./features/poRequestSlice";
 import filterSlice from "./features/filterSlice";
 import titleSlice from "./features/titleSlice";
 import menuItemSlice from "./features/menuItemSlice";
+import equipmentItemSlice from "./features/equipmentItemSlice"
 import invoiceSlice from "./features/invoiceSlice";
 
 const persistConfig = {
@@ -29,6 +30,7 @@ const rootReducer = combineReducers({
   [reduxAPI.reducerPath]: reduxAPI.reducer,
   items: itemSlice,
   menuItems: menuItemSlice,
+  equipmentItems: equipmentItemSlice,
   auth: authSlice,
   poRequest: poRequestSlice,
   filters: filterSlice,

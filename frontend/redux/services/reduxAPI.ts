@@ -7,7 +7,9 @@ export const reduxAPI = createApi({
   tagTypes: [
     "Item",
     "MenuItem",
+    "EquipmentItem",
     "MenuItemCategory",
+    "EquipmentCategory",
     "ItemLength",
     "LowStockItem",
     "SearchedItem",

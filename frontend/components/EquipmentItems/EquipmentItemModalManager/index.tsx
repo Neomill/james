@@ -1,14 +1,13 @@
 import React from "react";
 import AppModal from "@/components/AppModal";
 import { Button } from "@/components/Button";
-import ItemDetails from "../MenuItemDetails";
 import { PORequestForm } from "@/components/PORequest/PORequestForm";
 import { useDeleteManyItemMutation } from "@/redux/services/itemsAPI";
 import { toast } from "react-toastify";
-import { RestockingForm } from "../MenuRestockingForm";
-import { useDeleteManyMenuItemMutation } from "@/redux/services/menuItemsAPI";
-import MenuItemDetails from "../MenuItemDetails";
-import { MenuItemForm } from "../MenuItemForm";
+import { RestockingForm } from "../EquipmentRestockingForm";
+import { useDeleteManyEquipmentItemMutation } from "@/redux/services/equipmentItemsAPI";
+import EquipmentItemDetails from "../EquipmentItemDetails";
+import { EquipmentItemForm } from "../EquipmentItemForm";
 
 interface Props {
   closeFn: () => void;
@@ -25,44 +24,44 @@ const InventoryModalManager: React.FC<Props> = ({
   onConfirmDelete,
   selectedItems,
 }) => {
-  const [deleteMany] = useDeleteManyMenuItemMutation();
+  const [deleteMany] = useDeleteManyEquipmentItemMutation();
   const onConfirmBulkDelete = async () => {
     toast.promise(deleteMany(selectedItems).unwrap(), {
-      success: "Items deleted successfully!",
-      pending: "Deleting items...",
-      error: "Error deleting items!",
+      success: "Equipment deleted successfully!",
+      pending: "Deleting Equipments...",
+      error: "Error deleting Equipment!",
     });
     closeFn();
   };
   return (
     <>
       <AppModal
-        title="Product Item Details"
+        title="Equipment Item Details"
         onClose={closeFn}
-        isOpen={modal === "view-menu-item-modal"}
+        isOpen={modal === "view-equipment-item-modal"}
       >
-        <MenuItemDetails id={selectedId} onClose={closeFn} />
+        <EquipmentItemDetails id={selectedId} onClose={closeFn} />
       </AppModal>
       <AppModal
-        title="New Product"
+        title="New Equipment"
         onClose={closeFn}
-        isOpen={modal === "new-menu-item-modal"}
+        isOpen={modal === "new-equipment-item-modal"}
       >
-        <MenuItemForm onClose={closeFn} />
+        <EquipmentItemForm onClose={closeFn} />
       </AppModal>
 
       <AppModal
         title="Edit Equipment"
         onClose={closeFn}
-        isOpen={modal === "edit-menu-item-modal"}
+        isOpen={modal === "edit-equipment-item-modal"}
       >
-        <MenuItemForm id={selectedId} onClose={closeFn} />
+        <EquipmentItemForm id={selectedId} onClose={closeFn} />
       </AppModal>
 
       <AppModal
-        title="Restock Item"
+        title="Restock Equipment"
         onClose={closeFn}
-        isOpen={modal === "restock-menu-item-modal"}
+        isOpen={modal === "restock-equipment-item-modal"}
       >
         <RestockingForm id={selectedId} onClose={closeFn} />
       </AppModal>
@@ -70,10 +69,10 @@ const InventoryModalManager: React.FC<Props> = ({
       <AppModal
         title="Delete Item"
         onClose={closeFn}
-        isOpen={modal === "delete-menu-item-modal"}
+        isOpen={modal === "delete-equipment-item-modal"}
       >
         <div className="flex flex-col gap-6">
-          <p>Are you sure you want to delete item id:{selectedId} ?</p>
+          <p>Are you sure you want to Equipment item id:{selectedId} ?</p>
 
           <div className="gap-3 flex flex-col md:flex-row md:justify-end">
             <Button
@@ -94,12 +93,12 @@ const InventoryModalManager: React.FC<Props> = ({
 
       {selectedItems?.length > 0 && (
         <AppModal
-          title="Delete Items"
+          title="Delete Equipment Items"
           onClose={closeFn}
           isOpen={modal === "bulk-delete-menu-item-modal"}
         >
           <div className="flex flex-col gap-6">
-            <p>Are you sure you want to delete the selected items?</p>
+            <p>Are you sure you want to delete the selected Equipment?</p>
             <div className="gap-3 flex flex-col md:flex-row md:justify-end">
               <Button
                 onClick={closeFn}

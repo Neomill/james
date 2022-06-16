@@ -45,6 +45,11 @@ enum InvoicePaymentStatus {
   PAID
 }
 
+enum Remark {
+  EXPIRED
+  GOOD
+}
+
 model User {
   id          Int      @id @default(autoincrement())
   username    String @unique
@@ -310,7 +315,28 @@ model Branch {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   employees     Employee[]
+}
+
+model Equipment{
+  id                   Int              @id @default(autoincrement())
+  name                 String           @unique
+  cost_price               Decimal           @db.Decimal(19, 2) @default(0)
+  selling_price               Decimal           @db.Decimal(19, 2) @default(0)
+  qty                  Int
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+  image_url            String?
+  remark               Remark    @default(GOOD)
+  // relation
+  equipment_category            EquipmentCategory?         @relation(fields: [equipment_category_id], references: [id], onDelete: SetNull, onUpdate: SetNull)
+  equipment_category_id         Int?
 
 }
 
-
+model EquipmentCategory{
+  id                      Int           @id @default(autoincrement())
+  name                    String        @unique
+  createdAt               DateTime      @default(now())
+  updatedAt               DateTime      @updatedAt
+  equipment               Equipment[]
+}

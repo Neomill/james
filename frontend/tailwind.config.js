@@ -18,7 +18,17 @@ module.exports = {
       indigo: colors.indigo,
       yellow: colors.yellow,
       blue:colors.amber,
+      colors: {
+        custom: {
+            DEFAULT: '#10B981',
+            zincmedium: '#3f3f46',
+            zincmediumdark: "#27272a"
+        }
+    }
     },
   },
-  plugins: [require("@tailwindcss/line-clamp")],
+  plugins: [
+    require("@tailwindcss/line-clamp"),
+    require('tailwind-scrollbar')
+  ],
 };

@@ -48,112 +48,144 @@ export const links = [
     href: "/",
     permission: "read-dashboard",
   },
-  {
-    icon: <BsShop />,
-    label: "Point of Sale",
-    href: "/pos",
-    disabled: true,
-    permission: "read-order",
-    children: [
-      {
-        icon: <BsCart />,
-        label: "Orders",
-        href: "/pos/invoices",
-        permission: "read-order",
-      },
-      {
-        icon: <BsPlusCircle />,
-        label: "Add New Order",
-        href: "/pos/add-order/1",
-        permission: "create-order",
-      },
-      {
-        icon: <BsPlusCircle />,
-        label: "Add New Order2",
-        href: "/pos/bulk-add",
-        permission: "create-order",
-      },
-      {
-        icon: <BsReceipt />,
-        label: "Transactions",
-        href: "/pos/transactions",
-        permission: "read-transaction",
-      },
-    ],
-  },
+
   {
     icon: <BsCardList />,
-    label: "Product",
-    href: "/menu",
+    label: "Product Inventory",
+    href: "/product-inventory",
     disabled: true,
     permission: "read-menu-item",
     children: [
       {
         icon: <BsBox />,
-        label: "Items",
-        href: "/menu/items",
+        label: "Products",
+        href: "/product-inventory/items",
         permission: "read-menu-item",
       },
       {
         icon: <BsPlusCircle />,
-        label: "Add Menu",
-        href: "/menu/bulk-add",
+        label: "Add Product",
+        href: "/product-inventory/bulk-add",
         permission: "read-menu-item",
       },
       {
         icon: <BsListUl />,
         label: "Categories",
-        href: "/menu/categories",
+        href: "/product-inventory/categories",
+        permission: "read-menu-item-category",
+      },
+    ],
+  },
+  
+  {
+    icon: <BsCardList />,
+    label: "Equipment Inventory",
+    href: "/equipment-inventory",
+    disabled: true,
+    permission: "read-menu-item", 
+    children: [
+      {
+        icon: <BsBox />,
+        label: "Equipments",
+        href: "/equipment-inventory/items",
+        permission: "read-menu-item",
+      },
+      {
+        icon: <BsPlusCircle />,
+        label: "Add Equipment",
+        href: "/equipment-inventory/bulk-add",
+        permission: "read-menu-item",
+      },
+      {
+        icon: <BsListUl />,
+        label: "Categories",
+        href: "/equipment-inventory/categories",
         permission: "read-menu-item-category",
       },
     ],
   },
 
   {
-    icon: <BsBoxSeam />,
-    label: "Inventory",
-    href: "/inventory",
-    disabled: true,
-    permission: "read-item",
+    icon: <BsReceipt />,
+    label: "Order Transaction",
+    href: "/pos/transactions",
+    permission: "read-transaction",
+  },
 
-    children: [
-      {
-        icon: <BsBox />,
-        label: "Items",
-        href: "/inventory/items",
-        permission: "read-item",
-      },
-      {
-        icon: <BsPlusCircle />,
-        label: "Add Items",
-        href: "/inventory/bulk-add",
-      },
-      {
-        icon: <BsListUl />,
-        label: "Categories",
-        href: "/inventory/categories",
-        permission: "read-category",
-      },
-      {
-        icon: <BsTag />,
-        label: "Brands",
-        href: "/inventory/brands",
-        permission: "read-brand",
-      },
-      {
-        icon: <BsReceipt />,
-        label: "History",
-        href: "/inventory/history",
-        permission: "read-item",
-      },
-    ],
-  },
-  {
-    icon: <BsBoxArrowLeft />,
-    label: "Pull-out Requests",
-    href: "/po-requests",
-    permission: "read-po-request",
-  },
+
+  // {
+  //   icon: <BsShop />,
+  //   label: "Point of Sale",
+  //   href: "/pos",
+  //   disabled: true,
+  //   permission: "read-order",
+  //   children: [
+  //     {
+  //       icon: <BsCart />,
+  //       label: "Orders",
+  //       href: "/pos/invoices",
+  //       permission: "read-order",
+  //     },
+  //     {
+  //       icon: <BsPlusCircle />,
+  //       label: "Add New Order",
+  //       href: "/pos/add-order/1",
+  //       permission: "create-order",
+  //     },
+  //     {
+  //       icon: <BsReceipt />,
+  //       label: "Transactions",
+  //       href: "/pos/transactions",
+  //       permission: "read-transaction",
+  //     },
+  //   ],
+  // },
+
+  // {
+  //   icon: <BsBoxSeam />,
+  //   label: "Inventory",
+  //   href: "/inventory",
+  //   disabled: true,
+  //   permission: "read-item",
+
+  //   children: [
+  //     {
+  //       icon: <BsBox />,
+  //       label: "Items",
+  //       href: "/inventory/items",
+  //       permission: "read-item",
+  //     },
+  //     {
+  //       icon: <BsPlusCircle />,
+  //       label: "Add Items",
+  //       href: "/inventory/bulk-add",
+  //     },
+  //     {
+  //       icon: <BsListUl />,
+  //       label: "Categories",
+  //       href: "/inventory/categories",
+  //       permission: "read-category",
+  //     },
+  //     {
+  //       icon: <BsTag />,
+  //       label: "Brands",
+  //       href: "/inventory/brands",
+  //       permission: "read-brand",
+  //     },
+  //     {
+  //       icon: <BsReceipt />,
+  //       label: "History",
+  //       href: "/inventory/history",
+  //       permission: "read-item",
+  //     },
+  //   ],
+  // },
+  // {
+  //   icon: <BsBoxArrowLeft />,
+  //   label: "Pull-out Requests",
+  //   href: "/po-requests",
+  //   permission: "read-po-request",
+  // },
   {
     icon: <BsPeople />,
     label: "Employees",
