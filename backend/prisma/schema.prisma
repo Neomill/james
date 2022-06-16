@@ -209,11 +209,11 @@ model Transaction{
 
 model Customer{
   id                      Int            @id @default(autoincrement())
-  fname                   String?        @unique
-  lname                   String?        @unique
-  mname                   String?        @unique
-  phone                   String?        @unique
-  address                 String?        @unique
+  fname                   String?        
+  lname                   String?        
+  mname                   String?        
+  phone                   String?        
+  address                 String?        
   createdAt               DateTime       @default(now())
   updatedAt               DateTime       @updatedAt
   transaction             Transaction[]
