@@ -315,10 +315,7 @@ model Branch {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   employees     Employee[]
-
 }
-
-
 
 model Equipment{
   id                   Int              @id @default(autoincrement())
