@@ -31,6 +31,7 @@ export interface InvoiceProps {
   createdAt: string;
   updatedAt: string;
   status: InvoiceStatus;
+  customer_id: string | number;
   payment_status: InvoicePaymentStatus;
   table_id: string | number;
   table: any;
@@ -85,6 +86,7 @@ const InvoiceDetails = ({ id, onClose }: Props) => {
       createTransaction({
         invoice_id: id,
         transaction_code: "JMH_"+ Date.now() + id,
+        customer_id: formVal.customer_id,
         cash: formVal.cash,
       }).unwrap(),
       {
@@ -105,9 +107,6 @@ const InvoiceDetails = ({ id, onClose }: Props) => {
   return (
     <div className="h-full bg-white border rounded-lg   overflow-hidden  sm:grid-cols-3 lg:grid-cols-4 gap-4  w-96 max-w-lg mx-auto">
       <div className="px-4 py-5 sm:px-6">
-        <h3 className="text-base leading-6 font-medium text-gray-900">
-         table {/* Table {data.table.name} */}
-        </h3>
       </div>
       <div className="h-full  text-xs border-t border-gray-300 flex-col ">
         <dl style={{ height: "450px" }} className=" overflow-y-auto">
@@ -164,6 +163,11 @@ const InvoiceDetails = ({ id, onClose }: Props) => {
               <form onSubmit={methods.handleSubmit(handlePayment)}>
                 <div className="sm:grid px-5 pb-4 gap-4">
                   <Input
+                    name="customer_id"
+                    label="Customer id"
+                    placeholder="Customer id"
+                  />
+                  <Input
                     name="cash"
                     isDecimal
                     min={0}
@@ -177,6 +181,20 @@ const InvoiceDetails = ({ id, onClose }: Props) => {
                     className="text-xs"
                     size="medium"
                     label={`Pay`}
+                  />
+                </div>
+              </form>
+            </FormProvider>
+          )}
+          {data.payment_status === "PAID" && (
+            <FormProvider {...methods}>
+              <form onSubmit={methods.handleSubmit(handlePayment)}>
+                <div className="sm:grid px-5 pb-4 gap-4">
+                <Input
+                    name="customer_id"
+                    label="Customer id"
+                    placeholder="Customer id"
+                    value={data.customer_id}
                   />
                 </div>
               </form>

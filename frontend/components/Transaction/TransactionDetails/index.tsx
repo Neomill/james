@@ -109,7 +109,15 @@ const TransactionDetails = ({ id, onClose }: Props) => {
           </div>
           <div className="p-2">
             <PDFDownloadLink
-              document={<ReceiptPDF transaction={data} />}
+              document={
+              <ReceiptPDF 
+                transaction={data} 
+                cfname={data?.customer.fname}  
+                clname={data?.customer.lname}  
+                efname={data?.employee.fname}  
+                elname={data?.employee.lname}  
+                />
+              }
               fileName={`${data.transaction_code}.pdf`}
             >
               {({ blob, url, loading, error }) =>

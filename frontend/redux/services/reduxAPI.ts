@@ -25,6 +25,7 @@ export const reduxAPI = createApi({
     "Invoice",
     "Table",
     "Transaction",
+    "Customer"
   ],
   baseQuery: fetchBaseQuery({
     baseUrl: API,
