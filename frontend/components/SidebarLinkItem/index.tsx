@@ -34,6 +34,9 @@ const RawSideBarLinkItem: React.FC<SidebarItemProps> = ({
   if (href == "/" && href == router.pathname) {
     isActive = true;
   }
+
+  if (href.includes("add-order") && router.pathname.includes("add-order")) isActive = true;
+
   const [toggle, setToggle] = useState(false);
   const mode = isActive ? "text-orange-600" : "text-neutral-400";
   const toggleMode = toggle
