@@ -132,7 +132,7 @@ class TransactionController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const { transaction_code, invoice_id, cash } = req.body;
+    const { transaction_code, invoice_id, cash ,customer_id } = req.body;
     try {
       const invoice = await prisma.invoice.findFirst({
         where: {
@@ -179,7 +179,7 @@ class TransactionController {
           data: {
             transaction_code,
             employee_id: Number(authUser?.employee?.id),
-            customer_id: Number(invoice?.customer.id),
+            customer_id: Number(customer_id),
             invoice_id: Number(invoice?.id),
             price,
             cash,

@@ -58,8 +58,14 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
   },
+  sign:{
+    marginTop:20,
+    pading:30,
+    fontSize:20,
+  }
 });
-const ReceiptPDF = ({ transaction }) => {
+const ReceiptPDF = ({ transaction, cfname, clname, efname, elname }) => {
+  console.log(cfname)
   return (
     <Document>
       <Page style={styles.page}>
@@ -119,7 +125,20 @@ const ReceiptPDF = ({ transaction }) => {
               {numberWithCommas(Number(transaction?.change).toFixed(2))}
             </Text>
           </View>
+          
+          <View style={styles.sign}>
+              <Text>Ordered By :{cfname} {clname}</Text>
+          </View>
+
+          <View style={styles.sign}>
+              <Text></Text>
+          </View>
+
+          <View style={styles.sign}>
+              <Text>Sign By :{efname} {elname}</Text>
+          </View>
         </View>
+
 
         <View style={styles.footer}>
           <Text style={styles.title}>
