@@ -16,6 +16,8 @@ export interface EmployeeProps {
   address: string;
   representative: any;
   position: any;
+  branch_id: string;
+  branch: any;
   position_id: string;
   createdAt: string;
   updatedAt: string;
@@ -40,7 +42,7 @@ const EmployeeDetails = ({ id, onClose }: Props) => {
         <LabeledText label="Middle Name">{data.mname}</LabeledText>
         <LabeledText label="Last Name">{data.lname}</LabeledText>
         <LabeledText label="Phone">{data.phone}</LabeledText>
-        <LabeledText label="Branch">{data.branch_id}</LabeledText>
+        <LabeledText label="Branch">{data.branch.name}</LabeledText>
         <LabeledText label="Address">{data.address}</LabeledText>
         <LabeledText label="Position">{data.position.name}</LabeledText>
         <LabeledText label="Date Created">

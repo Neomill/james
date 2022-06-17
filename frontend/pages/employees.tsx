@@ -178,11 +178,8 @@ const Employees = ({}) => {
         accessor: "position.name",
       },
       {
-        Header: "Date created",
-        accessor: "createdAt",
-        Cell: (props: any) => (
-          <div>{dayjs(props.value).format("MM-DD-YYYY")}</div>
-        ),
+        Header: "Branch",
+        accessor: "branch.name",
       },
       {
         Header: "Actions",
@@ -259,6 +256,7 @@ const Employees = ({}) => {
           columns={columns}
           data={data.body}
         >
+          {console.log(data.body)}
           <Pagination
             page={page}
             setPage={setPage}
