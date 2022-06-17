@@ -106,40 +106,60 @@ export const links = [
   },
 
   {
-    icon: <BsReceipt />,
+    icon: <BsShop />,
     label: "Order Transaction",
-    href: "/pos/transactions",
-    permission: "read-transaction",
+    href: "/order-transaction",
+    disabled: true,
+    permission: "read-order",
+    children: [
+      {
+        icon: <BsCart />,
+        label: "Orders",
+        href: "/order-transaction/invoices",
+        permission: "read-order",
+      },
+      {
+        icon: <BsPlusCircle />,
+        label: "Add New Order",
+        href: "/order-transaction/add-order/1",
+        permission: "create-order",
+      },
+      {
+        icon: <BsReceipt />,
+        label: "Transactions",
+        href: "/order-transaction/transactions",
+        permission: "read-transaction",
+      },
+    ],
   },
 
-
-  // {
-  //   icon: <BsShop />,
-  //   label: "Point of Sale",
-  //   href: "/pos",
-  //   disabled: true,
-  //   permission: "read-order",
-  //   children: [
-  //     {
-  //       icon: <BsCart />,
-  //       label: "Orders",
-  //       href: "/pos/invoices",
-  //       permission: "read-order",
-  //     },
-  //     {
-  //       icon: <BsPlusCircle />,
-  //       label: "Add New Order",
-  //       href: "/pos/add-order/1",
-  //       permission: "create-order",
-  //     },
-  //     {
-  //       icon: <BsReceipt />,
-  //       label: "Transactions",
-  //       href: "/pos/transactions",
-  //       permission: "read-transaction",
-  //     },
-  //   ],
-  // },
+  {
+    icon: <BsShop />,
+    label: "Point of Sale",
+    href: "/pos",
+    disabled: true,
+    permission: "read-order",
+    children: [
+      {
+        icon: <BsCart />,
+        label: "Orders",
+        href: "/pos/invoices",
+        permission: "read-order",
+      },
+      {
+        icon: <BsPlusCircle />,
+        label: "Add New Order",
+        href: "/pos/add-order/1",
+        permission: "create-order",
+      },
+      {
+        icon: <BsReceipt />,
+        label: "Transactions",
+        href: "/pos/transactions",
+        permission: "read-transaction",
+      },
+    ],
+  },
 
   // {
   //   icon: <BsBoxSeam />,

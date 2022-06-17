@@ -32,7 +32,7 @@ const POSReceipt = (props: Props) => {
       }
     );
     dispatch(resetInvoiceState());
-    router.push("/pos/invoices");
+    router.push("/order-transaction/invoices");
   };
   return (
     <div className="h-full bg-white shadow-md  overflow-hidden  sm:grid-cols-3 lg:grid-cols-4 gap-4  w-full max-w-lg mx-auto">
