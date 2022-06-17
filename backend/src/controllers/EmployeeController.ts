@@ -135,6 +135,12 @@ class EmployeeController {
           id: Number(req.params.id),
         },
         include: {
+          branch:{
+            select:{
+              name:true,
+              id:true
+            }
+          },
           position: {
             select: {
               name: true,
@@ -154,7 +160,7 @@ class EmployeeController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const { fname, lname, mname, phone, address, position_id,branch_id = "N/A" } = req.body;
+    const { fname, lname, mname, phone, address, position_id, branch_id = "N/A" } = req.body;
     try {
       const data = await model.create({
         data: {
@@ -163,7 +169,7 @@ class EmployeeController {
           mname,
           phone,
           address, 
-          branch_id,
+          branch_id: Number(branch_id),
           position_id: Number(position_id),
         },
       });

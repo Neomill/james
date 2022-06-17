@@ -17,6 +17,7 @@ const EmployeeSchema = yup
     fname: yup.string().required(),
     lname: yup.string().required(),
     phone: yup.string().required(),
+    branch: yup.string().required(),
     mname: yup.string().required(),
     address: yup.string().required(),
     position_id: yup.string().required(),
@@ -56,6 +57,7 @@ export const EmployeeForm: React.VFC<Props> = ({ onClose, id }) => {
         setValue("mname", employee.mname);
         setValue("phone", employee.phone);
         setValue("address", employee.address);
+        setValue("branch_id", employee.branch_id);
         setValue("position_id", employee.position?.id);
       }
       return () => {};
@@ -109,6 +111,11 @@ export const EmployeeForm: React.VFC<Props> = ({ onClose, id }) => {
               name="phone"
               label="Employee Phone"
               placeholder="Employee Phone"
+            />
+             <Input
+              name="branch_id"
+              label="Branch"
+              placeholder="Branch id"
             />
             <Select
               options={position?.body}

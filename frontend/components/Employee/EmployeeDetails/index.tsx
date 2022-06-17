@@ -33,7 +33,6 @@ const EmployeeDetails = ({ id, onClose }: Props) => {
   if (!data) {
     return <div>Wow! Such empty.</div>;
   }
-
   return (
     <div className="flex flex-col md:flex-row gap-6">
       <div className="grid grid-cols-2 gap-3 w-96">
@@ -41,6 +40,7 @@ const EmployeeDetails = ({ id, onClose }: Props) => {
         <LabeledText label="Middle Name">{data.mname}</LabeledText>
         <LabeledText label="Last Name">{data.lname}</LabeledText>
         <LabeledText label="Phone">{data.phone}</LabeledText>
+        <LabeledText label="Branch">{data.branch_id}</LabeledText>
         <LabeledText label="Address">{data.address}</LabeledText>
         <LabeledText label="Position">{data.position.name}</LabeledText>
         <LabeledText label="Date Created">
