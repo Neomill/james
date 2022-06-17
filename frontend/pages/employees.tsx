@@ -256,7 +256,6 @@ const Employees = ({}) => {
           columns={columns}
           data={data.body}
         >
-          {console.log(data.body)}
           <Pagination
             page={page}
             setPage={setPage}

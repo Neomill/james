@@ -5,6 +5,7 @@ import { RootState } from "../store";
 type User = {
   id: number;
   username: string;
+  employee: any
   roles: Array<{
     id: number;
     name: string;

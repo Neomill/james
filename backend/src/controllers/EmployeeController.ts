@@ -25,6 +25,7 @@ class EmployeeController {
 
   static search = async (req: Request, res: Response) => {
     const {
+      branch,
       position,
       query = "",
       page = 0,
@@ -43,10 +44,18 @@ class EmployeeController {
         },
       },
     ];
+
     position &&
       filters.push({
         position: {
           id: Number(position),
+        },
+      });
+
+    branch &&
+      filters.push({
+        branch: {
+          id: Number(branch),
         },
       });
 
@@ -114,6 +123,12 @@ class EmployeeController {
               select: {
                 name: true,
               },
+            },
+            branch:{
+              select:{
+                name:true,
+                id:true
+              }
             },
           },
 

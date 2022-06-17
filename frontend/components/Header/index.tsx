@@ -9,6 +9,8 @@ type Props = {
   name: string;
   icon?: any;
   title: string;
+  branch_name: string,
+  branch_address: string,
 };
 
 const Header = ({
@@ -16,6 +18,8 @@ const Header = ({
   iconSize = 20,
   name = "Administrator",
   icon = <BsGrid1X2 />,
+  branch_name,
+  branch_address
 }: Props) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -27,7 +31,7 @@ const Header = ({
             <h1 className="text-xl text-neutral-900 font-bold" >
             Login as <p className="capitalize inline text-lg">{name}</p>
             </h1>
-            <p className="text-xs">Branch 1 - Tacloban City</p>
+            <p className="text-xs">{branch_name} - {branch_address}</p>
           </div>
         </div>
         <div className="flex flex-row items-center gap-4">
