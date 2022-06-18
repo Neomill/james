@@ -462,6 +462,7 @@ async function main() {
     let category = faker.commerce.productMaterial();
     let cost_price = faker.datatype.number({ precision: 0.01, max: 1000 });
     let selling_price = cost_price + cost_price * 0.25;
+    const branch_name = `BRANCH-${faker.datatype.number({ min: 1, max: 5 })}`
     const menuItem = await prisma.menuItem.create({
       data: {
         qty,

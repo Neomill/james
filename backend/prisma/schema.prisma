@@ -252,7 +252,8 @@ model MenuItem{
   menu_item_category            MenuItemCategory?         @relation(fields: [menu_item_category_id], references: [id], onDelete: SetNull, onUpdate: SetNull)
   menu_item_category_id         Int?
   menu_item_stock      MenuItemStock[]
-
+  branch                  Branch?         @relation(fields: [branch_id], references: [id],onDelete: Cascade)
+  branch_id               Int?
 }
 
 model MenuItemStock{
@@ -315,6 +316,8 @@ model Branch {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   employees     Employee[]
+  menu_item MenuItem[]
+  equipment_items Equipment[]
 }
 
 model Equipment{
@@ -330,7 +333,8 @@ model Equipment{
   // relation
   equipment_category            EquipmentCategory?         @relation(fields: [equipment_category_id], references: [id], onDelete: SetNull, onUpdate: SetNull)
   equipment_category_id         Int?
-
+  branch                  Branch?         @relation(fields: [branch_id], references: [id],onDelete: Cascade)
+  branch_id           Int?
 }
 
 model EquipmentCategory{
