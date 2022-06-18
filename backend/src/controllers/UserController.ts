@@ -4,6 +4,7 @@ import prisma from "../lib/prisma";
 class UserController {
   static index = async (req: Request, res: Response, next: NextFunction) => {
     const users = await prisma.user.findMany();
+
     res.json(users);
   };
 }

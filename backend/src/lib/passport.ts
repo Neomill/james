@@ -25,7 +25,11 @@ const setupPassport = async () => {
                 permissions: true,
               },
             },
-            employee: true,
+            employee : {
+              include:{
+                branch: true
+              }
+            }
           },
         });
 
@@ -40,6 +44,7 @@ const setupPassport = async () => {
             username: user.username,
             roles: user.roles,
             employee: user.employee,
+            branch: user.employee.branch
           });
         } else {
           return done(null, false, {
@@ -72,7 +77,11 @@ const setupPassport = async () => {
                 permissions: true,
               },
             },
-            employee: true,
+            employee : {
+              include:{
+                branch: true
+              }
+            }
           },
         });
         if (!user) {
@@ -84,6 +93,7 @@ const setupPassport = async () => {
           username: user.username,
           roles: user.roles,
           employee: user.employee,
+          branch: user.employee.branch
         });
       } catch (error) {
         return done(error, false);

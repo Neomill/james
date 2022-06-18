@@ -236,6 +236,8 @@ const Layout: React.FC<Props> = ({
   // let activeLink = links.find((link) => link.href == pathname) || links[1];
   const router = useRouter();
   const { user } = useAuth();
+  const branch_name = user.employee.branch.name
+  const branch_address = user.employee.branch.address
   if (!user) {
     router.push("/auth/sign-in");
   } else {
@@ -253,7 +255,7 @@ const Layout: React.FC<Props> = ({
           <Sidebar links={permittedLinks} />
           <div className="md:ml-64 w-full overflow-x-auto flex flex-col">
             <div className={`${styles["calculated-width"]} fixed top-0`}>
-              <Header title={title} icon={icon} name={user?.username} />
+              <Header title={title} icon={icon} name={user?.username} branch_name={branch_name} branch_address={branch_address}/>
             </div>
             <div className="mt-20 overflow-y-auto md:mt-20 bg-gray-100 h-auto min-h-content p-6">
               <div className={`bg-${bg} w-full flex flex-col gap-3 rounded-lg`}>

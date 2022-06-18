@@ -27,7 +27,7 @@ const ActionTableMenu: React.FC<Props> = ({
   filterOptions,
   sortOptions,
   searchPlaceholder = "Enter your search term...",
-  title = "Shydan",
+  title = "Equipment",
   operations,
 }) => {
   const { register } = useFormContext();
