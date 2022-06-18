@@ -39,6 +39,14 @@ const branchAPI = reduxAPI.injectEndpoints({
       }),
       invalidatesTags: ["Branch"],
     }),
+    updateBranch: builder.mutation({
+      query: ({ id, ...data }) => ({
+        url: `/branch/${id}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Branch"],
+    }),
     deleteBranch: builder.mutation({
       query: (id) => ({
         url: `/branch/${id}`,
@@ -63,6 +71,7 @@ export const {
   useGetAllBranchQuery,
   useCreateBranchMutation,
   useDeleteBranchMutation,
+  useUpdateBranchMutation,
   useSearchBranchQuery,
   useDeleteManyBranchMutation,
 } = branchAPI;

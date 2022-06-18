@@ -28,6 +28,7 @@ import {
   BsReception1,
   BsReception3,
   BsShop,
+  BsShopWindow
 } from "react-icons/bs";
 import Header from "../Header";
 import Loading from "../Loading";
@@ -132,6 +133,14 @@ export const links = [
         permission: "read-transaction",
       },
     ],
+  },
+
+
+  {
+    icon: <BsShopWindow />,
+    label: "Branches",
+    href: "/branch",
+    permission: "read-dashboard",
   },
 
   // {

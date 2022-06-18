@@ -111,13 +111,16 @@ class BranchController {
       if (branch_exist) {
         return res.status(400).send("Branch Already Existed");
       }
+
+      console.log(name)
+      console.log(address)
       const data = await model.create({
         data: {
           name,
           address
         },
       });
-      return res.status(200).send(data);
+      return res.status(200).send();
     } catch (e: any) {
       return res.status(400).send(e.message);
     }
