@@ -11,6 +11,7 @@ type User = {
     name: string;
     permissions: Array<{ id: number; name: string }>;
   }>;
+  branch: Array<{ id: number; name: string ; address:string}>;
 };
 
 type AuthState = {

@@ -209,8 +209,11 @@ const Layout: React.FC<Props> = ({
   // let activeLink = links.find((link) => link.href == pathname) || links[1];
   const router = useRouter();
   const { user } = useAuth();
-  const branch_name = user.employee.branch.name
-  const branch_address = user.employee.branch.address
+  // const branch_name = user.employee.branch.name
+  // const branch_address = user.employee.branch.address
+    const branch_name = "test"
+  const branch_address ="test"
+  console.log(user)
   if (!user) {
     router.push("/auth/sign-in");
   } else {
