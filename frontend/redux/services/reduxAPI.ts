@@ -24,6 +24,7 @@ export const reduxAPI = createApi({
     "Overview",
     "Invoice",
     "Table",
+    "Branch",
     "Transaction",
     "Customer"
   ],

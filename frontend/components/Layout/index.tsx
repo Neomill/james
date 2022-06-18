@@ -121,7 +121,7 @@ export const links = [
       {
         icon: <BsPlusCircle />,
         label: "Add New Order",
-        href: "/order-transaction/add-order/1",
+        href: "/order-transaction/add-order",
         permission: "create-order",
       },
       {

@@ -79,6 +79,10 @@ const permissions = [
   "create-equipment-item-category",
   "update-equipment-item-category",
   "delete-equipment-item-category",
+  "create-branch", //26
+  "read-branch", //27
+  "update-branch", //28
+  "delete-branch", //29
 ];
 
 const rolesData: Prisma.RoleCreateInput[] = [

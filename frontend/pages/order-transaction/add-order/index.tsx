@@ -7,6 +7,7 @@ import POSTableCard from "@/components/POSTableCard";
 import { useAuth } from "@/hooks/useAuth";
 import { useAppSelector } from "@/redux/hooks";
 import { useSearchTableQuery } from "@/redux/services/tablesAPI";
+import { useSearchBranchQuery } from "@/redux/services/branchAPI";
 import checkPermissions from "@/utils/checkPermissions";
 import Link from "next/link";
 import React, { ReactElement, useMemo, useState } from "react";
@@ -21,13 +22,21 @@ const AddOrder = (props: Props) => {
   const { filters, sortBy } = useAppSelector((state) => state.filters);
   const [page, setPage] = useState(0);
   const [query, setQuery] = useState("");
-  const { data, error, isLoading } = useSearchTableQuery({
+  // const { data, error, isLoading } = useSearchTableQuery({
+  //   page,
+  //   query,
+  //   ...filters,
+  //   ...sortBy,
+  // });
+
+
+  const { data, error, isLoading } = useSearchBranchQuery({
     page,
     query,
     ...filters,
     ...sortBy,
   });
-
+  
   const onSubmitSearch = (data) => {
     setPage(0);
     setQuery(data.search);
@@ -38,29 +47,34 @@ const AddOrder = (props: Props) => {
   }
   // if (error) return <p>Ooops. Something went wrong!</p>;
   // if (isLoading) return <Loading />;
+
+
+  // if(data.body.filter(e => e.name === user.employee.branch.name))
+console.log(user)
   return (
     <>
+          {console.log(data)}
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmitSearch)}>
           <ActionTableMenu
-            title="Add New Order"
+            title="Add New Order (Select Branch)"
             onSubmit={onSubmitSearch}
           ></ActionTableMenu>
         </form>
       </FormProvider>
-
       {data && (
         <div className="p-4 flex flex-col gap-6">
           <ul className="grid grid-cols-2 md:grid-cols-3 2xl:grid-cols-5 gap-6 ">
-            {data.body.map((table) => (
+            {data.body.map((branch) => ( 
               <>
                 <POSTableCard
-                  isTaken={table.invoices?.some(
+                  isTaken={branch.invoices?.some(
                     (invoice) => invoice.payment_status === "PENDING"
                   )}
-                  name={`Table ${table.name}`}
-                  key={table.id}
-                  href={`/order-transaction/add-order/${table.id}`}
+                  name={`${branch.name}`}
+                  key={branch.id}
+                  href={`/order-transaction/add-order/${branch.id}`}
+                  branch_address = {branch.address} 
                 />
               </>
             ))}
