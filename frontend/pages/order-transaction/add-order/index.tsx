@@ -49,11 +49,10 @@ const AddOrder = (props: Props) => {
   // if (isLoading) return <Loading />;
 
 
-  // if(data.body.filter(e => e.name === user.employee.branch.name))
-console.log(user)
+// let removeCurrentbranch = data.body.filter(e => e.name != user.employee.branch.name)
+
   return (
     <>
-          {console.log(data)}
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmitSearch)}>
           <ActionTableMenu
@@ -65,7 +64,8 @@ console.log(user)
       {data && (
         <div className="p-4 flex flex-col gap-6">
           <ul className="grid grid-cols-2 md:grid-cols-3 2xl:grid-cols-5 gap-6 ">
-            {data.body.map((branch) => ( 
+            {data.body.map((branch) => {
+            return ( 
               <>
                 <POSTableCard
                   isTaken={branch.invoices?.some(
@@ -77,7 +77,7 @@ console.log(user)
                   branch_address = {branch.address} 
                 />
               </>
-            ))}
+            )})}
           </ul>
           <Pagination
             page={page}
@@ -93,7 +93,7 @@ console.log(user)
 export default AddOrder;
 AddOrder.getLayout = function getLayout(page: ReactElement) {
   return (
-    <Layout icon={<BsPlusCircle />} title="Select Table">
+    <Layout icon={<BsPlusCircle />} title="Select Branch">
       {page}
     </Layout>
   );

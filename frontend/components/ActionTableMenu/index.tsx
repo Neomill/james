@@ -4,6 +4,7 @@ import {
   setFilters,
   setSort,
 } from "@/redux/features/filterSlice";
+import { useAuth } from "@/hooks/useAuth";
 import { useAppDispatch } from "@/redux/hooks";
 import React, { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
@@ -12,6 +13,9 @@ import { options } from "../../stories/Dropdown.stories";
 import BulkOperations from "../BulkOperations";
 import { Button } from "../Button";
 import Dropdown from "../Dropdown";
+import Link from "next/link";
+
+// const { user } = useAuth();
 
 type Props = {
   title: any;
@@ -69,13 +73,17 @@ const ActionTableMenu: React.FC<Props> = ({
     );
   };
 
+
   return (
     <>
-      <div className=" px-6 pb-4 pt-9 flex flex-row justify-between">
+      <div className=" px-6 pb-4 pt-9 flex flex-row justify-between items-end">
         <div className="flex flex-row gap-3 ">
-          <h1 className="text-xl text-neutral-900 font-bold">{title}</h1>
+          <h1 className="text-xl text-neutral-900 w-30 font-bold">{title}</h1>
         </div>
-        <div className=" flex flex-row gap-3">{children}</div>
+        {
+          children &&
+          <div className=" flex flex-row gap-3">{children}</div>
+        }
       </div>
       <hr />
       <div className="w-full  items-center  justify-between gap-3 flex flex-col md:flex-row  py-4 px-6">
