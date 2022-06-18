@@ -108,27 +108,27 @@ export const links = [
 
   {
     icon: <BsShop />,
-    label: "Point of Sale",
-    href: "/pos",
+    label: "Order Transaction",
+    href: "/order-transaction",
     disabled: true,
     permission: "read-order",
     children: [
       {
         icon: <BsCart />,
         label: "Orders",
-        href: "/pos/invoices",
+        href: "/order-transaction/invoices",
         permission: "read-order",
       },
       {
         icon: <BsPlusCircle />,
         label: "Add New Order",
-        href: "/pos/add-order/1",
+        href: "/order-transaction/add-order/",
         permission: "create-order",
       },
       {
         icon: <BsReceipt />,
         label: "Transactions",
-        href: "/pos/transactions",
+        href: "/order-transaction/transactions",
         permission: "read-transaction",
       },
     ],
