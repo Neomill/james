@@ -108,27 +108,27 @@ export const links = [
 
   {
     icon: <BsShop />,
-    label: "Point of Sale",
-    href: "/pos",
+    label: "Order Transaction",
+    href: "/order-transaction",
     disabled: true,
     permission: "read-order",
     children: [
       {
         icon: <BsCart />,
         label: "Orders",
-        href: "/pos/invoices",
+        href: "/order-transaction/invoices",
         permission: "read-order",
       },
       {
         icon: <BsPlusCircle />,
         label: "Add New Order",
-        href: "/pos/add-order/1",
+        href: "/order-transaction/add-order/",
         permission: "create-order",
       },
       {
         icon: <BsReceipt />,
         label: "Transactions",
-        href: "/pos/transactions",
+        href: "/order-transaction/transactions",
         permission: "read-transaction",
       },
     ],
@@ -209,8 +209,15 @@ const Layout: React.FC<Props> = ({
   // let activeLink = links.find((link) => link.href == pathname) || links[1];
   const router = useRouter();
   const { user } = useAuth();
-  const branch_name = user.employee.branch.name
-  const branch_address = user.employee.branch.address
+
+  let branch_name = "not available"
+  let branch_address = "not available"
+  
+  if (user !== null  && user.employee.branch.name)
+  branch_name = user.employee.branch.name
+  if (user !== null && user.employee.branch.address)
+  branch_address = user.employee.branch.address
+
   if (!user) {
     router.push("/auth/sign-in");
   } else {
