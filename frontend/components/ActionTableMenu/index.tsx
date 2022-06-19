@@ -105,7 +105,7 @@ const ActionTableMenu: React.FC<Props> = ({
             outline
           ></Button>
         </div>
-        <div className="flex flex-row gap-3">
+        {/* <div className="flex flex-row gap-3">
           {filterOptions && (
             <Dropdown
               label="Filter"
@@ -133,7 +133,7 @@ const ActionTableMenu: React.FC<Props> = ({
               options={sortOptions}
             />
           )}
-        </div>
+        </div> */}
       </div>
       <hr />
       <div className="w-full  items-center  justify-between gap-3 flex flex-col md:flex-row  py-4 px-9">
