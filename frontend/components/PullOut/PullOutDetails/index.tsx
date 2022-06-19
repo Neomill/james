@@ -9,8 +9,6 @@ type Props = {
 
 export interface PullOutProps {
   id: string;
-  name: string;
-  address:string;
   createdAt: string;
   updatedAt: string;
 }

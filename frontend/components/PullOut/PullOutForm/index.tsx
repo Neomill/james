@@ -1,8 +1,3 @@
-import {
-  useCreateCategoryMutation,
-  useUpdateCategoryMutation,
-  useGetCategoryByIdQuery,
-} from "@/redux/services/categoriesAPI";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useEffect, useState, useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -15,8 +10,8 @@ import {
   useGetPullOutByIdQuery,
   useUpdatePullOutMutation,
 } from "@/redux/services/pullOutAPI";
-import {useSearchMenuItemsQuery} from "@/redux/services/menuItemsAPI";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import {useSearchMenuItemsQuery} from "@/redux/services/menuItemsAPI";
 import AsyncAppSelect from "@/components/AsyncAppSelect";
 
 const PullOutSchema = yup
@@ -31,32 +26,6 @@ interface Props {
 }
 
 export const PullOutForm: React.VFC<Props> = ({ onClose, id }) => {
-
-  const [menuItemsPage, setMenuItemPage] = useState(0);
-    const [menuItemsQuery, setMenuItemQuery] = useState("");
-    const dispatch = useAppDispatch();
-    const { data } = useAppSelector((state) => state.menuItems);
-  
-    const { data: menuItemsAPI } = useSearchMenuItemsQuery({
-      page: menuItemsPage,
-      query: menuItemsQuery,
-    });
-  
-    async function loadMenuItemOptions(search, loadedOptions, { page }) {
-      setMenuItemPage(page);
-      setMenuItemQuery(search);
-      return {
-        options: menuItemsAPI?.body?.map((item) => ({
-          value: item.id,
-          label: item.name,
-        })),
-        hasMore: menuItemsAPI.hasMore,
-        additional: {
-          page: page + 1,
-        },
-      };
-    }
-
   const methods = useForm({
     resolver: yupResolver(PullOutSchema),
   });
@@ -64,35 +33,64 @@ export const PullOutForm: React.VFC<Props> = ({ onClose, id }) => {
     useCreatePullOutMutation();
   const [update, result] = useUpdatePullOutMutation();
 
+  const [menuItemsPage, setMenuItemPage] = useState(0);
+  const [menuItemsQuery, setMenuItemQuery] = useState("");
+  const [description, setDescription] = useState("");
+  const [qty, setQty] = useState("");
+  const dispatch = useAppDispatch();
+  const { data } = useAppSelector((state) => state.menuItems);
+
+  const { data: menuItemsAPI } = useSearchMenuItemsQuery({
+    page: menuItemsPage,
+    query: menuItemsQuery,
+  });
+
+  async function loadMenuItemOptions(search, loadedOptions, { page }) {
+    setMenuItemPage(page);
+    setMenuItemQuery(search);
+    return {
+      options: menuItemsAPI?.body?.map((item) => ({
+        value: item.id,
+        label: item.name,
+      })),
+      hasMore: menuItemsAPI.hasMore,
+      additional: {
+        page: page + 1,
+      },
+    };
+  }
+
   if (id) {
-    const { data: pullOut, isLoading: isUpdating } =
+    const { data: branch, isLoading: isUpdating } =
       useGetPullOutByIdQuery(id, {
         pollingInterval: 3000,
         refetchOnMountOrArgChange: true,
         skip: false,
       });
+
     useEffect(() => {
-      if (pullOut) {
+      if (branch) {
         const { setValue } = methods;
-        setValue("name", pullOut.name);
+        setValue("name", branch.name);
       }
       return () => {};
-    }, [id, pullOut]);
+    }, [id, branch]);
   }
 
   const onSubmit = async (data: any) => {
+    console.log(data)
     try {
       if (id)
         toast.promise(update({ id, ...data }).unwrap(), {
-          success: "Pull Out updated successfully!",
-          error: "Error updating Pull Out!",
-          pending: "Updating Pull Out...",
+          success: "PullOut updated successfully!",
+          error: "Error updating PullOut!",
+          pending: "Updating PullOut...",
         });
       else
         toast.promise(create(data).unwrap(), {
-          success: "Pull Out created successfully!",
-          error: "Error creating Pull Out!",
-          pending: "Creating Pull Out...",
+          success: "PullOut created successfully!",
+          error: "Error creating PullOut!",
+          pending: "Creating PullOut...",
         });
       onClose();
     } catch (error) {
@@ -110,27 +108,29 @@ export const PullOutForm: React.VFC<Props> = ({ onClose, id }) => {
             )}
           >
             <div className="w-96 flex flex-col gap-2 ">
-              <AsyncAppSelect
-                width={`w-50`}
-                name="menu_item"
-                label="product"
-                placeholder="Select Product to Pull Out"
-                loadOptions={loadMenuItemOptions}
-              />
-
-                <Input
-                  name="description"
-                  label="Description"
-                  placeholder="description or reason"
+            <AsyncAppSelect
+                  width={`w-50`}
+                  name="menu_item"
+                  label="product"
+                  placeholder="Select Product to Pull Out"
+                  loadOptions={loadMenuItemOptions}
                 />
-
-                <Input
-                  name="qty"
-                  min={0}
-                  label="Product Quantity"
-                  placeholder="Product Quantity"
-                  type="number"
-                />
+  
+                  <Input
+                    name="description"
+                    label="Description"
+                    placeholder="description or reason"
+                    // onChange={e => setDescription(e.target.value)}
+                  />
+  
+                  <Input
+                    name="qty"
+                    min={0}
+                    label="Product Quantity"
+                    placeholder="Product Quantity"
+                    type="number"
+                    // onChange={e => setQty(e.target.value)}
+                  />
             </div>
           </div>
           <div className="flex flex-col  justify-end md:flex-row gap-3">
