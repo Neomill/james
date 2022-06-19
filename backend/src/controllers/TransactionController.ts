@@ -25,8 +25,11 @@ class TransactionController {
       updatedAt = 1,
       id,
       transaction_code,
+      branch,
+      notbranch,
     } = req.query;
     const filters: any = [];
+    const notThis: any = [];
     let where: any = {
       OR: [
         {
@@ -36,7 +39,23 @@ class TransactionController {
         },
       ],
       AND: filters,
+      NOT: notThis,
     };
+    branch &&
+    filters.push({
+      employee:{
+        branch_id: Number(branch)
+        
+      }
+    });
+    notbranch &&
+    notThis.push({
+      employee:{
+        branch_id: Number(notbranch)
+        
+      }
+    });
+
     let orderBy: any = {};
     if (updatedAt) {
       Object.assign(orderBy, {
@@ -46,7 +65,7 @@ class TransactionController {
       Object.assign(orderBy, {
         transaction_code: Number(transaction_code) ? "desc" : "asc",
       });
-    } else if (id) {
+    } else if (id) {  
       Object.assign(orderBy, {
         id: Number(id) ? "desc" : "asc",
       });
@@ -61,19 +80,20 @@ class TransactionController {
           skip: Number(page) * 10,
           take: TAKE,
           include: {
-            employee: {
-              select: {
-                id: true,
-              },
-            },
-            customer: {
-              select: {
-                fname: true,
-              },
-            },
+            employee: true,
+            customer: true,
             invoice: {
-              select: {
-                id: true,
+              include: {
+                orders: {
+                  include: {
+                    menu_item: {
+                      select: {
+                        name: true,
+                        selling_price: true,
+                      },
+                    },
+                  },
+                },
               },
             },
           },
