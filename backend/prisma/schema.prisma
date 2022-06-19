@@ -344,3 +344,12 @@ model EquipmentCategory{
   updatedAt               DateTime      @updatedAt
   equipment               Equipment[]
 }
+
+model PullOut{
+  id                      Int           @id @default(autoincrement())
+  name                    String        @unique
+  reason                  String?
+  qty                     Int
+  createdAt               DateTime      @default(now())
+  updatedAt               DateTime      @updatedAt
+}

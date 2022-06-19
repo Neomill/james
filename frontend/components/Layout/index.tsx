@@ -28,7 +28,8 @@ import {
   BsReception1,
   BsReception3,
   BsShop,
-  BsShopWindow
+  BsShopWindow,
+  BsBoxArrowInLeft
 } from "react-icons/bs";
 import Header from "../Header";
 import Loading from "../Loading";
@@ -140,6 +141,14 @@ export const links = [
     icon: <BsShopWindow />,
     label: "Branches",
     href: "/branch",
+    permission: "read-branch",
+  },
+
+
+  {
+    icon: <BsBoxArrowInLeft />,
+    label: "Pull Out",
+    href: "/pull-out",
     permission: "read-dashboard",
   },
 

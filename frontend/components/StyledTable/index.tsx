@@ -119,6 +119,11 @@ const StyledTable = ({
     };
   }, [selectedFlatRows]);
 
+  let isPullOutForm = false;
+  for(const column of columns){
+    if (column.Header === "Description") isPullOutForm = true
+  }
+
   return (
     <div
       {...props}
