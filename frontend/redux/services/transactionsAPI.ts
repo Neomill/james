@@ -17,13 +17,13 @@ const transactionsAPI = reduxAPI.injectEndpoints({
     }),
     searchTransactions: builder.query<
       { body: any[]; totalPages: number; hasMore: boolean },
-      { page: number; query: string; order?: number }
+      { page: number; query: string; order?: number , branch: number, notbranch,  }
     >({
       query: (arg) => {
-        const { page = 0, query = "", order = 0, ...rest } = arg;
+        const { page = 0, query = "", order = 0, branch, notbranch, ...rest } = arg;
         return {
           url: "/transaction/search",
-          params: { page, query, order, ...rest },
+          params: { page, query, order,branch, notbranch, ...rest },
         };
       },
       providesTags: ["Transaction"],

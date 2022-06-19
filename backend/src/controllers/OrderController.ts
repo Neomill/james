@@ -42,6 +42,7 @@ class OrderController {
             invoice: {
               select: {
                 id: true,
+                transaction:true
               },
             },
             menu_item: {

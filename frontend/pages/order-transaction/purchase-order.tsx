@@ -40,6 +40,7 @@ const Transactions = () => {
   const { data, error, isLoading } = useSearchTransactionsQuery({
     page,
     query,
+    branch: user.employee.branch_id,
     ...filters,
     ...sortBy,
   });
@@ -58,6 +59,7 @@ const Transactions = () => {
     setPage(0);
     setQuery(data.search);
   };
+
   //---
 
   const onModalOpen = (event, id?) => {
@@ -129,8 +131,32 @@ const Transactions = () => {
         accessor: "transaction_code",
       },
       {
+        Header: "Branch",
+        accessor: "employee.branch_id",
+      },
+      {
         Header: "Price",
         accessor: "price",
+        Cell: (props: any) => (
+          <div>
+            &#8369;
+            {numberWithCommas(props.value)}
+          </div>
+        ),
+      },
+      {
+        Header: "Cash",
+        accessor: "cash",
+        Cell: (props: any) => (
+          <div>
+            &#8369;
+            {numberWithCommas(props.value)}
+          </div>
+        ),
+      },
+      {
+        Header: "Change",
+        accessor: "change",
         Cell: (props: any) => (
           <div>
             &#8369;
@@ -197,7 +223,7 @@ const Transactions = () => {
                 totalPages={data.totalPages}
               />
             }
-            title="List of Transactions"
+            title="Purchase Order"
             onSubmit={onSubmitSearch}
           ></ActionTableMenu>
         </form>
