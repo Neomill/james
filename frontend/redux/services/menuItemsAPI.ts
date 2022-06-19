@@ -18,7 +18,7 @@ const menuMenuItemsAPI = reduxAPI.injectEndpoints({
     }),
     searchMenuItems: builder.query<
       { body: MenuItemProps[]; totalPages: number; hasMore: boolean },
-      { page: number; query: string; order?: number }
+      { page: number; query: string; order?: number  }
     >({
       query: (arg) => {
         const { page = 0, query = "", order = 0, ...rest } = arg;
