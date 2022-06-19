@@ -11,13 +11,9 @@ import StyledTable from "@/components/StyledTable";
 import { useAuth } from "@/hooks/useAuth";
 import { useAppSelector } from "@/redux/hooks";
 import {
-  useDeleteCategoryMutation,
-  useSearchCategoryQuery,
-} from "@/redux/services/categoriesAPI";
-import {
-    useDeleteBranchMutation,
-    useSearchBranchQuery,
-} from "@/redux/services/branchAPI";
+    useDeletePullOutMutation,
+    useSearchPullOutQuery,
+} from "@/redux/services/pullOutAPI";
 import checkPermissions from "@/utils/checkPermissions";
 import dayjs from "dayjs";
 import { ReactElement, useEffect, useMemo, useState } from "react";
@@ -25,9 +21,9 @@ import { FormProvider, useForm } from "react-hook-form";
 import { BsListUl, BsPlusCircle } from "react-icons/bs";
 import { toast } from "react-toastify";
 
-const Branch = () => {
+const PullOut = () => {
   const [page, setPage] = useState(0);
-  const [deleteBranch] = useDeleteBranchMutation();
+  const [deletePullOut] = useDeletePullOutMutation();
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectedId, setSelectedId] = useState("");
   const [modal, setModal] = useState<string>("");
@@ -36,7 +32,7 @@ const Branch = () => {
 
   //---SEARCH FUNCTIONS
   const [query, setQuery] = useState("");
-  const { data, error, isLoading } = useSearchBranchQuery({
+  const { data, error, isLoading } = useSearchPullOutQuery({
     page,
     query,
     ...filters,
@@ -72,10 +68,10 @@ const Branch = () => {
   };
 
   const onConfirmDelete = async () => {
-    toast.promise(deleteBranch(selectedId).unwrap(), {
-      success: "Branch deleted successfully!",
-      error: "Error deleting Branch!",
-      pending: "Deleting branch...",
+    toast.promise(deletePullOut(selectedId).unwrap(), {
+      success: "PullOut deleted successfully!",
+      error: "Error deleting PullOut!",
+      pending: "Deleting PullOut...",
     });
     setSelectedId("");
     onModalClose();
@@ -144,20 +140,20 @@ const Branch = () => {
         Cell: (props: any) => (
           <div className=" flex flex-row gap-4 items-center">
             <ActionButton
-              data-modal="view-branch-modal"
+              data-modal="view-pull-out-modal"
               onClick={(e) => onModalOpen(e, props.row.original.id)}
               action="view"
             />
-            {checkPermissions(["update-branch"], user.roles) && (
+            {checkPermissions(["update-pull-out"], user.roles) && (
               <ActionButton
-                data-modal="edit-branch-modal"
+                data-modal="edit-pull-out-modal"
                 onClick={(e) => onModalOpen(e, props.row.original.id)}
                 action="edit"
               />
             )}
-            {checkPermissions(["delete-branch"], user.roles) && (
+            {checkPermissions(["delete-pull-out"], user.roles) && (
               <ActionButton
-                data-modal="delete-branch-modal"
+                data-modal="delete-pull-out-modal"
                 onClick={(e) => onModalOpen(e, props.row.original.id)}
                 action="delete"
               />
@@ -168,11 +164,13 @@ const Branch = () => {
     ],
     []
   );
-  if (!checkPermissions(["read-branch"], user.roles)) {
+  if (!checkPermissions(["read-pull-out"], user.roles)) {
     return <Forbidden />;
   }
-  if (error) return <p>Ooops. Something went wrong!</p>;
-
+  if (error){
+    console.log(error) 
+    return <p>Ooops. Something went wrong!</p>;
+  }
   if (isLoading) return <Loading />;
 
   return (
@@ -184,19 +182,19 @@ const Branch = () => {
             operations={
               <BulkOperations
                 bulkDelete={selectedItems.length > 0}
-                model="branch"
+                model="pull-out"
                 onModalOpen={onModalOpen}
                 page={page}
                 totalPages={data.totalPages}
               />
             }
-            title="List of Branches"
+            title="List of Pull Out"
             onSubmit={onSubmitSearch}
           >
-            {checkPermissions(["create-branch"], user.roles) && (
+            {checkPermissions(["create-pull-out"], user.roles) && (
               <>
                 <Button
-                  data-modal="new-branch-modal"
+                  data-modal="new-pull-out-modal"
                   onClick={onModalOpen}
                   icon={<BsPlusCircle />}
                   size="medium"
@@ -233,10 +231,10 @@ const Branch = () => {
   );
 };
 
-export default Branch;
-Branch.getLayout = function getLayout(page: ReactElement) {
+export default PullOut;
+PullOut.getLayout = function getLayout(page: ReactElement) {
   return (
-    <Layout icon={<BsListUl />} title="Branch">
+    <Layout icon={<BsListUl />} title="Pull Out">
       {page}
     </Layout>
   );

@@ -11,20 +11,15 @@ import { Button } from "@/components/Button";
 import Input from "@/components/Input";
 import { toast } from "react-toastify";
 import {
-  useCreateBranchMutation,
-  useGetBranchByIdQuery,
-  useUpdateBranchMutation,
-} from "@/redux/services/branchAPI";
+  useCreatePullOutMutation,
+  useGetPullOutByIdQuery,
+  useUpdatePullOutMutation,
+} from "@/redux/services/pullOutAPI";
 import {useSearchMenuItemsQuery} from "@/redux/services/menuItemsAPI";
-import AsyncAppSelect from "@/components/AsyncAppSelect";
-import StyledTable from "@/components/StyledTable";
-import ActionButton from "@/components/ActionButton";
-import {
-  removeMenuItem
-} from "@/redux/features/menuItemSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import AsyncAppSelect from "@/components/AsyncAppSelect";
 
-const BranchSchema = yup
+const PullOutSchema = yup
   .object({
     name: yup.string().required(),
   })
@@ -35,47 +30,69 @@ interface Props {
   id?: string;
 }
 
-export const BranchForm: React.VFC<Props> = ({ onClose, id }) => {
+export const PullOutForm: React.VFC<Props> = ({ onClose, id }) => {
+
+  const [menuItemsPage, setMenuItemPage] = useState(0);
+    const [menuItemsQuery, setMenuItemQuery] = useState("");
+    const dispatch = useAppDispatch();
+    const { data } = useAppSelector((state) => state.menuItems);
+  
+    const { data: menuItemsAPI } = useSearchMenuItemsQuery({
+      page: menuItemsPage,
+      query: menuItemsQuery,
+    });
+  
+    async function loadMenuItemOptions(search, loadedOptions, { page }) {
+      setMenuItemPage(page);
+      setMenuItemQuery(search);
+      return {
+        options: menuItemsAPI?.body?.map((item) => ({
+          value: item.id,
+          label: item.name,
+        })),
+        hasMore: menuItemsAPI.hasMore,
+        additional: {
+          page: page + 1,
+        },
+      };
+    }
+
   const methods = useForm({
-    resolver: yupResolver(BranchSchema),
+    resolver: yupResolver(PullOutSchema),
   });
   const [create, { isLoading: isCreating }] =
-    useCreateBranchMutation();
-  const [update, result] = useUpdateBranchMutation();
-
-  const [selectedId, setSelectedId] = useState("");
-  const [modal, setModal] = useState<string>("");
+    useCreatePullOutMutation();
+  const [update, result] = useUpdatePullOutMutation();
 
   if (id) {
-    const { data: branch, isLoading: isUpdating } =
-      useGetBranchByIdQuery(id, {
+    const { data: pullOut, isLoading: isUpdating } =
+      useGetPullOutByIdQuery(id, {
         pollingInterval: 3000,
         refetchOnMountOrArgChange: true,
         skip: false,
       });
     useEffect(() => {
-      if (branch) {
+      if (pullOut) {
         const { setValue } = methods;
-        setValue("name", branch.name);
+        setValue("name", pullOut.name);
       }
       return () => {};
-    }, [id, branch]);
+    }, [id, pullOut]);
   }
 
-  
   const onSubmit = async (data: any) => {
     try {
       if (id)
         toast.promise(update({ id, ...data }).unwrap(), {
-          success: "Branch updated successfully!",
-          error: "Error updating Branch!",
-          pending: "Updating Branch...",
+          success: "Pull Out updated successfully!",
+          error: "Error updating Pull Out!",
+          pending: "Updating Pull Out...",
         });
       else
         toast.promise(create(data).unwrap(), {
-          success: "Branch created successfully!",
-          error: "Error creating Branch!",
-          pending: "Creating Branch...",
+          success: "Pull Out created successfully!",
+          error: "Error creating Pull Out!",
+          pending: "Creating Pull Out...",
         });
       onClose();
     } catch (error) {
@@ -83,142 +100,47 @@ export const BranchForm: React.VFC<Props> = ({ onClose, id }) => {
     }
   };
 
-  const [menuItemsPage, setMenuItemPage] = useState(0);
-  const [menuItemsQuery, setMenuItemQuery] = useState("");
-  const dispatch = useAppDispatch();
-  const { data } = useAppSelector((state) => state.menuItems);
-
-  const { data: menuItemsAPI } = useSearchMenuItemsQuery({
-    page: menuItemsPage,
-    query: menuItemsQuery,
-  });
-
-  async function loadMenuItemOptions(search, loadedOptions, { page }) {
-    setMenuItemPage(page);
-    setMenuItemQuery(search);
-    return {
-      options: menuItemsAPI?.body?.map((item) => ({
-        value: item.id,
-        label: item.name,
-      })),
-      hasMore: menuItemsAPI.hasMore,
-      additional: {
-        page: page + 1,
-      },
-    };
-  }
-
-  const onModalOpen = (event, id?) => {
-    event.preventDefault();
-    const modal = event.currentTarget.getAttribute("data-modal");
-
-    if (id) {
-      setSelectedId(id);
-    }
-    if (modal) setModal(modal);
-  };
-
-  const columns = useMemo(
-    () => [
-      {
-        Header: "Product Name",
-        accessor: "name",
-      },
-            {
-        Header: "Description",
-        accessor: "description",
-      },
-      {
-        Header: "Qty",
-        accessor: "qty",
-      },
-      {
-        Header: "Actions",
-        Cell: (props: any) => (
-          <div className="flex flex-row gap-3 min-w-fit ">
-            <ActionButton
-              data-modal="edit-virtual-menu-item-modal"
-              onClick={(e) => onModalOpen(e, props.row.original.id)}
-              action="edit"
-            />
-            <ActionButton
-              onClick={(e) =>
-                dispatch(removeMenuItem(Number(props.row.original.id)))
-              }
-              action="delete"
-            />
-          </div>
-        ),
-      },
-    ],
-    []
-  );
-
   return (
     <FormProvider {...methods}>
-      <form className="h-72" onSubmit={methods.handleSubmit(onSubmit)}>
-        <div className={" border-0 flex flex-row gap-5 w-full"}>
+      <form onSubmit={methods.handleSubmit(onSubmit)}>
+        <div className={" border-0 flex flex-col gap-9"}>
           <div
-            className={["justify-between flex flex-row gap-3 w-3/6"].join(
+            className={["justify-between flex flex-col md:flex-row gap-3"].join(
               " "
             )}
           >
-            <div>
+            <div className="w-96 flex flex-col gap-2 ">
               <AsyncAppSelect
-                  width={`w-50`}
-                  name="menu_item"
-                  label="product"
-                  placeholder="Select Product to Pull Out"
-                  loadOptions={loadMenuItemOptions}
-                />
-              <Input
-                name="description"
-                label="Description"
-                placeholder="description or reason"
+                width={`w-50`}
+                name="menu_item"
+                label="product"
+                placeholder="Select Product to Pull Out"
+                loadOptions={loadMenuItemOptions}
               />
-              <Input
-                name="qty"
-                min={0}
-                label="Product Quantity"
-                placeholder="Product Quantity"
-                type="number"
-              />
-              <div className="flex mt-2 flex-col justify-end md:flex-row gap-3">
-                <Button
-                  type="submit"
-                  width="normal"
-                  size="small"
-                  label="Add Product"
+
+                <Input
+                  name="description"
+                  label="Description"
+                  placeholder="description or reason"
                 />
-              </div>
+
+                <Input
+                  name="qty"
+                  min={0}
+                  label="Product Quantity"
+                  placeholder="Product Quantity"
+                  type="number"
+                />
             </div>
           </div>
-          <div className="border w-96 h-12/12 bg-white rounded-lg flex flex-col justify-between">
-          <div className="text-xs w-96 mt-3 overflow-y-auto">
-            <StyledTable
-              minH="100%"
-              fontSize="text-xs"
-              noCheckbox
-              columns={columns}
-              data={data}
-            />
-          </div>
-          {/* {data.length < 1 && ( */}
-            <div className="self-center">No data available.</div>
-          {/* )} */}
-
-          <div className="m-4 flex flex-col  justify-end md:flex-row gap-3 mt-6">
+          <div className="flex flex-col  justify-end md:flex-row gap-3">
             <Button
               type="submit"
               width="wide"
               size="medium"
-              label="Submit"
-              onClick={async () => {
-
-              }}
+              label={id ? "Update" : "Submit"}
             />
           </div>
-      </div>
         </div>
       </form>
     </FormProvider>

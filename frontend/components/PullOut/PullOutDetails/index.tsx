@@ -1,4 +1,4 @@
-import { useGetBranchByIdQuery } from "@/redux/services/branchAPI";
+import { useGetPullOutByIdQuery } from "@/redux/services/pullOutAPI";
 import dayjs from "dayjs";
 import LabeledText from "@/components/LabeledText";
 
@@ -7,7 +7,7 @@ type Props = {
   onClose: () => void;
 };
 
-export interface BranchProps {
+export interface PullOutProps {
   id: string;
   name: string;
   address:string;
@@ -15,8 +15,8 @@ export interface BranchProps {
   updatedAt: string;
 }
 
-const BranchDetails = ({ id, onClose }: Props) => {
-  const { data, isLoading } = useGetBranchByIdQuery(id, {
+const PullOutDetails = ({ id, onClose }: Props) => {
+  const { data, isLoading } = useGetPullOutByIdQuery(id, {
     refetchOnMountOrArgChange: true,
     skip: false,
   });
@@ -44,4 +44,4 @@ const BranchDetails = ({ id, onClose }: Props) => {
   );
 };
 
-export default BranchDetails;
+export default PullOutDetails;
