@@ -129,10 +129,17 @@ export const links = [
       },
       {
         icon: <BsReceipt />,
-        label: "Transactions",
-        href: "/order-transaction/transactions",
+        label: "Sales Order",
+        href: "/order-transaction/sales-order",
         permission: "read-transaction",
       },
+      {
+        icon: <BsReceipt />,
+        label: "Purchase Order",
+        href: "/order-transaction/purchase-order",
+        permission: "read-transaction",
+      },
+
     ],
   },
 
@@ -197,6 +204,12 @@ export const links = [
   //   href: "/po-requests",
   //   permission: "read-po-request",
   // },
+  {
+    icon: <BsPeople />,
+    label: "Customers",
+    href: "/customer",
+    permission: "read-employee",
+  },
   {
     icon: <BsPeople />,
     label: "Employees",

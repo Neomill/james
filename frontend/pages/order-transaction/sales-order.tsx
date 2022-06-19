@@ -1,43 +1,46 @@
 import ActionButton from "@/components/ActionButton";
+import StyledTable from "@/components/StyledTable";
+
+import Pagination from "@/components/Pagination";
+import dayjs from "dayjs";
+import { ReactElement, useEffect, useMemo, useState } from "react";
+import { BsDownload, BsTag } from "react-icons/bs";
+
 import ActionTableMenu from "@/components/ActionTableMenu";
 import BulkOperations from "@/components/BulkOperations";
 import Forbidden from "@/components/Forbidden";
-import InvoiceModalmanager from "@/components/Invoice/InvoiceModalManager";
 import Layout from "@/components/Layout";
 import Loading from "@/components/Loading";
-import Pagination from "@/components/Pagination";
-import StyledTable from "@/components/StyledTable";
-import Tag from "@/components/Tag";
+import TransactionModalManager from "@/components/Transaction/TransactionModalManager";
 import { useAuth } from "@/hooks/useAuth";
 import { useAppSelector } from "@/redux/hooks";
-import { useSearchInvoiceQuery } from "@/redux/services/invoicesAPI";
-import { useDeletePORequestMutation } from "@/redux/services/poRequestAPI";
-import checkPermissions from "@/utils/checkPermissions";
 import {
-  invoicePaymentStatusColorPicker,
-  invoicePaymentStatusText,
-  invoiceStatusColorPicker,
-  invoiceStatusText,
-} from "@/utils/invoiceHelper";
-import dayjs from "dayjs";
-import { useRouter } from "next/router";
-import { ReactElement, useEffect, useMemo, useState } from "react";
+  useDeleteTransactionMutation,
+  useSearchTransactionsQuery,
+} from "@/redux/services/transactionsAPI";
+import checkPermissions from "@/utils/checkPermissions";
+import { numberWithCommas } from "@/utils/numberWithCommas";
+
 import { FormProvider, useForm } from "react-hook-form";
-import { BsCart } from "react-icons/bs";
 import { toast } from "react-toastify";
+import ReceiptPDF from "@/components/ReceiptPDF";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 
-type Props = {};
-
-const Invoices = (props: Props) => {
+const Transactions = () => {
   const [page, setPage] = useState(0);
+  const [deleteTransaction] = useDeleteTransactionMutation();
+  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedId, setSelectedId] = useState("");
+  const [modal, setModal] = useState<string>("");
   const { user } = useAuth();
   const { filters, sortBy } = useAppSelector((state) => state.filters);
 
   //---SEARCH FUNCTIONS
   const [query, setQuery] = useState("");
-  const { data, error, isLoading } = useSearchInvoiceQuery({
+  const { data, error, isLoading } = useSearchTransactionsQuery({
     page,
     query,
+    notbranch: user.employee.branch_id,
     ...filters,
     ...sortBy,
   });
@@ -50,24 +53,16 @@ const Invoices = (props: Props) => {
 
     return () => {};
   }, [filters, data]);
-
   const methods = useForm();
   const onSubmitSearch = (data) => {
     setPage(0);
     setQuery(data.search);
   };
-  //---
-  const router = useRouter();
 
-  const [deletePORequest] = useDeletePORequestMutation();
-  const [selectedItems, setSelectedItems] = useState([]);
-  const [modal, setModal] = useState<string>("");
-  const [selectedId, setSelectedId] = useState("");
 
   const onModalOpen = (event, id?) => {
     event.preventDefault();
     const modal = event.currentTarget.getAttribute("data-modal");
-
     if (id) {
       setSelectedId(id);
     }
@@ -76,61 +71,16 @@ const Invoices = (props: Props) => {
   const onModalClose = () => {
     setModal("");
   };
+
   const onConfirmDelete = async () => {
-    toast.promise(deletePORequest(selectedId).unwrap(), {
-      success: "Request deleted successfully!",
-      error: "Error deleting request!",
-      pending: "Deleting request...",
+    toast.promise(deleteTransaction(selectedId).unwrap(), {
+      success: "Transaction deleted successfully!",
+      error: "Error deleting transaction!",
+      pending: "Deleting transaction...",
     });
     setSelectedId("");
     onModalClose();
   };
-
-  const filterOptions = useMemo(
-    () => [
-      // {
-      //   title: "Status",
-      //   selector: "status",
-      //   sub_options: [
-      //     {
-      //       title: "All",
-      //       value: "",
-      //     },
-      //     {
-      //       title: "In Progress",
-      //       value: "IN_PROGRESS",
-      //     },
-      //     {
-      //       title: "Ready",
-      //       value: "READY",
-      //     },
-      //     {
-      //       title: "Void",
-      //       value: "VOID",
-      //     },
-      //   ],
-      // },
-      {
-        title: "Payment",
-        selector: "payment_status",
-        sub_options: [
-          {
-            title: "All",
-            value: "",
-          },
-          {
-            title: "Pending",
-            value: "PENDING",
-          },
-          {
-            title: "Paid",
-            value: "PAID",
-          },
-        ],
-      },
-    ],
-    []
-  );
 
   const sortOptions = useMemo(
     () => [
@@ -148,12 +98,12 @@ const Invoices = (props: Props) => {
             value: { selector: "id", value: 1 },
           },
           {
-            title: "Table Name: A-Z",
-            value: { selector: "table_name", value: 0 },
+            title: "Transaction Code: A-Z",
+            value: { selector: "transaction_code", value: 0 },
           },
           {
-            title: "Table Name: Z-A",
-            value: { selector: "table_name", value: 1 },
+            title: "Transaction Code: Z-A",
+            value: { selector: "transaction_code", value: 1 },
           },
           {
             title: "Last Created",
@@ -168,7 +118,6 @@ const Invoices = (props: Props) => {
     ],
     []
   );
-
   const columns = useMemo<any>(
     () => [
       {
@@ -176,21 +125,41 @@ const Invoices = (props: Props) => {
         accessor: "id",
       },
       {
-        Header: "Status",
-        accessor: "status",
+        Header: "Transaction Code",
+        accessor: "transaction_code",
+      },
+      {
+        Header: "Branch",
+        accessor: "employee.branch_id",
+      },
+      {
+        Header: "Price",
+        accessor: "price",
         Cell: (props: any) => (
-          <Tag tailwindColor={invoiceStatusColorPicker(props.value)}>
-            {invoiceStatusText(props.value)}
-          </Tag>
+          <div>
+            &#8369;
+            {numberWithCommas(props.value)}
+          </div>
         ),
       },
       {
-        Header: "Payment",
-        accessor: "payment_status",
+        Header: "Cash",
+        accessor: "cash",
         Cell: (props: any) => (
-          <Tag tailwindColor={invoicePaymentStatusColorPicker(props.value)}>
-            {invoicePaymentStatusText(props.value)}
-          </Tag>
+          <div>
+            &#8369;
+            {numberWithCommas(props.value)}
+          </div>
+        ),
+      },
+      {
+        Header: "Change",
+        accessor: "change",
+        Cell: (props: any) => (
+          <div>
+            &#8369;
+            {numberWithCommas(props.value)}
+          </div>
         ),
       },
       {
@@ -203,22 +172,23 @@ const Invoices = (props: Props) => {
       {
         Header: "Actions",
         Cell: (props: any) => (
-          <div className="flex flex-row gap-4 items-center">
+          <div className=" flex flex-row gap-4 items-center">
             <ActionButton
-              data-modal="view-invoice-modal"
+              data-modal="view-transaction-modal"
               onClick={(e) => onModalOpen(e, props.row.original.id)}
               action="receipt"
             />
-            {checkPermissions(["update-invoice"], user.roles) && (
+            {/* {checkPermissions(["update-transaction"], user.roles) && (
               <ActionButton
-                data-modal="edit-invoice-modal"
+                data-modal="edit-transaction-modal"
                 onClick={(e) => onModalOpen(e, props.row.original.id)}
                 action="edit"
               />
             )}
-            {/* {checkPermissions(["delete-invoice"], user.roles) && (
+
+            {checkPermissions(["delete-transaction"], user.roles) && (
               <ActionButton
-                data-modal="delete-invoice-modal"
+                data-modal="delete-transaction-modal"
                 onClick={(e) => onModalOpen(e, props.row.original.id)}
                 action="delete"
               />
@@ -229,11 +199,9 @@ const Invoices = (props: Props) => {
     ],
     []
   );
-
-  if (!checkPermissions(["read-order"], user.roles)) {
+  if (!checkPermissions(["read-transaction"], user.roles)) {
     return <Forbidden />;
   }
-
   if (error) return <p>Ooops. Something went wrong!</p>;
 
   if (isLoading) return <Loading />;
@@ -243,32 +211,19 @@ const Invoices = (props: Props) => {
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmitSearch)}>
           <ActionTableMenu
+            sortOptions={sortOptions}
             operations={
               <BulkOperations
                 bulkDelete={selectedItems.length > 0}
-                model="invoice"
+                model="transaction"
                 onModalOpen={onModalOpen}
                 page={page}
                 totalPages={data.totalPages}
               />
             }
-            filterOptions={filterOptions}
-            sortOptions={sortOptions}
-            title="List of order"
+            title="Sales Order"
             onSubmit={onSubmitSearch}
-          >
-            {/* {checkPermissions(["create-order"], user.roles) && (
-              <Button
-                data-modal="bulk-pull-out-item-modal"
-                onClick={(e) => {
-                  router.push("/po-requests/bulk-add");
-                }}
-                icon={<BsBoxArrowLeft />}
-                size="medium"
-                label="Pull out items"
-              />
-            )} */}
-          </ActionTableMenu>
+          ></ActionTableMenu>
         </form>
       </FormProvider>
       {data ? (
@@ -286,21 +241,22 @@ const Invoices = (props: Props) => {
       ) : (
         "No data available."
       )}
-      <InvoiceModalmanager
+      <TransactionModalManager
         closeFn={onModalClose}
-        selectedId={selectedId}
         selectedItems={selectedItems}
         onConfirmDelete={onConfirmDelete}
+        selectedId={selectedId}
         modal={modal}
       />
     </>
   );
 };
 
-export default Invoices;
-Invoices.getLayout = function getLayout(page: ReactElement) {
+export default Transactions;
+
+Transactions.getLayout = function getLayout(page: ReactElement) {
   return (
-    <Layout icon={<BsCart />} title="Orders">
+    <Layout icon={<BsTag />} title="Transactions">
       {page}
     </Layout>
   );
