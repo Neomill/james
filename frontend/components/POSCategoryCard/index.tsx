@@ -30,7 +30,6 @@ const POSCategoryCard: React.FC<Props> = ({
       }  transition transform duration-200 ease-in flex flex-col items-center justify-center p-2 h-40 rounded-lg `}
     >
       <p className="text-sm font-bold">{children}</p>
-      <p className="text-xs">{"3 items"}</p>
     </li>
   );
 };
