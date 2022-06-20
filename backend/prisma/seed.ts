@@ -127,7 +127,7 @@ const userData: Prisma.UserCreateInput[] = [
         branch: {
           create: {
             name: "BRANCH-1",
-            address: "Fake Address, Unknown City"
+            address: "Tacloban"
           }
         },
         position: {
@@ -156,7 +156,7 @@ const userData: Prisma.UserCreateInput[] = [
         branch: {
           create: {
             name: "BRANCH-2",
-            address: "Fake Address, Unknown City"
+            address: "Tacloban"
           }
         },
         position: {
@@ -185,7 +185,7 @@ const userData: Prisma.UserCreateInput[] = [
         branch: {
           create: {
             name: "BRANCH-3",
-            address: "Fake Address 3, Unknown City"
+            address: "Abuyog"
           }
         },
         position: {
@@ -207,14 +207,14 @@ const userData: Prisma.UserCreateInput[] = [
     employee: {
       create: {
         fname: "Ryan",
-        address: "Fake address 2",
+        address: "Apitong 2",
         lname: "Tillaman",
         mname: "Ben",
         phone: "520-111-555",
         branch: {
           create: {
             name: "BRANCH-4",
-            address: "Fake Address, Unknown City"
+            address: "Manila"
           }
         },
         position: {
@@ -243,7 +243,7 @@ const userData: Prisma.UserCreateInput[] = [
         branch: {
           create: {
             name: "BRANCH-5",
-            address: "Fake Address, Unknown City"
+            address: "NCR"
           }
         },
         position: {
@@ -295,7 +295,7 @@ async function main() {
     console.log(`Created user with id: ${user.id}`);
   }
 
-  const itemLength = 100;
+  const itemLength = 0;
   for (let i = 0; i < itemLength; i++) {
     let cost_price = faker.datatype.number({ precision: 0.01, max: 1000 });
     let selling_price = cost_price + cost_price * 0.25;
@@ -455,34 +455,52 @@ async function main() {
     console.log(`Created po with id: ${po.id}`);
   }
 
-  const menuItemLength = 20;
+  const menuItemLength = 10;
 
   for (let i = 0; i < menuItemLength; i++) {
     let qty = faker.datatype.number({ max: 100 });
-    let category = faker.commerce.productMaterial();
+
+    let eggs = faker.random.arrayElement([
+      'Duck Eggs', 
+      'Quil Eggs', 
+      'Standard White Eggs', 
+      'Omega-3 Eggs',
+      'Organic Eggs', 
+      'Free-Run Eggs',
+      'Free-Range Eggs', 
+      'Vitamin-Enhanced Eggs', 
+      'Vegetarian Eggs', 
+      'Processed Eggs'
+    ])
+    let category = faker.random.arrayElement([
+      'Small', 'Medium', 'Large', 'Exatra Large' ,'Jambo'
+    ])
     let cost_price = faker.datatype.number({ precision: 0.01, max: 1000 });
     let selling_price = cost_price + cost_price * 0.25;
     const branch_name = `BRANCH-${faker.datatype.number({ min: 1, max: 5 })}`
-    const menuItem = await prisma.menuItem.create({
-      data: {
-        qty,
-        cost_price,
-        selling_price,
-        image_url: faker.image.imageUrl(640, 480, "food"),
-        name: faker.commerce.productName() + ` - ${i}`,
-        menu_item_category: {
-          connectOrCreate: {
-            where: {
-              name: category,
-            },
-            create: {
-              name: category,
+    try{
+      const menuItem = await prisma.menuItem.create({
+        data: {
+          qty,
+          cost_price,
+          selling_price,
+          image_url: faker.image.imageUrl(640, 480, "egg"),
+          name: eggs,
+          menu_item_category: {
+            connectOrCreate: {
+              where: {
+                name: category,
+              },
+              create: {
+                name: category,
+              },
             },
           },
         },
-      },
-    });
-    console.log(`Created menuItem with id: ${menuItem.id}`);
+      });
+      console.log(`Created menuItem with id: ${menuItem.id}`);
+    }
+    catch(e){console.log(e)}
   }
 
   // equipment Item Faker
