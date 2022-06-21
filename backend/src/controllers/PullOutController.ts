@@ -82,21 +82,27 @@ class PullOutController {
   };
 
   static create = async (req: Request, res: Response) => {
-    const { name, address } = req.body;
+    const { menu_item, description, qty } = req.body;
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
     try {
-
-      console.log(req.body)
-    //   const data = await model.create({
-    //     data: {
-    //       name,
-    //       address
-    //     },
-    //   });
-      return res.status(200).send();
+      const validData = {
+        menu_item: {
+          connect: {
+            id: menu_item?.value,
+          }
+        },
+        reason: description,
+        qty: qty
+      }
+      console.log(validData)
+      
+      const data = await model.create({
+        data: validData
+      });
+      return res.status(200).send(data);
     } catch (e: any) {
       return res.status(400).send(e.message);
     }
