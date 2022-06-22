@@ -7,13 +7,13 @@ import {
 export const invoiceStatusColorPicker = (status: InvoiceStatus) => {
   switch (status) {
     case "IN_PROGRESS":
-      return "bg-blue-50 text-blue-500";
+      return "bg-amber-50 text-amber-500";
     case "READY":
       return "bg-emerald-50 text-emerald-500";
     case "VOID":
       return "bg-gray-50 text-gray-700";
     default:
-      return "bg-blue-50 text-blue-500";
+      return "bg-amber-50 text-amber-500";
   }
 };
 
@@ -39,7 +39,7 @@ export const invoicePaymentStatusColorPicker = (
     case "PENDING":
       return "bg-amber-50 text-amber-500";
     default:
-      return "bg-blue-50 text-blue-500";
+      return "bg-amber-50 text-amber-500";
   }
 };
 

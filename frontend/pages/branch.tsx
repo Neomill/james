@@ -174,7 +174,7 @@ const Branch = () => {
   if (error) return <p>Ooops. Something went wrong!</p>;
 
   if (isLoading) return <Loading />;
-
+console.log(data)
   return (
     <>
       <FormProvider {...methods}>

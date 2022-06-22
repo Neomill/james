@@ -67,7 +67,7 @@ const ActionButton = ({ action, onClick, ...props }: Props) => {
           <BsEye
             {...props}
             onClick={onClick}
-            className="hover:text-blue-600 text-blue-500 cursor-pointer text-lg"
+            className="hover:text-amber-600 text-amber-500 cursor-pointer text-lg"
           />
         </TooltipContainer>
       );
@@ -97,7 +97,7 @@ const ActionButton = ({ action, onClick, ...props }: Props) => {
           <BsReceipt
             {...props}
             onClick={onClick}
-            className="hover:text-blue-600 text-blue-500 cursor-pointer text-lg"
+            className="hover:text-amber-600 text-amber-500 cursor-pointer text-lg"
           />
         </TooltipContainer>
       );

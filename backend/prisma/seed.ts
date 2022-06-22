@@ -115,14 +115,14 @@ const rolesData: Prisma.RoleCreateInput[] = [
 
 const userData: Prisma.UserCreateInput[] = [
   {
-    username: "shydan_bot",
+    username: "Branch-1",
     password: "password",
     employee: {
       create: {
-        fname: "Shydan",
-        address: "Shydan",
-        lname: "Bot",
-        mname: "Developer",
+        fname: "James",
+        address: "Tacloban",
+        lname: "Master",
+        mname: "Macale",
         phone: "520-666-555",
         branch: {
           create: {
@@ -132,7 +132,7 @@ const userData: Prisma.UserCreateInput[] = [
         },
         position: {
           create: {
-            name: "Shydan Bot",
+            name: "Admin-1",
           },
         },
       },
@@ -144,12 +144,12 @@ const userData: Prisma.UserCreateInput[] = [
     },
   },
   {
-    username: "admin",
+    username: "Branch-2",
     password: "password",
     employee: {
       create: {
         fname: "Anna",
-        address: "Fake address",
+        address: "Leyte",
         lname: "Montana",
         mname: "Gabriel",
         phone: "520-666-555",
@@ -161,7 +161,7 @@ const userData: Prisma.UserCreateInput[] = [
         },
         position: {
           create: {
-            name: "CEO",
+            name: "Admin-2",
           },
         },
       },
@@ -173,7 +173,7 @@ const userData: Prisma.UserCreateInput[] = [
     },
   },
   {
-    username: "attendant",
+    username: "Branch-3",
     password: "password",
     employee: {
       create: {
@@ -190,25 +190,25 @@ const userData: Prisma.UserCreateInput[] = [
         },
         position: {
           create: {
-            name: "Human Resource",
+            name: "Admin-3",
           },
         },
       },
     },
     roles: {
       connect: {
-        name: "attendant",
+        name: "administrator",
       },
     },
   },
   {
-    username: "developer",
+    username: "Branch-4",
     password: "password",
     employee: {
       create: {
-        fname: "Ryan",
-        address: "Apitong 2",
-        lname: "Tillaman",
+        fname: "David",
+        address: "Manila",
+        lname: "Vanroque",
         mname: "Ben",
         phone: "520-111-555",
         branch: {
@@ -219,19 +219,19 @@ const userData: Prisma.UserCreateInput[] = [
         },
         position: {
           create: {
-            name: "Web Developer",
+            name: "Admin-4",
           },
         },
       },
     },
     roles: {
       connect: {
-        name: "developer",
+        name: "administrator",
       },
     },
   },
   {
-    username: "guest",
+    username: "Branch-5",
     password: "password",
     employee: {
       create: {
@@ -248,14 +248,14 @@ const userData: Prisma.UserCreateInput[] = [
         },
         position: {
           create: {
-            name: "Janitor",
+            name: "Admin-5",
           },
         },
       },
     },
     roles: {
       connect: {
-        name: "guest",
+        name: "administrator",
       },
     },
   },
@@ -295,7 +295,7 @@ async function main() {
     console.log(`Created user with id: ${user.id}`);
   }
 
-  const itemLength = 0;
+  const itemLength = 2;
   for (let i = 0; i < itemLength; i++) {
     let cost_price = faker.datatype.number({ precision: 0.01, max: 1000 });
     let selling_price = cost_price + cost_price * 0.25;
@@ -454,54 +454,119 @@ async function main() {
 
     console.log(`Created po with id: ${po.id}`);
   }
+  
+  let category = [
+    'Small', 
+    'Medium', 
+    'Large', 
+  ]
+  let chickenCategory =[    
+    '0-12 Weeks', 
+    '12-52 Weeks', 
+  ]
+  let chickem = [
+    'Chicken Raw Meat',
+    'Chicken  Poultry',
+  ]
+  let eggs = [
+    'Standard White Eggs', 
+    'Organic Eggs', 
+    'Free-Range Eggs', 
+    'Vitamin-Enhanced Eggs', 
+    'Vegetarian Eggs', 
+  ]
+  const branchLength = 5
 
-  const menuItemLength = 10;
 
-  for (let i = 0; i < menuItemLength; i++) {
-    let qty = faker.datatype.number({ max: 100 });
-
-    let eggs = faker.random.arrayElement([
-      'Duck Eggs', 
-      'Quil Eggs', 
-      'Standard White Eggs', 
-      'Omega-3 Eggs',
-      'Organic Eggs', 
-      'Free-Run Eggs',
-      'Free-Range Eggs', 
-      'Vitamin-Enhanced Eggs', 
-      'Vegetarian Eggs', 
-      'Processed Eggs'
-    ])
-    let category = faker.random.arrayElement([
-      'Small', 'Medium', 'Large', 'Exatra Large' ,'Jambo'
-    ])
-    let cost_price = faker.datatype.number({ precision: 0.01, max: 1000 });
-    let selling_price = cost_price + cost_price * 0.25;
-    const branch_name = `BRANCH-${faker.datatype.number({ min: 1, max: 5 })}`
-    try{
-      const menuItem = await prisma.menuItem.create({
-        data: {
-          qty,
-          cost_price,
-          selling_price,
-          image_url: faker.image.imageUrl(640, 480, "egg"),
-          name: eggs,
-          menu_item_category: {
-            connectOrCreate: {
-              where: {
-                name: category,
-              },
-              create: {
-                name: category,
-              },
-            },
-          },
-        },
-      });
-      console.log(`Created menuItem with id: ${menuItem.id}`);
-    }
-    catch(e){console.log(e)}
+  for (let i = 0; i < category.length; i++) {
+        //create category 
+    const categorydata = await prisma.menuItemCategory.create({
+      data:{
+        name:category[i]
+      },
+    })
+    console.log(`Created category with id: ${categorydata.id}`);
   }
+  for (let i = 0; i < chickenCategory.length; i++) {
+        //create category 
+    const categorydata = await prisma.menuItemCategory.create({
+      data:{
+        name:chickenCategory[i],
+      },
+    })
+    console.log(`Created category with id: ${categorydata.id}`);
+  }
+
+  for (let branchId = 0; branchId < branchLength; branchId++) {  
+    for (let  categoryId= 0; categoryId < category.length; categoryId++) {
+      //Egg Menu item
+      for (let i = 0; i < eggs.length; i++) {
+        let qty = faker.datatype.number({ max: 100 });
+        let cost_price = faker.datatype.number({ precision: 0.01, max: 1000 });
+        let selling_price = cost_price + cost_price * 0.25;
+        
+        try{
+          const menuItem = await prisma.menuItem.create({
+            data: {
+              qty,
+              cost_price,
+              selling_price,
+              image_url: faker.image.imageUrl(640, 480, "egg"),
+              name: eggs[i],
+              branch: {
+                connect: {
+                  id: branchId + 1,
+                },
+              },
+              menu_item_category:{
+                connect: {
+                  id: categoryId + 1,
+                },
+              }
+            },
+          });
+          console.log(`Created Egg item with id: ${menuItem.id}`);
+        }
+        catch(e){console.log(e)}
+      }
+      
+      
+    }
+    for (let  categoryId= 0; categoryId < chickenCategory.length; categoryId++) {
+      //chicken Menu item
+      for (let i = 0; i < chickem.length; i++) {
+        let qty = faker.datatype.number({ max: 100 });
+        let cost_price = faker.datatype.number({ precision: 0.01, max: 1000 });
+        let selling_price = cost_price + cost_price * 0.25;
+        console.log(`this is chicken counter ${i}`)
+        try{
+          const chickemitem = await prisma.menuItem.create({
+            data: {
+              qty,
+              cost_price,
+              selling_price,
+              image_url: faker.image.imageUrl(640, 480, "egg"),
+              name: chickem[i],
+              branch: {
+                connect: {
+                  id: branchId + 1,
+                },
+              },
+              menu_item_category:{
+                connect: {
+                  id: categoryId + 4,
+                },
+              }
+            },
+          });
+          console.log(`Created Chicken  item with id: ${chickemitem.id}`);
+        }
+        catch(e){console.log(e)}
+      }
+    }
+  }
+
+ 
 
   // equipment Item Faker
   for (let i = 0; i < 20; i++) {

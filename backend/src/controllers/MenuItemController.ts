@@ -40,6 +40,7 @@ class MenuItemController {
       qty,
       price,
     } = req.query;
+    const authUser: any = req.user;
     const filters: any = [];
     menu_item_category &&
       filters.push({
@@ -57,6 +58,8 @@ class MenuItemController {
         },
       ],
       AND: filters,
+      branch_id: Number(authUser.employee.branch_id) 
+      
     };
     let orderBy: any = {};
     if (updatedAt) {
@@ -95,6 +98,11 @@ class MenuItemController {
                 id: true,
               },
             },
+            // branch:{
+            //   select:{
+            //     name:true
+            //   }
+            // },
             menu_item_category: {
               select: {
                 name: true,
@@ -115,6 +123,7 @@ class MenuItemController {
       }
       return res.status(200).send({ body: data, totalPages, hasMore });
     } catch (e: any) {
+      console.log(e)
       return res.status(400).send(e.message);
     }
   };
@@ -161,6 +170,8 @@ class MenuItemController {
       expiry_date,
       qty,
     } = req.body;
+    const authUser: any = req.user;
+
     try {
       if (!process.env.API_URL) {
         await unlink("public/" + req.file?.filename + "");
@@ -182,6 +193,11 @@ class MenuItemController {
         selling_price: Number(selling_price),
         qty: Number(qty),
         image_url: encodedImgUrlBToA,
+        branch: {
+          connect: {
+            id: authUser.employee.branch_id,
+          },
+        },
       };
       if (menu_item_category_id) {
         Object.assign(data, {
@@ -212,8 +228,10 @@ class MenuItemController {
           },
         },
       });
+      console.log(transaction)
       return res.status(200).send(transaction);
     } catch (error: any) {
+      console.log(error)
       await unlink("public/" + req.file?.filename + "");
       return res.status(404).send(error.message);
     }

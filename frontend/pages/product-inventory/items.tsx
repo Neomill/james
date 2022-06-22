@@ -137,20 +137,14 @@ const MenuItem = () => {
         Header: "#",
         accessor: "id",
       },
-      {
-        Header: "Image",
-        accessor: "image_url",
-        Cell: (props: any) => (
-          <img
-            className="rounded-lg w-20 h-20 object-cover"
-            src={props.value ? props.value : "/shydan.jpg"}
-            alt="No Image Available"
-          />
-        ),
-      },
+
       {
         Header: "Name",
         accessor: "name",
+      },
+      {
+        Header: "Branch",
+        accessor: "branch_id",
       },
       {
         Header: "Category",
@@ -223,7 +217,7 @@ const MenuItem = () => {
   }
   if (error) return <p>Ooops. Something went wrong!</p>;
   if (isLoading) return <Loading />;
-
+console.log(data.body)
   return (
     <>
       <FormProvider {...methods}>

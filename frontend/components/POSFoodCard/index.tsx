@@ -43,12 +43,12 @@ const POSFoodCard: React.FC<Props> = ({
         isTaken ? "bg-gray-50 text-gray-500" : "cursor-pointer "
       } shadow transition transform duration-200 ease-in flex flex-col items-center gap-3  pb-4 rounded-lg `}
     >
-      <img
+      {/* <img
         className="rounded-lg w-full h-32 object-cover"
         src={image_url ? image_url : "/shydan.jpg"}
         alt="No Image Available"
-      />
-      <div className="text-center w-full text-gray-700 justify-between  flex flex-col px-4">
+      /> */}
+      <div className="text-center pt-6 w-full text-gray-700 justify-between  flex flex-col px-4">
         <div className="flex flex-col gap-1 ">
           <p className="text-xs line-clamp-1  font-bold text-ellipsis">
             {name}
@@ -65,14 +65,14 @@ const POSFoodCard: React.FC<Props> = ({
           <div className="mt-3 text-sm gap-4 flex  items-center justify-center">
             <div
               onClick={() => qty > 1 && setQty(qty - 1)}
-              className="text-blue-500 bg-blue-50 w-5 h-5 rounded-sm"
+              className="text-amber-500 bg-amber-50 w-5 h-5 rounded-sm"
             >
               -
             </div>
             <div className="text-xs">{qty}</div>
             <div
               onClick={() => setQty(qty + 1)}
-              className="text-blue-500 bg-blue-50 w-5 h-5 rounded-sm"
+              className="text-amber-500 bg-amber-50 w-5 h-5 rounded-sm"
             >
               +
             </div>

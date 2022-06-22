@@ -260,14 +260,14 @@ const Layout: React.FC<Props> = ({
         )
       )
     );
-
+console.log(user)
     return (
       <>
         <div className="flex flex-row h-screen">
           <Sidebar links={permittedLinks} />
           <div className="md:ml-64 w-full overflow-x-auto flex flex-col">
             <div className={`${styles["calculated-width"]} fixed top-0`}>
-              <Header title={title} icon={icon} name={user?.username} branch_name={branch_name} branch_address={branch_address}/>
+              <Header title={title} icon={icon} role={user.roles[0].name} fname={user.employee.fname} name={user?.username} branch_name={branch_name} branch_address={branch_address}/>
             </div>
             <div className="mt-20 overflow-y-auto md:mt-20 bg-gray-100 h-auto min-h-content p-6">
               <div className={`bg-${bg} w-full flex flex-col gap-3 rounded-lg`}>

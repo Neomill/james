@@ -201,7 +201,7 @@ export const MenuItemForm: React.FC<Props> = ({
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)}>
             <div className={"flex flex-col"}>
-              {id && (
+              {/* {id && (
                 <img
                   className="rounded-lg w-full h-40 object-cover"
                   src={
@@ -211,7 +211,7 @@ export const MenuItemForm: React.FC<Props> = ({
                   }
                   alt="No Image Available"
                 />
-              )}
+              )} */}
               <AsyncAppSelect
                 width={`${!isBulkAdd && "w-96"}`}
                 name="menu_item_category_id"

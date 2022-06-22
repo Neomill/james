@@ -40,7 +40,7 @@ const Dropdown = ({
   const mode =
     outline === false
       ? colorScheme === "primary"
-        ? `bg-blue-500 text-white hover:bg-blue-600`
+        ? `bg-amber-500 text-white hover:bg-amber-600`
         : colorScheme === "secondary"
         ? `bg-gray-500 text-white hover:bg-gray-600 `
         : colorScheme === "warning"
@@ -49,7 +49,7 @@ const Dropdown = ({
         ? `bg-red-500 text-white hover:bg-red-600 `
         : `bg-white text-black`
       : colorScheme === "primary"
-      ? `bg-blue-50 text-blue-500 hover:bg-blue-100 hover:text-blue-600`
+      ? `bg-amber-50 text-amber-500 hover:bg-amber-100 hover:text-amber-600`
       : colorScheme === "secondary"
       ? `bg-gray-50 text-gray-600 hover:bg-gray-100`
       : colorScheme === "warning"

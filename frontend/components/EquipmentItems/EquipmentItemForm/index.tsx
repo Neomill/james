@@ -170,7 +170,7 @@ export const EquipmentItemForm: React.FC<Props> = ({
             error: "Error updating Equipment!",
           });
         } else {
-          console.log("dids");
+
           toast.promise(updateEquipmentItem({ id, ...data }), {
             pending: "Updating Equipment...",
             success: "Equipment updated successfully!",

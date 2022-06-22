@@ -3,7 +3,7 @@ export const poRequestReasonColorPicker = (
 ) => {
   switch (status) {
     case "OVERSTOCKING":
-      return "bg-blue-50 text-blue-500";
+      return "bg-amber-50 text-amber-500";
     case "BAD_ORDER":
       return "bg-amber-50 text-amber-500";
     case "OTHERS":
@@ -13,7 +13,7 @@ export const poRequestReasonColorPicker = (
     case "STOCK_TRANSFER":
       return "bg-orange-50 text-orange-500";
     default:
-      return "bg-blue-50 text-blue-500";
+      return "bg-amber-50 text-amber-500";
   }
 };
 
@@ -43,7 +43,7 @@ export const poRequestStatusColorPicker = (status: "PENDING" | "RETURNED") => {
     case "RETURNED":
       return "bg-emerald-50 text-emerald-500";
     default:
-      return "bg-blue-50 text-blue-500";
+      return "bg-amber-50 text-amber-500";
   }
 };
 

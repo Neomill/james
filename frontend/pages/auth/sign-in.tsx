@@ -43,13 +43,13 @@ const SignIn = () => {
     router.push("/");
   } else {
     return (
-      <div className="text-gray-700 items-center justify-center flex flex-col h-screen bg-blue-50">
+      <div className="text-gray-700 items-center justify-center flex flex-col h-screen bg-amber-50">
         <div className="relative flex flex-col gap-4 bg-white w-80  rounded-2xl p-9 shadow-sm">
-          <div className="transition duration-150 ease-in-out hover:-translate-y-1 hover:scale-110 flex flex-col items-center justify-center -top-6 -right-5 absolute h-20 w-20 rounded-2xl bg-blue-500 shadow-lg shadow-blue-500/50">
+          <div className="transition duration-150 ease-in-out hover:-translate-y-1 hover:scale-110 flex flex-col items-center justify-center -top-6 -right-5 absolute h-20 w-20 rounded-2xl bg-amber-500 shadow-lg shadow-amber-500/50">
             <MdOutlineLock className="w-9 h-9 text-white" />
           </div>
           <div>
-            <h4 className="text-blue-500 font-bold">Poultry</h4>
+            <h4 className="text-amber-500 font-bold">Poultry</h4>
             <h1 className="font-bold text-2xl">Log In to James Poultry</h1>
           </div>
           <FormProvider {...methods}>

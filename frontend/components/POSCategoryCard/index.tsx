@@ -26,7 +26,7 @@ const POSCategoryCard: React.FC<Props> = ({
       className={`${
         isTaken
           ? "bg-gray-50 text-gray-500"
-          : "cursor-pointer hover:scale-110  bg-blue-50 text-blue-500"
+          : "cursor-pointer hover:scale-110  bg-amber-50 text-amber-500"
       }  transition transform duration-200 ease-in flex flex-col items-center justify-center p-2 h-40 rounded-lg `}
     >
       <p className="text-sm font-bold">{children}</p>
