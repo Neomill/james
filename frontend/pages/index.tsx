@@ -104,8 +104,8 @@ const Dashboard = ({}) => {
           </Stat>
           <Stat
             label="Transactions"
-            color="text-blue-500"
-            bg="bg-blue-50"
+            color="text-amber-500"
+            bg="bg-amber-50"
             variant="clean"
             icon={<BsReceipt />}
           >
@@ -142,8 +142,8 @@ const Dashboard = ({}) => {
           </Stat>
           <Stat
             label="Transactions"
-            color="text-blue-500"
-            bg="bg-blue-50"
+            color="text-amber-500"
+            bg="bg-amber-50"
             variant="clean"
             icon={<BsReceipt />}
           >
@@ -180,8 +180,8 @@ const Dashboard = ({}) => {
           </Stat>
           <Stat
             label="Transactions"
-            color="text-blue-500"
-            bg="bg-blue-50"
+            color="text-amber-500"
+            bg="bg-amber-50"
             variant="clean"
             icon={<BsReceipt />}
           >
@@ -218,8 +218,8 @@ const Dashboard = ({}) => {
           </Stat>
           <Stat
             label="Transactions"
-            color="text-blue-500"
-            bg="bg-blue-50"
+            color="text-amber-500"
+            bg="bg-amber-50"
             variant="clean"
             icon={<BsReceipt />}
           >
@@ -256,8 +256,8 @@ const Dashboard = ({}) => {
           </Stat>
           <Stat
             label="Transactions"
-            color="text-blue-500"
-            bg="bg-blue-50"
+            color="text-amber-500"
+            bg="bg-amber-50"
             variant="clean"
             icon={<BsReceipt />}
           >
@@ -294,8 +294,8 @@ const Dashboard = ({}) => {
           </Stat>
           <Stat
             label="Transactions"
-            color="text-blue-500"
-            bg="bg-blue-50"
+            color="text-amber-500"
+            bg="bg-amber-50"
             variant="clean"
             icon={<BsReceipt />}
           >
@@ -332,8 +332,8 @@ const Dashboard = ({}) => {
           </Stat>
           <Stat
             label="Transactions"
-            color="text-blue-500"
-            bg="bg-blue-50"
+            color="text-amber-500"
+            bg="bg-amber-50"
             variant="clean"
             icon={<BsReceipt />}
           >

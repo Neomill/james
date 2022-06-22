@@ -216,7 +216,6 @@ CREATE TABLE `MenuItem` (
     `menu_item_category_id` INTEGER NULL,
     `branch_id` INTEGER NULL,
 
-    UNIQUE INDEX `MenuItem_name_key`(`name`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 

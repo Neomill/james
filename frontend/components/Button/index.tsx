@@ -57,7 +57,7 @@ export const Button = ({
   const mode =
     outline === false
       ? colorScheme === "primary"
-        ? `bg-blue-500 text-white hover:bg-blue-600`
+        ? `bg-amber-500 text-white hover:bg-amber-600`
         : colorScheme === "secondary"
         ? `bg-gray-300 text-neutral-700 hover:bg-gray-400 `
         : colorScheme === "warning"
@@ -70,7 +70,7 @@ export const Button = ({
         ? `bg-orange-400 text-white hover:bg-orange-400 `
         : `bg-white text-black`
       : colorScheme === "primary"
-      ? `bg-blue-50 text-blue-500 hover:bg-blue-100 hover:text-blue-600`
+      ? `bg-amber-50 text-amber-500 hover:bg-amber-100 hover:text-amber-600`
       : colorScheme === "secondary"
       ? `bg-gray-50 text-black hover:bg-gray-100`
       : colorScheme === "warning"

@@ -30,7 +30,8 @@ export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <Head>
-          <title>James Hatchery</title>
+          <title> James Hatchery</title>
+          <link rel="icon" href="/logo.png" /> 
           <meta
             name="viewport"
             content="initial-scale=1.0, width=device-width"

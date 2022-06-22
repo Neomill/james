@@ -220,7 +220,6 @@ export const InventoryForm: React.FC<Props> = ({
     );
     useEffect(() => {
       if (virtualItem) {
-        console.log(virtualItem);
         setValue("name", virtualItem.name);
         setValue("qty", virtualItem.qty);
         setValue("desc", virtualItem.desc);

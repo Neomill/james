@@ -99,7 +99,7 @@ const BulkCreateMenuItem = (props: Props) => {
   return (
     <div className="px-6 py-6 flex flex-col gap-6">
       <div className=" max-w-fit">
-        <Link href="/menu/items" passHref>
+        <Link href="/product-inventory/items" passHref>
           <a>
             <Button
               icon={<BsArrowLeft />}

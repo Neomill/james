@@ -137,17 +137,17 @@ const EquipmentItem = () => {
         Header: "#",
         accessor: "id",
       },
-      {
-        Header: "Image",
-        accessor: "image_url",
-        Cell: (props: any) => (
-          <img
-            className="rounded-lg w-20 h-20 object-cover"
-            src={props.value ? props.value : "/shydan.jpg"}
-            alt="No Image Available"
-          />
-        ),
-      },
+      // {
+      //   Header: "Image",
+      //   accessor: "image_url",
+      //   Cell: (props: any) => (
+      //     <img
+      //       className="rounded-lg w-20 h-20 object-cover"
+      //       src={props.value ? props.value : "/shydan.jpg"}
+      //       alt="No Image Available"
+      //     />
+      //   ),
+      // },
       {
         Header: "Name",
         accessor: "name",

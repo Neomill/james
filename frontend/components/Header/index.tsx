@@ -11,6 +11,8 @@ type Props = {
   title: string;
   branch_name: string,
   branch_address: string,
+  fname:string,
+  role:string,
 };
 
 const Header = ({
@@ -19,7 +21,9 @@ const Header = ({
   name = "Administrator",
   icon = <BsGrid1X2 />,
   branch_name,
-  branch_address
+  branch_address,
+  fname,
+  role,
 }: Props) => {
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -29,9 +33,9 @@ const Header = ({
         <div className="flex flex-row items-center gap-4">
           <div>
             <h1 className="text-xl text-neutral-900 font-bold" >
-            Login as <p className="capitalize inline text-lg">{name}</p>
+              Login as {role && 'Admin'}, <p className="capitalize inline text-lg">{branch_address}</p>
             </h1>
-            <p className="text-xs">{branch_name} - {branch_address}</p>
+            <p className="text-xs">User : {fname}</p>
           </div>
         </div>
         <div className="flex flex-row items-center gap-4">
@@ -41,7 +45,7 @@ const Header = ({
           <IconContext.Provider
             value={{
               className:
-                "cursor-pointer hover:text-red-500 transition ease-in-out duration-200",
+                " cursor-pointer hover:text-red-500 transition rounded-full ease-in-out duration-200",
               size: `${iconSize}`,
               color:'red'
             }}

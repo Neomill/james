@@ -238,7 +238,7 @@ model Order{
 
 model MenuItem{
   id                   Int              @id @default(autoincrement())
-  name                 String           @unique
+  name                 String           
   cost_price               Decimal           @db.Decimal(19, 2) @default(0)
   selling_price               Decimal           @db.Decimal(19, 2) @default(0)
   qty                  Int

@@ -4,13 +4,13 @@ import { ItemStatus } from "@/components/Inventory/ItemDetails";
 export const itemStatusColorPicker = (status: ItemStatus) => {
   switch (status) {
     case "IN_STOCK":
-      return "bg-blue-50 text-blue-500";
+      return "bg-amber-50 text-amber-500";
     case "LOW_STOCK":
       return "bg-amber-50 text-amber-500";
     case "OUT_OF_STOCK":
       return "bg-gray-50 text-gray-700";
     default:
-      return "bg-blue-50 text-blue-500";
+      return "bg-amber-50 text-amber-500";
   }
 };
 
@@ -34,7 +34,7 @@ export const itemConditionColorPicker = (status: ItemCondition) => {
     case "EXPIRED":
       return "bg-red-50 text-red-500";
     default:
-      return "bg-blue-50 text-blue-500";
+      return "bg-amber-50 text-amber-500";
   }
 };
 

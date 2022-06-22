@@ -27,7 +27,7 @@ const Pagination = ({ page, setPage, totalPages }: Props) => {
         className={`${
           page === 0
             ? "bg-gray-50 cursor-not-allowed"
-            : "bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700"
+            : "bg-amber-50 text-amber-600 hover:bg-amber-100 hover:text-amber-700"
         } items-center justify-center text-center flex rounded-lg  cursor-pointer  font-bold text-sm w-9 h-9 mr-2`}
       >
         <BsChevronLeft />
@@ -41,7 +41,7 @@ const Pagination = ({ page, setPage, totalPages }: Props) => {
         className={`${
           page === totalPages
             ? "bg-gray-50 cursor-not-allowed"
-            : "bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700"
+            : "bg-amber-50 text-amber-600 hover:bg-amber-100 hover:text-amber-700"
         }  items-center justify-center text-center flex rounded-lg cursor-pointer  font-bold text-xs w-9 h-9 ml-2`}
       >
         <BsChevronRight />

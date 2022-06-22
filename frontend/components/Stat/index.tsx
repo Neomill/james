@@ -14,8 +14,8 @@ const Stat: React.FC<Props> = ({
   variant = "solid",
   label,
   icon,
-  color = "text-blue-500",
-  bg = "bg-blue-50",
+  color = "text-amber-500",
+  bg = "bg-amber-50",
   children,
 }) => {
   switch (variant) {

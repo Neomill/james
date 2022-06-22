@@ -68,12 +68,12 @@ Danger.args = {
 // Large.args = {
 //   size: "large",
 //   label: "Button",
-//   color: "blue",
+//   color: "amber",
 // };
 
 // export const Small = Template.bind({});
 // Small.args = {
 //   size: "small",
 //   label: "Button",
-//   color: "blue",
+//   color: "amber",
 // };
