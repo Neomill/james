@@ -173,18 +173,6 @@ class MenuItemController {
     const authUser: any = req.user;
 
     try {
-      if (!process.env.API_URL) {
-        await unlink("public/" + req.file?.filename + "");
-        return res.status(400).json("Please add an API_URL to your env");
-      }
-      if (!req.file) {
-        return res.status(400).send("Please upload an image.");
-      }
-      const API_URL = process.env.API_URL;
-
-      // encode img_url string to base64 to ensure data during transport
-      const rawUrl = API_URL + req.file?.filename
-      const encodedImgUrlBToA = Buffer.from(rawUrl).toString('base64')
 
       let data: any = {
         name,
@@ -192,7 +180,6 @@ class MenuItemController {
         cost_price: Number(cost_price),
         selling_price: Number(selling_price),
         qty: Number(qty),
-        image_url: encodedImgUrlBToA,
         branch: {
           connect: {
             id: authUser.employee.branch_id,

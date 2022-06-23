@@ -134,9 +134,9 @@ const BulkCreateMenuItem = (props: Props) => {
               label="Submit"
               onClick={async () => {
                 if (data.length > 0) {
+                  console.log(data)
                   let parsedData = data.map((d) => {
                     const formData = new FormData();
-                    formData.append("image", d.image[0]);
                     formData.append(
                       "menu_item_category_id",
                       d.menu_item_category_id.value
@@ -152,6 +152,7 @@ const BulkCreateMenuItem = (props: Props) => {
                     }
                     toast.success("Items added successfully!");
                   } catch (error) {
+                    console.log(error)
                     toast.error("Error adding items.");
                   }
                   dispatch(resetMenuItemState());

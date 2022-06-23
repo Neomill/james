@@ -215,7 +215,9 @@ CREATE TABLE `MenuItem` (
     `expiry_date` DATETIME(3) NULL,
     `menu_item_category_id` INTEGER NULL,
     `branch_id` INTEGER NULL,
+    `pull_out_id` INTEGER NULL,
 
+    UNIQUE INDEX `MenuItem_pull_out_id_key`(`pull_out_id`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -325,13 +327,11 @@ CREATE TABLE `EquipmentCategory` (
 -- CreateTable
 CREATE TABLE `PullOut` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(191) NOT NULL,
     `reason` VARCHAR(191) NULL,
     `qty` INTEGER NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
-    UNIQUE INDEX `PullOut_name_key`(`name`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -406,6 +406,9 @@ ALTER TABLE `MenuItem` ADD CONSTRAINT `MenuItem_menu_item_category_id_fkey` FORE
 
 -- AddForeignKey
 ALTER TABLE `MenuItem` ADD CONSTRAINT `MenuItem_branch_id_fkey` FOREIGN KEY (`branch_id`) REFERENCES `Branch`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `MenuItem` ADD CONSTRAINT `MenuItem_pull_out_id_fkey` FOREIGN KEY (`pull_out_id`) REFERENCES `PullOut`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `MenuItemStock` ADD CONSTRAINT `MenuItemStock_menu_item_id_fkey` FOREIGN KEY (`menu_item_id`) REFERENCES `MenuItem`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

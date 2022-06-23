@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { validationResult } from "express-validator";
+import { body, validationResult } from "express-validator";
 import { TAKE } from "../lib/constants";
 import prisma from "../lib/prisma";
 const model = prisma.invoice;
@@ -113,49 +113,55 @@ class InvoiceController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const { fname, lname, mname, phone, address, orders, table_id } = req.body;
+    // const { fname, lname, mname, phone, address, orders, table_id } = req.body;
+    console.log(req.body)
     try {
       let sanitized_orders = [];
-      for (const order of orders) {
-        const menu_item = await prisma.menuItem.findFirst({
-          where: {
-            id: Number(order.menu_item_id),
-          },
-          select: {
-            id: true,
-            selling_price: true,
-            qty: true,
-            name: true,
-          },
-        });
-        if (Number(order?.qty) > Number(menu_item?.qty)) {
-          return res.status(400).send(`${menu_item?.name} is out of stock`);
-        }
-        sanitized_orders.push({
-          ...order,
-          price: menu_item?.selling_price,
-        });
-      }
-      const invoice = await model.create({
-        data: {
-          customer: {
-            create: {
-              fname,
-              lname,
-              mname,
-              phone,
-              address,
-            },
-          },
-          orders: {
-            createMany: {
-              data: sanitized_orders,
-            },
-          },
-        },
-      });
+      // for (const order of orders) {
+      //   const menu_item = await prisma.menuItem.findFirst({
+      //     where: {
+      //       id: Number(order.menu_item_id),
+      //     },
+      //     select: {
+      //       id: true,
+      //       selling_price: true,
+      //       qty: true,
+      //       name: true,
+      //     },
+      //   });
+      //   if (Number(order?.qty) > Number(menu_item?.qty)) {
+      //     console.log(`${menu_item?.name} is out of stock`)
+      //     return res.status(400).send(`${menu_item?.name} is out of stock`);
+      //   }
+      //   sanitized_orders.push({
+      //     ...order,
+      //     price: menu_item?.selling_price,
+      //   });
+      // }
 
-      return res.status(200).send(invoice);
+      // const invoice = await model.create({
+      //   data: {
+      //     customer: {
+      //       create: {
+      //         fname,
+      //         lname,
+      //         mname,
+      //         phone,
+      //         address,
+      //       },
+      //     },
+      //     orders: {
+      //       createMany: {
+      //         data: sanitized_orders,
+      //       },
+      //     },
+      //   },
+      // });
+
+      // return res.status(200).send(invoice);
+
+      
+      return res.status(200).send();
     } catch (error: any) {
       return res.status(404).send(error.message);
     }

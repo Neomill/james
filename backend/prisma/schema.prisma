@@ -309,6 +309,8 @@ model Invoice{
   transaction         Transaction?
   customer            Customer          @relation(fields: [customer_id], references: [id])
   customer_id         Int
+    branch                  Branch?         @relation(fields: [branch_id], references: [id],onDelete: SetNull)
+  branch_id           Int?
 }
 
 model Branch {
@@ -320,6 +322,7 @@ model Branch {
   employees     Employee[]
   menu_item MenuItem[]
   equipment_items Equipment[]
+  invoices  Invoice[]
 }
 
 model Equipment{
