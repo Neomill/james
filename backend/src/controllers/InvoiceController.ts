@@ -83,6 +83,7 @@ class InvoiceController {
       }
       return res.status(200).send({ body: data, totalPages, hasMore });
     } catch (e: any) {
+      console.log(e)
       return res.status(400).send(e.message);
     }
   };
