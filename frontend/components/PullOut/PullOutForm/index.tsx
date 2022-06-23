@@ -1,8 +1,3 @@
-import {
-  useCreateCategoryMutation,
-  useUpdateCategoryMutation,
-  useGetCategoryByIdQuery,
-} from "@/redux/services/categoriesAPI";
 import { yupResolver } from "@hookform/resolvers/yup";
 import React, { useEffect, useState, useMemo } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -11,22 +6,19 @@ import { Button } from "@/components/Button";
 import Input from "@/components/Input";
 import { toast } from "react-toastify";
 import {
-  useCreateBranchMutation,
-  useGetBranchByIdQuery,
-  useUpdateBranchMutation,
-} from "@/redux/services/branchAPI";
+  useCreatePullOutMutation,
+  useGetPullOutByIdQuery,
+  useUpdatePullOutMutation,
+} from "@/redux/services/pullOutAPI";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import {useSearchMenuItemsQuery} from "@/redux/services/menuItemsAPI";
 import AsyncAppSelect from "@/components/AsyncAppSelect";
-import StyledTable from "@/components/StyledTable";
-import ActionButton from "@/components/ActionButton";
-import {
-  removeMenuItem
-} from "@/redux/features/menuItemSlice";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 
-const BranchSchema = yup
+const PullOutSchema = yup
   .object({
-    name: yup.string().required(),
+    menu_item: yup.object().optional(),
+    description: yup.string().required(),
+    qty: yup.number().moreThan(-1).integer().required(),
   })
   .required();
 
@@ -35,56 +27,18 @@ interface Props {
   id?: string;
 }
 
-export const BranchForm: React.VFC<Props> = ({ onClose, id }) => {
+export const PullOutForm: React.VFC<Props> = ({ onClose, id }) => {
   const methods = useForm({
-    resolver: yupResolver(BranchSchema),
+    resolver: yupResolver(PullOutSchema),
   });
   const [create, { isLoading: isCreating }] =
-    useCreateBranchMutation();
-  const [update, result] = useUpdateBranchMutation();
-
-  const [selectedId, setSelectedId] = useState("");
-  const [modal, setModal] = useState<string>("");
-
-  if (id) {
-    const { data: branch, isLoading: isUpdating } =
-      useGetBranchByIdQuery(id, {
-        pollingInterval: 3000,
-        refetchOnMountOrArgChange: true,
-        skip: false,
-      });
-    useEffect(() => {
-      if (branch) {
-        const { setValue } = methods;
-        setValue("name", branch.name);
-      }
-      return () => {};
-    }, [id, branch]);
-  }
-
-  
-  const onSubmit = async (data: any) => {
-    try {
-      if (id)
-        toast.promise(update({ id, ...data }).unwrap(), {
-          success: "Branch updated successfully!",
-          error: "Error updating Branch!",
-          pending: "Updating Branch...",
-        });
-      else
-        toast.promise(create(data).unwrap(), {
-          success: "Branch created successfully!",
-          error: "Error creating Branch!",
-          pending: "Creating Branch...",
-        });
-      onClose();
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
+    useCreatePullOutMutation();
+  const [update, result] = useUpdatePullOutMutation();
 
   const [menuItemsPage, setMenuItemPage] = useState(0);
   const [menuItemsQuery, setMenuItemQuery] = useState("");
+  const [description, setDescription] = useState("");
+  const [qty, setQty] = useState("");
   const dispatch = useAppDispatch();
   const { data } = useAppSelector((state) => state.menuItems);
 
@@ -108,117 +62,97 @@ export const BranchForm: React.VFC<Props> = ({ onClose, id }) => {
     };
   }
 
-  const onModalOpen = (event, id?) => {
-    event.preventDefault();
-    const modal = event.currentTarget.getAttribute("data-modal");
+  var pullOutitemName: any;
+  if (id) {
+    const { data: pullOut, isLoading: isUpdating } =
+      useGetPullOutByIdQuery(id, {
+        pollingInterval: 3000,
+        refetchOnMountOrArgChange: true,
+        skip: false,
+      });
 
-    if (id) {
-      setSelectedId(id);
+    if (pullOut)
+    pullOutitemName = pullOut.menu_item.name
+
+    useEffect(() => {
+      if (pullOut) {
+        const { setValue } = methods;
+        setValue("description", pullOut.reason);
+        setValue("qty", pullOut.qty);
+
+      }
+      return () => {};
+    }, [id, pullOut]);
+  }
+
+  const onSubmit = async (data: any) => {
+    try {
+      if (id)
+        toast.promise(update({ id, ...data }).unwrap(), {
+          success: "PullOut updated successfully!",
+          error: "Error updating PullOut!",
+          pending: "Updating PullOut...",
+        });
+      else
+        toast.promise(create(data).unwrap(), {
+          success: "PullOut created successfully!",
+          error: "Error creating PullOut!",
+          pending: "Creating PullOut...",
+        });
+      onClose();
+    } catch (error) {
+      console.error(error.message);
     }
-    if (modal) setModal(modal);
   };
-
-  const columns = useMemo(
-    () => [
-      {
-        Header: "Product Name",
-        accessor: "name",
-      },
-            {
-        Header: "Description",
-        accessor: "description",
-      },
-      {
-        Header: "Qty",
-        accessor: "qty",
-      },
-      {
-        Header: "Actions",
-        Cell: (props: any) => (
-          <div className="flex flex-row gap-3 min-w-fit ">
-            <ActionButton
-              data-modal="edit-virtual-menu-item-modal"
-              onClick={(e) => onModalOpen(e, props.row.original.id)}
-              action="edit"
-            />
-            <ActionButton
-              onClick={(e) =>
-                dispatch(removeMenuItem(Number(props.row.original.id)))
-              }
-              action="delete"
-            />
-          </div>
-        ),
-      },
-    ],
-    []
-  );
 
   return (
     <FormProvider {...methods}>
-      <form className="h-72" onSubmit={methods.handleSubmit(onSubmit)}>
-        <div className={" border-0 flex flex-row gap-5 w-full"}>
+      <form onSubmit={methods.handleSubmit(onSubmit)}>
+        <div className={" border-0 flex flex-col gap-9"}>
           <div
-            className={["justify-between flex flex-row gap-3 w-3/6"].join(
+            className={["justify-between flex flex-col md:flex-row gap-3"].join(
               " "
             )}
           >
-            <div>
-              <AsyncAppSelect
+            <div className="w-96 flex flex-col gap-2 ">
+
+                {
+                  (id) ? 
+                  <h1>{pullOutitemName}</h1> :
+                  <AsyncAppSelect
                   width={`w-50`}
                   name="menu_item"
                   label="product"
                   placeholder="Select Product to Pull Out"
                   loadOptions={loadMenuItemOptions}
                 />
-              <Input
-                name="description"
-                label="Description"
-                placeholder="description or reason"
-              />
-              <Input
-                name="qty"
-                min={0}
-                label="Product Quantity"
-                placeholder="Product Quantity"
-                type="number"
-              />
-              <div className="flex mt-2 flex-col justify-end md:flex-row gap-3">
-                <Button
-                  type="submit"
-                  width="normal"
-                  size="small"
-                  label="Add Product"
-                />
-              </div>
+                }
+  
+                  <Input
+                    name="description"
+                    label="Description"
+                    placeholder="description or reason"
+                    // onChange={e => setDescription(e.target.value)}
+                  />
+  
+                  <Input
+                    name="qty"
+                    min={0}
+                    label="Product Quantity"
+                    placeholder="Product Quantity"
+                    type="number"
+                    // onChange={e => setQty(e.target.value)}
+                  />
             </div>
           </div>
-          <div className="border w-96 h-12/12 bg-white rounded-lg flex flex-col justify-between">
-          <div className="text-xs w-96 mt-3 overflow-y-auto">
-            <StyledTable
-              minH="100%"
-              fontSize="text-xs"
-              noCheckbox
-              columns={columns}
-              data={data}
-            />
-          </div>
-          {/* {data.length < 1 && ( */}
-            <div className="self-center">No data available.</div>
-          {/* )} */}
-
-          <div className="m-4 flex flex-col  justify-end md:flex-row gap-3 mt-6">
+          <div className="flex flex-col  justify-end md:flex-row gap-3">
             <Button
               type="submit"
               width="wide"
               size="medium"
-              label="Submit"
-              onClick={async () => {
-
-              }}
+              label={id ? "Update" : "Submit"}
             />
           </div>
-      </div>
         </div>
       </form>
     </FormProvider>

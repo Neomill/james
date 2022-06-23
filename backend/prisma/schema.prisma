@@ -254,6 +254,8 @@ model MenuItem{
   menu_item_stock      MenuItemStock[]
   branch                  Branch?         @relation(fields: [branch_id], references: [id],onDelete: Cascade)
   branch_id               Int?
+  pull_out            PullOut?         @relation(fields: [pull_out_id], references: [id],onDelete: Cascade)
+  pull_out_id           Int?
 }
 
 model MenuItemStock{
@@ -347,7 +349,7 @@ model EquipmentCategory{
 
 model PullOut{
   id                      Int           @id @default(autoincrement())
-  name                    String        @unique
+  menu_item               MenuItem?      
   reason                  String?
   qty                     Int
   createdAt               DateTime      @default(now())

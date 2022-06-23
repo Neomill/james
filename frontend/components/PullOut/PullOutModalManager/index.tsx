@@ -1,9 +1,9 @@
 import AppModal from "@/components/AppModal";
 import { Button } from "@/components/Button";
-import { useDeleteManyBranchMutation } from "@/redux/services/branchAPI";
+import { useDeleteManyPullOutMutation } from "@/redux/services/pullOutAPI";
 import { toast } from "react-toastify";
-import BranchDetails from "../PullOutDetails";
-import { BranchForm } from "../PullOutForm";
+import PullOutDetails from "../PullOutDetails";
+import { PullOutForm } from "../PullOutForm";
 
 const PullOutModalManager = ({
   closeFn = () => null,
@@ -12,7 +12,7 @@ const PullOutModalManager = ({
   onConfirmDelete,
   selectedItems,
 }) => {
-  const [deleteMany] = useDeleteManyBranchMutation();
+  const [deleteMany] = useDeleteManyPullOutMutation();
   const onConfirmBulkDelete = async () => {
     toast.promise(deleteMany(selectedItems).unwrap(), {
       success: "PullOut deleted successfully!",
@@ -24,35 +24,35 @@ const PullOutModalManager = ({
   return (
     <>
       <AppModal
-        title="Branch Details"
+        title="PullOut Details"
         onClose={closeFn}
-        isOpen={modal === "view-branch-modal"}
+        isOpen={modal === "view-pull-out-modal"}
       >
-        <BranchDetails id={selectedId} onClose={closeFn} />
+        <PullOutDetails id={selectedId} onClose={closeFn} />
       </AppModal>
       <AppModal
         title="New Pull Out"
         onClose={closeFn}
-        isOpen={modal === "new-branch-modal"}
+        isOpen={modal === "new-pull-out-modal"}
       >
-        <BranchForm onClose={closeFn} />
+        <PullOutForm onClose={closeFn} />
       </AppModal>
 
       <AppModal
-        title="Edit Branch"
+        title="Edit PullOut"
         onClose={closeFn}
-        isOpen={modal === "edit-branch-modal"}
+        isOpen={modal === "edit-pull-out-modal"}
       >
-        <BranchForm id={selectedId} onClose={closeFn} />
+        <PullOutForm id={selectedId} onClose={closeFn} />
       </AppModal>
 
       <AppModal
-        title="Delete Branch"
+        title="Delete PullOut"
         onClose={closeFn}
-        isOpen={modal === "delete-branch-modal"}
+        isOpen={modal === "delete-pull-out-modal"}
       >
         <div className="flex flex-col gap-6">
-          <p>Are you sure you want to delete branch id:{selectedId} ?</p>
+          <p>Are you sure you want to delete pull out id:{selectedId} ?</p>
 
           <div className="gap-3 flex flex-col md:flex-row md:justify-end">
             <Button
@@ -72,12 +72,12 @@ const PullOutModalManager = ({
       </AppModal>
       {selectedItems?.length > 0 && (
         <AppModal
-          title="Delete Branch"
+          title="Delete PullOut"
           onClose={closeFn}
-          isOpen={modal === "bulk-branch-modal"}
+          isOpen={modal === "bulk-pull-out-modal"}
         >
           <div className="flex flex-col gap-6">
-            <p>Are you sure you want to delete the selected branches?</p>
+            <p>Are you sure you want to delete the selected PullOut?</p>
             <div className="gap-3 flex flex-col md:flex-row md:justify-end">
               <Button
                 onClick={closeFn}

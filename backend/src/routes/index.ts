@@ -24,6 +24,7 @@ import table from "./table";
 import branch from "./branch";
 import equipmentItem from "./equipmentItem"
 import equipmentItemCategory from "./equipmentItemCategory"
+import pullOut from "./pullOut"
 
 const routes = Router();
 routes.use("/auth", auth);
@@ -124,6 +125,12 @@ routes.use(
   "/equipment-item-category",
   passport.authenticate("jwt", { session: false }),
   equipmentItemCategory
+);
+
+routes.use(
+  "/pull-out",
+  passport.authenticate("jwt", { session: false }),
+  pullOut
 );
 
 export default routes;

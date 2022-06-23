@@ -46,6 +46,7 @@ export const BranchForm: React.VFC<Props> = ({ onClose, id }) => {
       if (branch) {
         const { setValue } = methods;
         setValue("name", branch.name);
+        setValue("address", branch.address);
       }
       return () => {};
     }, [id, branch]);

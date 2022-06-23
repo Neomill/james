@@ -1,4 +1,4 @@
-import { useGetBranchByIdQuery } from "@/redux/services/branchAPI";
+import { useGetPullOutByIdQuery } from "@/redux/services/pullOutAPI";
 import dayjs from "dayjs";
 import LabeledText from "@/components/LabeledText";
 
@@ -7,16 +7,14 @@ type Props = {
   onClose: () => void;
 };
 
-export interface BranchProps {
+export interface PullOutProps {
   id: string;
-  name: string;
-  address:string;
   createdAt: string;
   updatedAt: string;
 }
 
-const BranchDetails = ({ id, onClose }: Props) => {
-  const { data, isLoading } = useGetBranchByIdQuery(id, {
+const PullOutDetails = ({ id, onClose }: Props) => {
+  const { data, isLoading } = useGetPullOutByIdQuery(id, {
     refetchOnMountOrArgChange: true,
     skip: false,
   });
@@ -29,10 +27,13 @@ const BranchDetails = ({ id, onClose }: Props) => {
   }
 
   return (
-    <div className="flex flex-col md:flex-row gap-6">
-      <div className="grid grid-cols-2 gap-3 w-96">
-        <LabeledText label="Name">{data.name}</LabeledText>
-        <LabeledText label="Address">{data.address}</LabeledText>
+    <div>
+      <div className="w-full">
+        <LabeledText label="Product Name">{data.menu_item.name}</LabeledText>
+        <LabeledText label="Description">{data.reason}</LabeledText>
+      </div>
+      <div className="grid grid-cols-3 gap-3 w-96">
+        <LabeledText label="Qty">{data.qty}</LabeledText>
         <LabeledText label="Date Created">
           {dayjs(data.createdAt).format("YYYY-MM-DD")}
         </LabeledText>
@@ -44,4 +45,4 @@ const BranchDetails = ({ id, onClose }: Props) => {
   );
 };
 
-export default BranchDetails;
+export default PullOutDetails;
