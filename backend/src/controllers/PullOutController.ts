@@ -57,9 +57,18 @@ class PullOutController {
       });
     }
     try {
-      let data = await model.findMany()
+      let data = await model.findMany(
+        {
+          include: {
+            menu_item: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        }
+      )
         // model.count({ where }),
-      console.log(req.query)
   
       let totalPages = Math.ceil(Number(2) / Number(TAKE)) - 1;
       return res.status(200).send({ body: data, totalPages });
@@ -73,6 +82,13 @@ class PullOutController {
       const data = await model.findFirst({
         where: {
           id: Number(req.params.id),
+        },
+        include: {
+          menu_item: {
+            select: {
+              name: true,
+            },
+          },
         },
       });
       return res.status(200).send(data);
@@ -97,8 +113,7 @@ class PullOutController {
         reason: description,
         qty: qty
       }
-      console.log(validData)
-      
+    
       const data = await model.create({
         data: validData
       });
@@ -112,17 +127,19 @@ class PullOutController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+
+    console.log(req.body)
     try {
-    //   const { name } = req.body;
-    //   const id = req.params.id;
-    //   const branch = await model.update({
-    //     where: { id: Number(id) },
-    //     data: {
-    //       name,
-    //     },
-    //   });
-    //   return res.json(branch);
+      const { reqdata } = req.body;
+      const id = req.params.id;
+      const data = await model.update({
+        where: { id: Number(id) },
+        data: 
+          reqdata
+      });
+      return res.status(200).send(data);
     } catch (e: any) {
+      console.log(e)
       return res.status(400).send(e.message);
     }
   };

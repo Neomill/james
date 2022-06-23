@@ -27,10 +27,13 @@ const PullOutDetails = ({ id, onClose }: Props) => {
   }
 
   return (
-    <div className="flex flex-col md:flex-row gap-6">
-      <div className="grid grid-cols-2 gap-3 w-96">
-        <LabeledText label="Name">{data.name}</LabeledText>
-        <LabeledText label="Address">{data.address}</LabeledText>
+    <div>
+      <div className="w-full">
+        <LabeledText label="Product Name">{data.menu_item.name}</LabeledText>
+        <LabeledText label="Description">{data.reason}</LabeledText>
+      </div>
+      <div className="grid grid-cols-3 gap-3 w-96">
+        <LabeledText label="Qty">{data.qty}</LabeledText>
         <LabeledText label="Date Created">
           {dayjs(data.createdAt).format("YYYY-MM-DD")}
         </LabeledText>

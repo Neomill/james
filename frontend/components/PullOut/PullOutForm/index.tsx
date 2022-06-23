@@ -16,7 +16,9 @@ import AsyncAppSelect from "@/components/AsyncAppSelect";
 
 const PullOutSchema = yup
   .object({
-    name: yup.string().required(),
+    menu_item: yup.object().optional(),
+    description: yup.string().required(),
+    qty: yup.number().moreThan(-1).integer().required(),
   })
   .required();
 
@@ -60,25 +62,30 @@ export const PullOutForm: React.VFC<Props> = ({ onClose, id }) => {
     };
   }
 
+  var pullOutitemName: any;
   if (id) {
-    const { data: branch, isLoading: isUpdating } =
+    const { data: pullOut, isLoading: isUpdating } =
       useGetPullOutByIdQuery(id, {
         pollingInterval: 3000,
         refetchOnMountOrArgChange: true,
         skip: false,
       });
 
+    if (pullOut)
+    pullOutitemName = pullOut.menu_item.name
+
     useEffect(() => {
-      if (branch) {
+      if (pullOut) {
         const { setValue } = methods;
-        setValue("name", branch.name);
+        setValue("description", pullOut.reason);
+        setValue("qty", pullOut.qty);
+
       }
       return () => {};
-    }, [id, branch]);
+    }, [id, pullOut]);
   }
 
   const onSubmit = async (data: any) => {
-    console.log(data)
     try {
       if (id)
         toast.promise(update({ id, ...data }).unwrap(), {
@@ -108,13 +115,18 @@ export const PullOutForm: React.VFC<Props> = ({ onClose, id }) => {
             )}
           >
             <div className="w-96 flex flex-col gap-2 ">
-            <AsyncAppSelect
+
+                {
+                  (id) ? 
+                  <h1>{pullOutitemName}</h1> :
+                  <AsyncAppSelect
                   width={`w-50`}
                   name="menu_item"
                   label="product"
                   placeholder="Select Product to Pull Out"
                   loadOptions={loadMenuItemOptions}
                 />
+                }
   
                   <Input
                     name="description"

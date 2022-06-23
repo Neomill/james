@@ -120,12 +120,12 @@ const PullOut = () => {
         accessor: "id",
       },
       {
-        Header: "Name",
-        accessor: "name",
+        Header: "Product Name",
+        accessor: "menu_item.name",
       },
       {
-        Header: "Address",
-        accessor: "address",
+        Header: "Description/Reason",
+        accessor: "reason",
       },
       
       {
@@ -172,7 +172,6 @@ const PullOut = () => {
     return <p>Ooops. Something went wrong!</p>;
   }
   if (isLoading) return <Loading />;
-
   return (
     <>
       <FormProvider {...methods}>
