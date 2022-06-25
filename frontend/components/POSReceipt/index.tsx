@@ -3,7 +3,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useCreateInvoiceMutation } from "@/redux/services/invoicesAPI";
 import { numberWithCommas } from "@/utils/numberWithCommas";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { Button } from "../Button";
@@ -23,6 +23,7 @@ const POSReceipt = (props: Props) => {
           qty: order.qty,
           menu_item_id: order.menu_item_id,
         })),
+        req_branch: Number(router.query.table),
         table_id: Number(router.query.table),
       }).unwrap(),
       {

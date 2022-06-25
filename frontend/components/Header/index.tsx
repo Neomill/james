@@ -52,6 +52,12 @@ const Header = ({
           >
             <BsPower
               onClick={() => {
+                let reload = true
+                if(reload) {
+                  window.location.reload(); 
+                  reload=false
+                }
+
                 dispatch(resetCredentials());
                 router.push("/auth/sign-in");
               }}

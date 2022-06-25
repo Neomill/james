@@ -196,7 +196,7 @@ CREATE TABLE `Order` (
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `menu_item_id` INTEGER NOT NULL,
-    `invoice_id` INTEGER NOT NULL,
+    `invoice_id` INTEGER NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -239,6 +239,7 @@ CREATE TABLE `MenuItemCategory` (
     `name` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
+    `branch_id` INTEGER NULL,
 
     UNIQUE INDEX `MenuItemCategory_name_key`(`name`),
     PRIMARY KEY (`id`)
@@ -276,9 +277,22 @@ CREATE TABLE `Invoice` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
-    `status` ENUM('IN_PROGRESS', 'READY', 'VOID') NOT NULL DEFAULT 'IN_PROGRESS',
+    `status` ENUM('IN_PROGRESS', 'READY', 'VOID', 'REQUESTING_TO_OTHER_BRANCH') NOT NULL DEFAULT 'IN_PROGRESS',
     `payment_status` ENUM('PENDING', 'PAID') NOT NULL DEFAULT 'PENDING',
-    `customer_id` INTEGER NOT NULL,
+    `customer_id` INTEGER NULL,
+    `branch_id` INTEGER NULL,
+    `request_invoice_id` INTEGER NULL,
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `RequestInvoice` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `from_branch_id` INTEGER NULL,
+    `to_branch_id` INTEGER NULL,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
 
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -399,7 +413,7 @@ ALTER TABLE `Transaction` ADD CONSTRAINT `Transaction_invoice_id_fkey` FOREIGN K
 ALTER TABLE `Order` ADD CONSTRAINT `Order_menu_item_id_fkey` FOREIGN KEY (`menu_item_id`) REFERENCES `MenuItem`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Order` ADD CONSTRAINT `Order_invoice_id_fkey` FOREIGN KEY (`invoice_id`) REFERENCES `Invoice`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Order` ADD CONSTRAINT `Order_invoice_id_fkey` FOREIGN KEY (`invoice_id`) REFERENCES `Invoice`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `MenuItem` ADD CONSTRAINT `MenuItem_menu_item_category_id_fkey` FOREIGN KEY (`menu_item_category_id`) REFERENCES `MenuItemCategory`(`id`) ON DELETE SET NULL ON UPDATE SET NULL;
@@ -414,10 +428,22 @@ ALTER TABLE `MenuItem` ADD CONSTRAINT `MenuItem_pull_out_id_fkey` FOREIGN KEY (`
 ALTER TABLE `MenuItemStock` ADD CONSTRAINT `MenuItemStock_menu_item_id_fkey` FOREIGN KEY (`menu_item_id`) REFERENCES `MenuItem`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE `MenuItemCategory` ADD CONSTRAINT `MenuItemCategory_branch_id_fkey` FOREIGN KEY (`branch_id`) REFERENCES `Branch`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE `ItemTransaction` ADD CONSTRAINT `ItemTransaction_item_id_fkey` FOREIGN KEY (`item_id`) REFERENCES `Item`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE `Invoice` ADD CONSTRAINT `Invoice_customer_id_fkey` FOREIGN KEY (`customer_id`) REFERENCES `Customer`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE `Invoice` ADD CONSTRAINT `Invoice_customer_id_fkey` FOREIGN KEY (`customer_id`) REFERENCES `Customer`(`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Invoice` ADD CONSTRAINT `Invoice_request_invoice_id_fkey` FOREIGN KEY (`request_invoice_id`) REFERENCES `RequestInvoice`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Invoice` ADD CONSTRAINT `Invoice_branch_id_fkey` FOREIGN KEY (`branch_id`) REFERENCES `Branch`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `RequestInvoice` ADD CONSTRAINT `RequestInvoice_to_branch_id_fkey` FOREIGN KEY (`to_branch_id`) REFERENCES `Branch`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Equipment` ADD CONSTRAINT `Equipment_branch_id_fkey` FOREIGN KEY (`branch_id`) REFERENCES `Branch`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

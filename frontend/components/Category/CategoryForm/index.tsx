@@ -48,6 +48,7 @@ export const CategoryForm: React.VFC<Props> = ({ onClose, id }) => {
   }
 
   const onSubmit = async (data: any) => {
+    console.log(data)
     try {
       if (id)
         toast.promise(update({ id, ...data }).unwrap(), {

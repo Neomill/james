@@ -152,14 +152,14 @@ class TransactionController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const { transaction_code, invoice_id, cash ,customer_id } = req.body;
+    const { transaction_code, invoice_id, cash ,customer_id, customer_name, customer_lname, customer_address, customer_phone} = req.body;
+    console.log(req.body)
     try {
       const invoice = await prisma.invoice.findFirst({
         where: {
           id: Number(invoice_id),
         },
         include: {
-          customer: true,
           orders: {
             select: {
               qty: true,
@@ -168,6 +168,29 @@ class TransactionController {
           },
         },
       });
+
+      let createCustomer = await prisma.customer.create({
+        data: {
+          fname: customer_name,
+          lname: customer_lname,
+          phone: customer_phone,
+          address: customer_address
+        }
+      })
+
+      const connectCustomer = await prisma.invoice.update({
+        where: {
+          id: Number(invoice_id),
+        },
+        data: {
+          customer: {
+            connect: {
+              id: Number(createCustomer.id)
+            }
+          }
+        },
+      });
+    
       let price = 0;
       if (invoice?.orders) {
         for (const order of invoice?.orders) {
@@ -179,16 +202,16 @@ class TransactionController {
           if (order.menu_item.selling_price) {
             price += Number(order.menu_item.selling_price) * Number(order.qty);
           }
-          await prisma.menuItem.update({
-            where: {
-              id: Number(order?.menu_item.id),
-            },
-            data: {
-              qty: {
-                decrement: order?.qty,
-              },
-            },
-          });
+          // await prisma.menuItem.update({
+          //   where: {
+          //     id: Number(order?.menu_item.id),
+          //   },
+          //   data: {
+          //     qty: {
+          //       decrement: order?.qty,
+          //     },
+          //   },
+          // });
         }
       }
       if (Number(cash) < price) {
@@ -198,9 +221,21 @@ class TransactionController {
         model.create({
           data: {
             transaction_code,
-            employee_id: Number(authUser?.employee?.id),
-            customer_id: Number(customer_id),
-            invoice_id: Number(invoice?.id),
+            employee: {
+              connect: {
+                id : Number(authUser?.employee?.id),
+              }
+            },
+            invoice: {
+              connect: {
+                id : Number(invoice?.id),
+              }
+            },
+            customer: {
+              connect: {
+                id : Number(createCustomer.id),
+              }
+            },
             price,
             cash,
             change: Number(cash) - Number(price),
@@ -218,6 +253,7 @@ class TransactionController {
 
       return res.status(200).send(data);
     } catch (error: any) {
+      console.log(error)
       return res.status(404).send(error.message);
     }
   };

@@ -99,6 +99,7 @@ const StepThreeSelectFood = (props: Props) => {
             />
           </div>
         )}
+        {console.log(data)}
       </div>
       <div style={{ width: "500px" }} className=" min-h-full ">
         <POSReceipt />

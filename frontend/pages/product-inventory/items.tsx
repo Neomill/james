@@ -33,7 +33,8 @@ const MenuItem = () => {
   const { filters, sortBy } = useAppSelector((state) => state.filters);
   const router = useRouter();
   const { user } = useAuth();
-  const [query, setQuery] = useState("");
+  const [changeItem, setChangeItem] = useState(user)
+  const [query, setQuery] = useState();
   const { data, error, isLoading } = useSearchMenuItemsQuery({
     page,
     query,
@@ -41,12 +42,13 @@ const MenuItem = () => {
     ...sortBy,
   });
 
-  const { data: item, isLoading: isUpdating } = useGetBranchByIdQuery(user.employee.branch.id, {
-    // pollingInterval: 3000,
-    refetchOnMountOrArgChange: true,
-    skip: false,
-  });
-  // console.log(item)
+
+  useEffect(() => {
+    if (changeItem !== user){
+      setChangeItem(user)
+    }
+  }, [user]);
+
 
   useEffect(() => {
     if (data?.totalPages < 0) {

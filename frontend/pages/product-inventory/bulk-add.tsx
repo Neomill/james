@@ -134,12 +134,16 @@ const BulkCreateMenuItem = (props: Props) => {
               label="Submit"
               onClick={async () => {
                 if (data.length > 0) {
-                  console.log(data)
+                  const branchid = user.employee.branch.id
                   let parsedData = data.map((d) => {
                     const formData = new FormData();
                     formData.append(
                       "menu_item_category_id",
                       d.menu_item_category_id.value
+                    );
+                    formData.append(
+                      "branch_id",
+                      branchid
                     );
                     for (var key in d) {
                       formData.append(key, d[key]);

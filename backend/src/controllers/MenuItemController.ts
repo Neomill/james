@@ -52,7 +52,6 @@ class MenuItemController {
 
       filters.push({
         branch_id: Number(authUser.employee.branch_id),
-
       });
 
     let where: any = {
