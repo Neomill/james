@@ -2,6 +2,7 @@ import { Button } from "@/components/Button";
 import Input from "@/components/Input";
 import POSReceiptCard from "@/components/POSReceiptCard";
 import { useGetInvoiceByIdQuery } from "@/redux/services/invoicesAPI";
+import { useGetCustomerByIdQuery } from "@/redux/services/customersAPI";
 import { useCreateTransactionMutation } from "@/redux/services/transactionsAPI";
 import { numberWithCommas } from "@/utils/numberWithCommas";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -10,6 +11,7 @@ import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import * as yup from "yup";
+import { useAuth } from "@/hooks/useAuth";
 
 type Props = {
   id: string;
@@ -17,6 +19,7 @@ type Props = {
 };
 
 export enum InvoiceStatus {
+  REQUESTING_TO_OTHER_BRANCH = "REQUESTING_TO_OTHER_BRANCH",
   IN_PROGRESS = "IN_PROGRESS",
   READY = "READY",
   VOID = "VOID",
@@ -32,10 +35,14 @@ export interface InvoiceProps {
   updatedAt: string;
   status: InvoiceStatus;
   customer_id: string | number;
+  customer: any;
   payment_status: InvoicePaymentStatus;
   table_id: string | number;
   table: any;
   transaction: any;
+  request_to_branch: number;
+  request_to_branch_NAME: string;
+  link_invoice: string | number;
 }
 
 const InvoiceSchema = yup
@@ -45,10 +52,13 @@ const InvoiceSchema = yup
   .required();
 
 const InvoiceDetails = ({ id, onClose }: Props) => {
+  const { user } = useAuth();
   const { data, isLoading } = useGetInvoiceByIdQuery(id, {
     refetchOnMountOrArgChange: true,
     skip: false,
   });
+
+  console.log(data)
   const methods = useForm({
     resolver: yupResolver(InvoiceSchema),
   });
@@ -60,7 +70,7 @@ const InvoiceDetails = ({ id, onClose }: Props) => {
 
   useEffect(() => {
     const subscription = watch((value, { name, type }) =>
-      console.log(value, name, type)
+      console.log()
     );
     return () => subscription.unsubscribe();
   }, [watch]);
@@ -80,13 +90,22 @@ const InvoiceDetails = ({ id, onClose }: Props) => {
 
   const handlePayment = async (formVal: any) => {
     //payment
-    console.log("id:",id)
-    console.log("form Val:",formVal)
+    // console.log("id:",id)
+    // console.log("form Val:",formVal)
+    let isAvailabeCustomer = "N/A"
+    if(data.request_to_branch_NAME == 'customer'){
+      isAvailabeCustomer = formVal.customer_name
+    }
     await toast.promise(
       createTransaction({
         invoice_id: id,
         transaction_code: "JMH_"+ Date.now() + id,
         customer_id: formVal.customer_id,
+        customer_name : isAvailabeCustomer,
+        customer_lname : formVal.customer_lname,
+        customer_phone : formVal.customer_phone,
+        customer_address: formVal.customer_address,
+        branch_id: user.employee.branch.id,
         cash: formVal.cash,
       }).unwrap(),
       {
@@ -107,6 +126,7 @@ const InvoiceDetails = ({ id, onClose }: Props) => {
   return (
     <div className="h-full bg-white border rounded-lg   overflow-hidden  sm:grid-cols-3 lg:grid-cols-4 gap-4  w-96 max-w-lg mx-auto">
       <div className="px-4 py-5 sm:px-6">
+        {(data?.link_invoice != 0) && (<p className="uppercase font-bold">{data?.request_to_branch_NAME}</p>)}
       </div>
       <div className="h-full  text-xs border-t border-gray-300 flex-col ">
         <dl style={{ height: "450px" }} className=" overflow-y-auto">
@@ -162,11 +182,38 @@ const InvoiceDetails = ({ id, onClose }: Props) => {
             <FormProvider {...methods}>
               <form onSubmit={methods.handleSubmit(handlePayment)}>
                 <div className="sm:grid px-5 pb-4 gap-4">
+                  { (data.request_to_branch_NAME == "customer") &&              
+                 ( <Input
+                    name="customer_name"
+                    label="Customer name"
+                    placeholder="Customer Name"
+                  />)}
+
+                  { (data.request_to_branch_NAME == "customer") &&  
+                  (
                   <Input
-                    name="customer_id"
-                    label="Customer id"
-                    placeholder="Customer id"
+                    name="customer_lname"
+                    label="Customer Surname"
+                    placeholder="(optional)"
                   />
+                  )}
+
+                  { (data.request_to_branch_NAME == "customer") &&  
+                  (
+                  <Input
+                    name="customer_address"
+                    label="Customer Address"
+                    placeholder="(optional)"
+                  />
+                  )}
+                  { (data.request_to_branch_NAME == "customer") &&  
+                  (
+                  <Input
+                    name="customer_phone"
+                    label="Customer Phone #"
+                    placeholder="(optional)"
+                  />
+                  )}
                   <Input
                     name="cash"
                     isDecimal
@@ -186,16 +233,31 @@ const InvoiceDetails = ({ id, onClose }: Props) => {
               </form>
             </FormProvider>
           )}
-          {data.payment_status === "PAID" && (
+          {data.payment_status === "PAID" && (data.customer) && ( 
             <FormProvider {...methods}>
               <form onSubmit={methods.handleSubmit(handlePayment)}>
                 <div className="sm:grid px-5 pb-4 gap-4">
-                <Input
-                    name="customer_id"
-                    label="Customer id"
-                    placeholder="Customer id"
-                    value={data.customer_id}
-                  />
+                { (data.customer.fname) &&              
+                 ( <Input
+                    name="customer_name"
+                    label="Customer Name"
+                    placeholder={`${data.customer.fname} ${data.customer.lname}`}
+                    disabled
+                  />)}
+                { (data.customer.phone) &&              
+                 ( <Input
+                    name="customer_phone"
+                    label="Customer Phone #"
+                    placeholder={`${data.customer.fname} ${data.customer.lname}`}
+                    disabled
+                  />)}
+                { (data.customer.address) &&              
+                 ( <Input
+                    name="customer_name"
+                    label="Customer Adress"
+                    placeholder={data.customer.address}
+                    disabled
+                  />)}
                 </div>
               </form>
             </FormProvider>

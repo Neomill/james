@@ -39,6 +39,7 @@ const SignIn = () => {
       });
     }
   };
+  
   if (user) {
     router.push("/");
   } else {

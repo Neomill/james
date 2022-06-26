@@ -3,6 +3,7 @@ import TransactionDetails from "../TransactionDetails";
 
 const TransactionModalManager = ({
   closeFn = () => null,
+  isPO,
   modal = "",
   selectedId,
   onConfirmDelete,
@@ -15,7 +16,7 @@ const TransactionModalManager = ({
         onClose={closeFn}
         isOpen={modal === "view-transaction-modal"}
       >
-        <TransactionDetails id={selectedId} onClose={closeFn} />
+        <TransactionDetails isPO={isPO} id={selectedId} onClose={closeFn} />
       </AppModal>
     </>
   );

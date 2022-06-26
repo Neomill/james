@@ -26,7 +26,10 @@ import { FormProvider, useForm } from "react-hook-form";
 import { BsCart } from "react-icons/bs";
 import { toast } from "react-toastify";
 
-type Props = {};
+type Props = {
+  link_invoice?: number;
+};
+
 
 const Invoices = (props: Props) => {
   const [page, setPage] = useState(0);
@@ -50,6 +53,8 @@ const Invoices = (props: Props) => {
 
     return () => {};
   }, [filters, data]);
+
+
 
   const methods = useForm();
   const onSubmitSearch = (data) => {
@@ -185,6 +190,10 @@ const Invoices = (props: Props) => {
         ),
       },
       {
+        Header: "info",
+        accessor: "request_to_branch_NAME",
+      },
+      {
         Header: "Payment",
         accessor: "payment_status",
         Cell: (props: any) => (
@@ -209,7 +218,8 @@ const Invoices = (props: Props) => {
               onClick={(e) => onModalOpen(e, props.row.original.id)}
               action="receipt"
             />
-            {checkPermissions(["update-invoice"], user.roles) && (
+            {checkPermissions(["update-invoice"], user.roles) && 
+            (
               <ActionButton
                 data-modal="edit-invoice-modal"
                 onClick={(e) => onModalOpen(e, props.row.original.id)}

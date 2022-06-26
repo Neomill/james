@@ -26,10 +26,15 @@ const StepTwoSelectCategory = (props: Props) => {
   const router = useRouter();
   const { filters, sortBy } = useAppSelector((state) => state.filters);
 
+  var tableId;
+  if(router.query.table) tableId = router.query.table
+
   const { data, error, isLoading } = useSearchMenuItemCategoryQuery({
     page,
     query,
-    ...filters,
+    ...{
+      branch_id: tableId
+    },
     ...sortBy,
   });
 

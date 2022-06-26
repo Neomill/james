@@ -186,7 +186,7 @@ const MenuItemCategories = () => {
                 totalPages={data.totalPages}
               />
             }
-            title="List of Menu Categories"
+            title="List of Product Categories"
             onSubmit={onSubmitSearch}
           >
             {checkPermissions(["create-menu-item-category"], user.roles) && (

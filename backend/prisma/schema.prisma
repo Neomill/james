@@ -38,6 +38,7 @@ enum InvoiceStatus {
   IN_PROGRESS
   READY
   VOID
+  REQUESTING_TO_OTHER_BRANCH
 }
 
 enum InvoicePaymentStatus { 
@@ -197,15 +198,15 @@ model Transaction{
   updatedAt               DateTime      @updatedAt
   employee                Employee       @relation(fields: [employee_id], references: [id])
   employee_id             Int
-  customer                Customer       @relation(fields: [customer_id], references: [id])
-  customer_id             Int  
+  customer                Customer?     @relation(fields: [customer_id], references: [id])
+  customer_id             Int?  
   invoice                   Invoice          @relation(fields: [invoice_id], references: [id])
   invoice_id                Int
   price               Decimal           @db.Decimal(19, 2)
   cash               Decimal           @db.Decimal(19, 2)
   change               Decimal           @db.Decimal(19, 2)
-  branch                  Branch @relation(fields: [branch_id], references: [id])
-  branch_id                Int 
+  branch   Branch?  @relation(fields: [branch_id], references: [id],onDelete: Cascade)
+  branch_id  Int?
 }
 
 model Customer{
@@ -231,8 +232,8 @@ model Order{
   menu_item           MenuItem          @relation(fields: [menu_item_id], references: [id])
   menu_item_id        Int
  
-  invoice           Invoice          @relation(fields: [invoice_id], references: [id])
-  invoice_id        Int
+  invoice           Invoice?          @relation(fields: [invoice_id], references: [id])
+  invoice_id        Int?
 
 
 }
@@ -275,6 +276,8 @@ model MenuItemCategory{
   createdAt               DateTime      @default(now())
   updatedAt               DateTime      @updatedAt
   menu_item                MenuItem[]
+  branch   Branch?  @relation(fields: [branch_id], references: [id],onDelete: Cascade)
+  branch_id  Int?
 }
 
 model ItemTransaction{
@@ -308,9 +311,16 @@ model Invoice{
   status InvoiceStatus @default(IN_PROGRESS)
   payment_status InvoicePaymentStatus @default(PENDING)
   transaction         Transaction?
-  customer            Customer          @relation(fields: [customer_id], references: [id])
-  customer_id         Int
+  customer            Customer?          @relation(fields: [customer_id], references: [id])
+  customer_id         Int?
+  branch                  Branch?         @relation(fields: [branch_id], references: [id],onDelete: Cascade)
+  branch_id           Int?
+  request_to_branch Int? @default(0)
+  request_to_branch_NAME String? @default("customer")
+  link_invoice Int? @default(0)
+
 }
+
 
 model Branch {
   id        Int      @id @default(autoincrement())
@@ -321,7 +331,9 @@ model Branch {
   employees     Employee[]
   menu_item MenuItem[]
   equipment_items Equipment[]
-  transactions Transaction[]
+  invoices  Invoice[]
+  category MenuItemCategory[]
+  transaction Transaction[]
 }
 
 model Equipment{

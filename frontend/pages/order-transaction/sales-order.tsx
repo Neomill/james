@@ -40,7 +40,7 @@ const Transactions = () => {
   const { data, error, isLoading } = useSearchTransactionsQuery({
     page,
     query,
-    notbranch: user.employee.branch_id,
+    branch: user.employee.branch_id,
     ...filters,
     ...sortBy,
   });
@@ -129,8 +129,8 @@ const Transactions = () => {
         accessor: "transaction_code",
       },
       {
-        Header: "Branch",
-        accessor: "employee.branch_id",
+        Header: "Customer Name",
+        accessor: "customer.fname",
       },
       {
         Header: "Price",
@@ -242,6 +242,7 @@ const Transactions = () => {
         "No data available."
       )}
       <TransactionModalManager
+        isPO={false}
         closeFn={onModalClose}
         selectedItems={selectedItems}
         onConfirmDelete={onConfirmDelete}

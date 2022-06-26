@@ -14,6 +14,9 @@ import {
   useDeleteMenuItemMutation,
   useSearchMenuItemsQuery,
 } from "@/redux/services/menuItemsAPI";
+import {
+  useGetBranchByIdQuery
+} from "@/redux/services/branchAPI";
 import checkPermissions from "@/utils/checkPermissions";
 import { numberWithCommas } from "@/utils/numberWithCommas";
 import Image from "next/image";
@@ -22,6 +25,7 @@ import { ReactElement, useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { BsCardList, BsPlusCircle } from "react-icons/bs";
 import { toast } from "react-toastify";
+
 const MenuItem = () => {
   const [page, setPage] = useState(0);
   const [modal, setModal] = useState<string>("");
@@ -29,13 +33,22 @@ const MenuItem = () => {
   const { filters, sortBy } = useAppSelector((state) => state.filters);
   const router = useRouter();
   const { user } = useAuth();
-  const [query, setQuery] = useState("");
+  const [changeItem, setChangeItem] = useState(user)
+  const [query, setQuery] = useState();
   const { data, error, isLoading } = useSearchMenuItemsQuery({
     page,
     query,
     ...filters,
     ...sortBy,
   });
+
+
+  useEffect(() => {
+    if (changeItem !== user){
+      setChangeItem(user)
+    }
+  }, [user]);
+
 
   useEffect(() => {
     if (data?.totalPages < 0) {
@@ -70,9 +83,9 @@ const MenuItem = () => {
 
   const onConfirmDelete = async () => {
     toast.promise(deletMenuItem(selectedId).unwrap(), {
-      pending: "Deleting menu...",
-      error: "Error deleting menu!",
-      success: "Menu deleted successfully!",
+      pending: "Deleting product...",
+      error: "Error deleting product!",
+      success: "Product deleted successfully!",
     });
     setSelectedId("");
     onModalClose();
@@ -141,10 +154,6 @@ const MenuItem = () => {
       {
         Header: "Name",
         accessor: "name",
-      },
-      {
-        Header: "Branch",
-        accessor: "branch_id",
       },
       {
         Header: "Category",
@@ -217,14 +226,14 @@ const MenuItem = () => {
   }
   if (error) return <p>Ooops. Something went wrong!</p>;
   if (isLoading) return <Loading />;
-console.log(data.body)
+
   return (
     <>
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmitSearch)}>
           <ActionTableMenu
             sortOptions={sortOptions}
-            title="Product inventory"
+            title="Product Available On Your Branch"
             onSubmit={onSubmitSearch}
             operations={
               <BulkOperations
@@ -242,7 +251,7 @@ console.log(data.body)
                   onClick={() => router.push("/product-inventory/bulk-add")}
                   icon={<BsPlusCircle />}
                   size="medium"
-                  label="Add Menu"
+                  label="Add Product"
                 />
               </>
             )}

@@ -25,18 +25,38 @@ class MenuItemCategoryController {
       updatedAt = 1,
       name,
       id,
+      branch_id
     } = req.query;
+
+
     const filters: any = [];
-    let where: any = {
-      OR: [
-        {
-          name: {
-            contains: query + "",
-          },
-        },
-      ],
-      AND: filters,
-    };
+
+    // console.log(branch_id)
+    // if (branch_id){    
+    //   (filters.push({
+    //     branch_id: branch_id
+    //   }))
+    // }
+
+    // let where: any;
+    //   if(branch_id){
+    //     where = {
+    //       branch_id : Number(branch_id)
+    //     }
+    //   }
+    //   else{
+      let where = {
+          OR: [
+            {
+              name: {
+                contains: query + "",
+              },
+            },
+          ],
+          AND: filters,
+        };
+      // }
+
     let orderBy: any = {};
     if (updatedAt) {
       Object.assign(orderBy, {
@@ -74,7 +94,6 @@ class MenuItemCategoryController {
       ]);
 
       let totalPages = Math.ceil(Number(totalData) / Number(TAKE)) - 1;
-
       let hasMore = false;
       if (page < totalPages) {
         hasMore = true;
@@ -106,12 +125,24 @@ class MenuItemCategoryController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const { name } = req.body;
+    const { name, branch_id } = req.body;
     try {
+      let dataCategory = {
+        name
+      }
+  
+      if (branch_id) {
+        Object.assign(dataCategory, {
+          branch: {
+            connect: {
+              id: Number(branch_id),
+            },
+          },
+        });
+      }
+
       const data = await model.create({
-        data: {
-          name,
-        },
+        data: dataCategory
       });
       return res.status(200).send(data);
     } catch (error: any) {

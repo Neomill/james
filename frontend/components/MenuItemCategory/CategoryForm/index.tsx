@@ -15,6 +15,9 @@ import {
   useGetMenuItemCategoryByIdQuery,
   useUpdateMenuItemCategoryMutation,
 } from "@/redux/services/menuItemCategoriesAPI";
+import { useAuth } from "@/hooks/useAuth";
+import Branch from "@/pages/branch";
+
 
 const MenuItemCategorySchema = yup
   .object({
@@ -34,7 +37,7 @@ export const MenuItemCategoryForm: React.VFC<Props> = ({ onClose, id }) => {
   const [create, { isLoading: isCreating }] =
     useCreateMenuItemCategoryMutation();
   const [update, result] = useUpdateMenuItemCategoryMutation();
-
+  const { user } = useAuth();
   if (id) {
     const { data: category, isLoading: isUpdating } =
       useGetMenuItemCategoryByIdQuery(id, {
@@ -52,6 +55,8 @@ export const MenuItemCategoryForm: React.VFC<Props> = ({ onClose, id }) => {
   }
 
   const onSubmit = async (data: any) => {
+    data.branch_id = user.employee.branch.id
+    console.log(data)
     try {
       if (id)
         toast.promise(update({ id, ...data }).unwrap(), {

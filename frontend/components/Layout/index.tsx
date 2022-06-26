@@ -43,7 +43,7 @@ type Props = {
   bg?: string;
 };
 
-export const links = [
+const links = [
   {
     icon: <BsGrid1X2 />,
     label: "Dashboard",
@@ -124,7 +124,7 @@ export const links = [
       {
         icon: <BsPlusCircle />,
         label: "Add New Order",
-        href: "/order-transaction/add-order/",
+        href: `/order-transaction/add-order/`,
         permission: "create-order",
       },
       {
@@ -159,51 +159,6 @@ export const links = [
     permission: "read-dashboard",
   },
 
-  // {
-  //   icon: <BsBoxSeam />,
-  //   label: "Inventory",
-  //   href: "/inventory",
-  //   disabled: true,
-  //   permission: "read-item",
-
-  //   children: [
-  //     {
-  //       icon: <BsBox />,
-  //       label: "Items",
-  //       href: "/inventory/items",
-  //       permission: "read-item",
-  //     },
-  //     {
-  //       icon: <BsPlusCircle />,
-  //       label: "Add Items",
-  //       href: "/inventory/bulk-add",
-  //     },
-  //     {
-  //       icon: <BsListUl />,
-  //       label: "Categories",
-  //       href: "/inventory/categories",
-  //       permission: "read-category",
-  //     },
-  //     {
-  //       icon: <BsTag />,
-  //       label: "Brands",
-  //       href: "/inventory/brands",
-  //       permission: "read-brand",
-  //     },
-  //     {
-  //       icon: <BsReceipt />,
-  //       label: "History",
-  //       href: "/inventory/history",
-  //       permission: "read-item",
-  //     },
-  //   ],
-  // },
-  // {
-  //   icon: <BsBoxArrowLeft />,
-  //   label: "Pull-out Requests",
-  //   href: "/po-requests",
-  //   permission: "read-po-request",
-  // },
   {
     icon: <BsPeople />,
     label: "Customers",
@@ -241,6 +196,147 @@ const Layout: React.FC<Props> = ({
   const router = useRouter();
   const { user } = useAuth();
 
+  const links = [
+    {
+      icon: <BsGrid1X2 />,
+      label: "Dashboard",
+      href: "/",
+      permission: "read-dashboard",
+    },
+  
+    {
+      icon: <BsCardList />,
+      label: "Product Inventory",
+      href: "/product-inventory",
+      disabled: true,
+      permission: "read-menu-item",
+      children: [
+        {
+          icon: <BsBox />,
+          label: "Products",
+          href: "/product-inventory/items",
+          permission: "read-menu-item",
+        },
+        {
+          icon: <BsPlusCircle />,
+          label: "Add Product",
+          href: "/product-inventory/bulk-add",
+          permission: "read-menu-item",
+        },
+        {
+          icon: <BsListUl />,
+          label: "Categories",
+          href: "/product-inventory/categories",
+          permission: "read-menu-item-category",
+        },
+      ],
+    },
+    
+    {
+      icon: <BsCardList />,
+      label: "Equipment Inventory",
+      href: "/equipment-inventory",
+      disabled: true,
+      permission: "read-menu-item", 
+      children: [
+        {
+          icon: <BsBox />,
+          label: "Equipments",
+          href: "/equipment-inventory/items",
+          permission: "read-menu-item",
+        },
+        {
+          icon: <BsPlusCircle />,
+          label: "Add Equipment",
+          href: "/equipment-inventory/bulk-add",
+          permission: "read-menu-item",
+        },
+        {
+          icon: <BsListUl />,
+          label: "Categories",
+          href: "/equipment-inventory/categories",
+          permission: "read-menu-item-category",
+        },
+      ],
+    },
+  
+  
+    {
+      icon: <BsShop />,
+      label: "Order Transaction",
+      href: "/order-transaction",
+      disabled: true,
+      permission: "read-order",
+      children: [
+        {
+          icon: <BsCart />,
+          label: "Orders",
+          href: "/order-transaction/invoices",
+          permission: "read-order",
+        },
+        {
+          icon: <BsPlusCircle />,
+          label: "Add New Order",
+          href: `/order-transaction/add-order/${user.employee.branch.id}`,
+          permission: "create-order",
+        },
+        {
+          icon: <BsReceipt />,
+          label: "Sales Order",
+          href: "/order-transaction/sales-order",
+          permission: "read-transaction",
+        },
+        {
+          icon: <BsReceipt />,
+          label: "Purchase Order",
+          href: "/order-transaction/purchase-order",
+          permission: "read-transaction",
+        },
+  
+      ],
+    },
+  
+  
+    {
+      icon: <BsShopWindow />,
+      label: "Branches",
+      href: "/branch",
+      permission: "read-branch",
+    },
+  
+  
+    {
+      icon: <BsBoxArrowInLeft />,
+      label: "Pull Out",
+      href: "/pull-out",
+      permission: "read-dashboard",
+    },
+  
+    {
+      icon: <BsPeople />,
+      label: "Customers",
+      href: "/customer",
+      permission: "read-employee",
+    },
+    {
+      icon: <BsPeople />,
+      label: "Employees",
+      href: "/employees",
+      permission: "read-employee",
+    },
+    {
+      icon: <BsPersonBadge />,
+      label: "Positions",
+      href: "/positions",
+      permission: "read-position",
+    },
+    {
+      icon: <BsGear />,
+      label: "Settings",
+      href: "/settings",
+      permission: "read-settings",
+    },
+  ];
 
   let branch_name = "not available"
   let branch_address = "not available"

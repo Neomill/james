@@ -6,6 +6,8 @@ import {
 
 export const invoiceStatusColorPicker = (status: InvoiceStatus) => {
   switch (status) {
+    case "REQUESTING_TO_OTHER_BRANCH":
+      return "bg-violet-50 text-violet-500";
     case "IN_PROGRESS":
       return "bg-amber-50 text-amber-500";
     case "READY":
@@ -21,6 +23,8 @@ export const invoiceStatusText = (status: InvoiceStatus) => {
   switch (status) {
     case "IN_PROGRESS":
       return "In Progress";
+    case "REQUESTING_TO_OTHER_BRANCH":
+      return "Requested";  
     case "READY":
       return "Ready";
     case "VOID":

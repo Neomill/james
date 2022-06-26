@@ -21,14 +21,7 @@ const AddOrder = (props: Props) => {
   const methods = useForm();
   const { filters, sortBy } = useAppSelector((state) => state.filters);
   const [page, setPage] = useState(0);
-  const [query, setQuery] = useState("");
-  // const { data, error, isLoading } = useSearchTableQuery({
-  //   page,
-  //   query,
-  //   ...filters,
-  //   ...sortBy,
-  // });
-
+  const [query, setQuery] = useState('');
 
   const { data, error, isLoading } = useSearchBranchQuery({
     page,

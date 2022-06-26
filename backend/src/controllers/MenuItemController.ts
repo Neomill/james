@@ -6,8 +6,8 @@ import { unlink } from "fs/promises";
 const model = prisma.menuItem;
 const dummyImage = "http://loremflickr.com/640/480/food";
 
-class MenuItemController {
 
+class MenuItemController {
   static getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
       let [data, totalData] = await prisma.$transaction([
@@ -41,12 +41,17 @@ class MenuItemController {
       price,
     } = req.query;
     const authUser: any = req.user;
+  
     const filters: any = [];
     menu_item_category &&
       filters.push({
         menu_item_category: {
           id: Number(menu_item_category),
         },
+      });
+
+      filters.push({
+        branch_id: Number(authUser.employee.branch_id),
       });
 
     let where: any = {
@@ -58,7 +63,7 @@ class MenuItemController {
         },
       ],
       AND: filters,
-      branch_id: Number(authUser.employee.branch_id) 
+      // branch_id: Number(authUser.employee.branch_id) 
       
     };
     let orderBy: any = {};
@@ -168,23 +173,13 @@ class MenuItemController {
       cost_price,
       selling_price,
       expiry_date,
+      branch_id,
       qty,
     } = req.body;
     const authUser: any = req.user;
 
+    console.log(req.body)
     try {
-      if (!process.env.API_URL) {
-        await unlink("public/" + req.file?.filename + "");
-        return res.status(400).json("Please add an API_URL to your env");
-      }
-      if (!req.file) {
-        return res.status(400).send("Please upload an image.");
-      }
-      const API_URL = process.env.API_URL;
-
-      // encode img_url string to base64 to ensure data during transport
-      const rawUrl = API_URL + req.file?.filename
-      const encodedImgUrlBToA = Buffer.from(rawUrl).toString('base64')
 
       let data: any = {
         name,
@@ -192,13 +187,18 @@ class MenuItemController {
         cost_price: Number(cost_price),
         selling_price: Number(selling_price),
         qty: Number(qty),
-        image_url: encodedImgUrlBToA,
-        branch: {
-          connect: {
-            id: authUser.employee.branch_id,
-          },
-        },
       };
+
+      if (branch_id) {
+        Object.assign(data, {
+          branch: {
+            connect: {
+              id: Number(branch_id),
+            },
+          },
+        });
+      }
+
       if (menu_item_category_id) {
         Object.assign(data, {
           menu_item_category: {
@@ -228,11 +228,10 @@ class MenuItemController {
           },
         },
       });
-      console.log(transaction)
+
       return res.status(200).send(transaction);
     } catch (error: any) {
       console.log(error)
-      await unlink("public/" + req.file?.filename + "");
       return res.status(404).send(error.message);
     }
   };

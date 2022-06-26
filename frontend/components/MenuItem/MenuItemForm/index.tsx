@@ -22,7 +22,7 @@ import { toast } from "react-toastify";
 import { useSearchMenuItemCategoryQuery } from "@/redux/services/menuItemCategoriesAPI";
 
 const FILE_SIZE = 2000000;
-const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/gif", "image/png"];
+
 const MenuItemSchema = yup
   .object({
     name: yup.string().required(),
@@ -31,17 +31,6 @@ const MenuItemSchema = yup
     cost_price: yup.number().positive().required(),
     selling_price: yup.number().positive().required(),
     menu_item_category_id: yup.object().required(),
-    image: yup
-      .mixed()
-      .test("fileSize", "File Size is too large", (value) => {
-        if (typeof value === "string") return true;
-        return value[0]?.size <= FILE_SIZE;
-      })
-      .test("fileType", "Unsupported File Format", (value) => {
-        if (typeof value === "string") return true;
-        return SUPPORTED_FORMATS.includes(value[0]?.type);
-      })
-      .required(),
   })
   .required();
 
@@ -125,7 +114,6 @@ export const MenuItemForm: React.FC<Props> = ({
         setValue("desc", item.desc);
         setValue("cost_price", item.cost_price);
         setValue("selling_price", item.selling_price);
-        setValue("image", item.image_url);
         setValue("menu_item_category_id", {
           label: item.menu_item_category?.name,
           value: item.menu_item_category_id,
@@ -254,14 +242,6 @@ export const MenuItemForm: React.FC<Props> = ({
                 type="number"
                 step="any"
               />
-              {!id && (
-                <Input
-                  name="image"
-                  label="Image"
-                  placeholder="Image"
-                  type="file"
-                />
-              )}
               <div className="col-span-2 flex flex-col mt-6 justify-end md:flex-row gap-3">
                 {isBulkAdd && (
                   <Button
