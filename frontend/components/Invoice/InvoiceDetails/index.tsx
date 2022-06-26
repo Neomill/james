@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import * as yup from "yup";
+import { useAuth } from "@/hooks/useAuth";
 
 type Props = {
   id: string;
@@ -51,6 +52,7 @@ const InvoiceSchema = yup
   .required();
 
 const InvoiceDetails = ({ id, onClose }: Props) => {
+  const { user } = useAuth();
   const { data, isLoading } = useGetInvoiceByIdQuery(id, {
     refetchOnMountOrArgChange: true,
     skip: false,
@@ -103,6 +105,7 @@ const InvoiceDetails = ({ id, onClose }: Props) => {
         customer_lname : formVal.customer_lname,
         customer_phone : formVal.customer_phone,
         customer_address: formVal.customer_address,
+        branch_id: user.employee.branch.id,
         cash: formVal.cash,
       }).unwrap(),
       {

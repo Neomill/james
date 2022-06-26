@@ -44,7 +44,6 @@ const Transactions = () => {
     ...filters,
     ...sortBy,
   });
-
   useEffect(() => {
     if (data?.totalPages < 0) {
       setPage(0);
@@ -60,7 +59,6 @@ const Transactions = () => {
     setQuery(data.search);
   };
 
-  //---
 
   const onModalOpen = (event, id?) => {
     event.preventDefault();
@@ -131,8 +129,8 @@ const Transactions = () => {
         accessor: "transaction_code",
       },
       {
-        Header: "Branch",
-        accessor: "employee.branch_id",
+        Header: "Customer Name",
+        accessor: "customer.fname",
       },
       {
         Header: "Price",
@@ -244,6 +242,7 @@ const Transactions = () => {
         "No data available."
       )}
       <TransactionModalManager
+        isPO={true}
         closeFn={onModalClose}
         selectedItems={selectedItems}
         onConfirmDelete={onConfirmDelete}

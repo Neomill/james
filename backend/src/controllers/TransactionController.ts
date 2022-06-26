@@ -43,17 +43,7 @@ class TransactionController {
     };
     branch &&
     filters.push({
-      employee:{
-        branch_id: Number(branch)
-        
-      }
-    });
-    notbranch &&
-    notThis.push({
-      employee:{
-        branch_id: Number(notbranch)
-        
-      }
+      branch_id: Number(branch)
     });
 
     let orderBy: any = {};
@@ -124,6 +114,7 @@ class TransactionController {
         include: {
           employee: true,
           customer: true,
+          branch: true,
           invoice: {
             include: {
               orders: {
@@ -152,7 +143,7 @@ class TransactionController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const { transaction_code, invoice_id, cash ,customer_id, customer_name, customer_lname, customer_address, customer_phone} = req.body;
+    const { transaction_code, invoice_id, cash , customer_name, customer_lname, customer_address, customer_phone , branch_id} = req.body;
     console.log(req.body)
     try {
       const invoice = await prisma.invoice.findFirst({
@@ -234,6 +225,11 @@ class TransactionController {
             customer: {
               connect: {
                 id : Number(createCustomer.id),
+              }
+            },
+            branch:{
+              connect: {
+                id : Number(branch_id),
               }
             },
             price,

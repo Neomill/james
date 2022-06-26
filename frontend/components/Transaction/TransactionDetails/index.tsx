@@ -20,9 +20,10 @@ import * as yup from "yup";
 type Props = {
   id: string;
   onClose: () => void;
+  isPO: boolean;
 };
 
-const TransactionDetails = ({ id, onClose }: Props) => {
+const TransactionDetails = ({ id, onClose ,isPO}: Props) => {
   const { data, isLoading } = useGetTransactionByIdQuery(id, {
     refetchOnMountOrArgChange: true,
     skip: false,
@@ -61,12 +62,11 @@ const TransactionDetails = ({ id, onClose }: Props) => {
   if (!data) {
     return <div>Wow! Such empty.</div>;
   }
-
   return (
     <div className="h-full bg-white border rounded-lg   overflow-hidden  sm:grid-cols-3 lg:grid-cols-4 gap-4  w-96 max-w-lg mx-auto">
       <div className="px-4 py-5 sm:px-6">
         <h3 className="text-base leading-6 font-medium text-gray-900">
-          Table {data.invoice?.table?.name}
+          {(isPO) ? "Purchase Order Summary" : "Sales Order Summary"}
         </h3>
       </div>
       <div className="h-full  text-xs border-t border-gray-300 flex-col ">
@@ -111,6 +111,7 @@ const TransactionDetails = ({ id, onClose }: Props) => {
             <PDFDownloadLink
               document={
               <ReceiptPDF 
+                isPO={isPO}
                 transaction={data} 
                 cfname={data?.customer.fname}  
                 clname={data?.customer.lname}  
