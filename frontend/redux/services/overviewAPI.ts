@@ -18,6 +18,9 @@ const overviewAPI = reduxAPI.injectEndpoints({
         totalCost: number;
         totalProfit: number;
         totalTransactions: number;
+        totalequipment:any,
+        totalequipmentitems :number,
+        totalequipmentSum :any,
       },
       {}
     >({
