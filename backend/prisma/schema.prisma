@@ -204,7 +204,8 @@ model Transaction{
   price               Decimal           @db.Decimal(19, 2)
   cash               Decimal           @db.Decimal(19, 2)
   change               Decimal           @db.Decimal(19, 2)
-
+  branch                  Branch @relation(fields: [branch_id], references: [id])
+  branch_id                Int 
 }
 
 model Customer{
@@ -318,6 +319,7 @@ model Branch {
   employees     Employee[]
   menu_item MenuItem[]
   equipment_items Equipment[]
+  transactions Transaction[]
 }
 
 model Equipment{

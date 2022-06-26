@@ -204,6 +204,7 @@ class TransactionController {
             price,
             cash,
             change: Number(cash) - Number(price),
+            branch_id : Number(authUser?.employee?.branch_id)
           },
         }),
         prisma.invoice.update({

@@ -169,6 +169,7 @@ CREATE TABLE `Transaction` (
     `price` DECIMAL(19, 2) NOT NULL,
     `cash` DECIMAL(19, 2) NOT NULL,
     `change` DECIMAL(19, 2) NOT NULL,
+    `branch_id` INTEGER NOT NULL,
 
     UNIQUE INDEX `Transaction_invoice_id_key`(`invoice_id`),
     PRIMARY KEY (`id`)
@@ -394,6 +395,9 @@ ALTER TABLE `Transaction` ADD CONSTRAINT `Transaction_customer_id_fkey` FOREIGN 
 
 -- AddForeignKey
 ALTER TABLE `Transaction` ADD CONSTRAINT `Transaction_invoice_id_fkey` FOREIGN KEY (`invoice_id`) REFERENCES `Invoice`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `Transaction` ADD CONSTRAINT `Transaction_branch_id_fkey` FOREIGN KEY (`branch_id`) REFERENCES `Branch`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Order` ADD CONSTRAINT `Order_menu_item_id_fkey` FOREIGN KEY (`menu_item_id`) REFERENCES `MenuItem`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;

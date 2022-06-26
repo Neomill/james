@@ -3,14 +3,11 @@ import prisma from "../lib/prisma";
 
 class OverviewController {
   static index = async (req: Request, res: Response, next: NextFunction) => {
+    const authUser: any = req.user;
     try {
       let [
         totalItems,
-        totalInStockItems,
-        totalLowStockItems,
-        totalOutOfStockItems,
-        totalGoodConditionItems,
-        totalExpiredItems,
+
         totalNoOfPurchase,
         totalPullout,
         totalCustomers,
@@ -18,51 +15,56 @@ class OverviewController {
         totalAggregateRevenue,
         menuItems,
         totalTransactions,
+        totalequipment,
+        totalequipmentSum,
       ] = await prisma.$transaction([
-        prisma.item.count(),
-        prisma.item.count({
-          where: {
-            status: "IN_STOCK",
-          },
+        prisma.menuItem.count(
+
+        ),
+        prisma.transaction.findMany({
+          where:{
+            branch_id : Number(authUser?.employee?.branch_id)
+          }
         }),
-        prisma.item.count({
-          where: {
-            status: "LOW_STOCK",
-          },
-        }),
-        prisma.item.count({
-          where: {
-            status: "OUT_OF_STOCK",
-          },
-        }),
-        prisma.itemTransaction.count({
-          where: {
-            condition: "GOOD",
-          },
-        }),
-        prisma.itemTransaction.count({
-          where: {
-            condition: "EXPIRED",
-          },
-        }),
-        prisma.itemTransaction.count(),
         prisma.pO_Request.count(),
         prisma.customer.count(),
-        prisma.company.count(),
+        prisma.branch.count(),
         prisma.transaction.aggregate({
+          where:{
+            branch_id : Number(authUser?.employee?.branch_id)
+          },
           _sum: {
             price: true,
           },
         }),
         prisma.menuItem.findMany({
+          where:{
+            branch_id : Number(authUser?.employee?.branch_id)
+          },
           select: {
             cost_price: true,
             qty: true,
           },
         }),
-        prisma.transaction.count(),
+        prisma.transaction.count(
+        ),
+        prisma.equipment.findMany(
+          {   
+            where:{
+              branch_id : Number(authUser?.employee?.branch_id)
+            },
+          }
+        ),
+        prisma.equipment.aggregate({
+          where:{
+            branch_id : Number(authUser?.employee?.branch_id)
+          },
+          _sum: {
+            cost_price: true,
+          },
+        }),
       ]);
-
+      let totalequipmentitems = totalequipment.length 
       const totalCost = menuItems.reduce(
         (partialSum, menuItem) =>
           partialSum + Number(menuItem.cost_price) * Number(menuItem.qty),
@@ -72,11 +74,6 @@ class OverviewController {
       const totalProfit = Number(totalRevenue) - Number(totalCost);
       return res.status(200).send({
         totalItems,
-        totalInStockItems,
-        totalLowStockItems,
-        totalOutOfStockItems,
-        totalGoodConditionItems,
-        totalExpiredItems,
         totalNoOfPurchase,
         totalPullout,
         totalCustomers,
@@ -85,6 +82,9 @@ class OverviewController {
         totalCost,
         totalProfit,
         totalTransactions,
+        totalequipment,
+        totalequipmentitems,
+        totalequipmentSum
       });
     } catch (error: any) {
       return res.status(404).send(error.message);

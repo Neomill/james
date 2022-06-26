@@ -567,41 +567,50 @@ async function main() {
   }
 
  
-
+  let branches = 5
   // equipment Item Faker
-  for (let i = 0; i < 20; i++) {
-    let qty = faker.datatype.number({ max: 100 });
-    let category = faker.commerce.productMaterial();
-    let cost_price = faker.datatype.number({ precision: 0.01, max: 1000 });
-    let remarks = faker.random.arrayElement([
-      "OVERSTOCKING",
-      "EXPIRED",
-      "BAD_ORDER",
-      "OTHERS",
-    ])
-    let selling_price = cost_price + cost_price * 0.25;
-    const equipment = await prisma.equipment.create({
-      data: {
-        qty,
-        cost_price,
-        selling_price,
-        image_url: faker.image.imageUrl(640, 480, "food"),
-        name: faker.commerce.productName() + ` - ${i}`,
-        equipment_category: {
-          connectOrCreate: {
-            where: {
-              name: category,
-            },
-            create: {
-              name: category,
+  for (let branchid = 0; branchid < branches; branchid++) {
+    for (let i = 0; i < 10; i++) {
+      let qty = faker.datatype.number({ max: 100 });
+      let category = faker.commerce.productMaterial();
+      let cost_price = faker.datatype.number({ precision: 0.01, max: 1000 });
+      let remarks = faker.random.arrayElement([
+        "OVERSTOCKING",
+        "EXPIRED",
+        "BAD_ORDER",
+        "OTHERS",
+      ])
+      let selling_price = cost_price + cost_price * 0.25;
+      const equipment = await prisma.equipment.create({
+        data: {
+          qty,
+          cost_price,
+          selling_price,
+          image_url: faker.image.imageUrl(640, 480, "food"),
+          name: faker.commerce.productName() + ` - ${i}`,
+          branch:{
+            connect:{
+              id:branchid +1
+            }
+          },
+          equipment_category: {
+            connectOrCreate: {
+              where: {
+                name: category,
+              },
+              create: {
+                name: category,
+              },
             },
           },
+          
         },
-      },
-    });
-    console.log(`Created Equipment Item with id: ${equipment.id}`);
+      });
+      console.log(`Created Equipment Item with id: ${equipment.id}`);
+    }
+  
+    
   }
-
 
   for (let i = 0; i < 10; i++) {
     const table = await prisma.table.create({
