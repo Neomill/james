@@ -37,8 +37,9 @@ export const PullOutForm: React.VFC<Props> = ({ onClose, id }) => {
 
   const [menuItemsPage, setMenuItemPage] = useState(0);
   const [menuItemsQuery, setMenuItemQuery] = useState("");
+  
   const [description, setDescription] = useState("");
-  const [qty, setQty] = useState("");
+  const [qty, setQty] = useState(0);
   const dispatch = useAppDispatch();
   const { data } = useAppSelector((state) => state.menuItems);
 
@@ -132,13 +133,14 @@ export const PullOutForm: React.VFC<Props> = ({ onClose, id }) => {
                     name="description"
                     label="Description"
                     placeholder="description or reason"
+                    onFocus={()=>{setQty(5)}}
                     // onChange={e => setDescription(e.target.value)}
                   />
   
                   <Input
                     name="qty"
                     min={0}
-                    label="Product Quantity"
+                    label={`Product Quantity`}
                     placeholder="Product Quantity"
                     type="number"
                     // onChange={e => setQty(e.target.value)}

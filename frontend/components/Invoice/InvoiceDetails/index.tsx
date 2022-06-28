@@ -92,19 +92,41 @@ const InvoiceDetails = ({ id, onClose }: Props) => {
     //payment
     // console.log("id:",id)
     // console.log("form Val:",formVal)
-    let isAvailabeCustomer = "N/A"
+    let isAvailabeCustomer = user.employee.branch.name
     if(data.request_to_branch_NAME == 'customer'){
       isAvailabeCustomer = formVal.customer_name
     }
+
+    let isAvailabelname = "N/A"
+    if(formVal.customer_lname){
+      isAvailabelname = formVal.customer_lname
+    }
+
+    let isAvailabePhone = "N/A"
+    if(formVal.customer_phone){
+      isAvailabePhone = formVal.customer_phone
+    }
+    
+    let isAvailabelAddress = "N/A"
+    if(formVal.customer_address){
+      isAvailabelAddress = formVal.customer_address
+    }
+    
+    let isAvailabelMname = "N/A"
+    if(formVal.customer_customer_mname){
+      isAvailabelMname = formVal.customer_mname
+    }
+    
     await toast.promise(
       createTransaction({
         invoice_id: id,
         transaction_code: "JMH_"+ Date.now() + id,
         customer_id: formVal.customer_id,
         customer_name : isAvailabeCustomer,
-        customer_lname : formVal.customer_lname,
-        customer_phone : formVal.customer_phone,
-        customer_address: formVal.customer_address,
+        customer_lname : isAvailabelname,
+        customer_phone : isAvailabePhone,
+        customer_address: isAvailabelAddress,
+        customer_mname: isAvailabelMname,
         branch_id: user.employee.branch.id,
         cash: formVal.cash,
       }).unwrap(),

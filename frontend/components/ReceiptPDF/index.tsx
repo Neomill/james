@@ -217,33 +217,51 @@ const ReceiptPDF = ({isPO, transaction, cfname, clname, efname, elname }) => {
                 {transaction?.branch?.name}
               </Text>
               <Text style={{fontSize:"12", color: "gray"}}>
-              {transaction?.branch?.id}
+              {transaction?.branch?.address}
               </Text>
             </View>
             <Image style={{width: "50px"}} src={"/a.png"} />
           </View>
           
-          <Text style={{fontSize:"12",  color:"orange", marginBottom:"10px"}}>CUSTOMER:</Text>
+          <Text style={{fontSize:"12",  color:"orange", marginTop:"12px"}}>CUSTOMER:</Text>
           <Text style={{fontSize: "10px", color: "gray"}}>
             NAME:
           </Text>
           <Text>
-            {`${transaction?.customer.fname} ${transaction?.customer.lname}`}
+            {`${transaction?.customer.fname} ${(transaction?.customer.lname !== "N/A") ? transaction?.customer.lname : ""}`}
           </Text>
           <View style={{marginTop:"7"}}>
             <Text style={{fontSize: "10px", color: "gray", }}>
               PHONE #:
             </Text>
-            <Text>
-            {`${transaction?.customer.phone}`}
-            </Text>
+            {
+            (transaction?.customer.phone !== "N/A") ? (
+              <Text>
+              {`${transaction?.customer.phone}`}
+              </Text>
+            ) :
+            (
+              <Text>
+              N/A
+              </Text>
+            )
+          }
           </View>
           <Text style={{marginTop:"7",fontSize: "10px", color: "gray"}}>
             ADDRESS:
           </Text>
-          <Text>
-          {`${transaction?.customer.address}`}
-          </Text>
+          {
+            (transaction?.customer.address !== "N/A") ? (
+              <Text>
+              {`${transaction?.customer.address}`}
+              </Text>
+            ) :
+            (
+              <Text>
+              N/A
+              </Text>
+            )
+          }
         </View>
       </View>
       

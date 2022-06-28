@@ -43,6 +43,14 @@ class MenuItemController {
     const authUser: any = req.user;
   
     const filters: any = [];
+    const notThis: any = [];
+
+    notThis.push({
+      qty: {
+        lte: 0
+      }
+    });
+
     menu_item_category &&
       filters.push({
         menu_item_category: {
@@ -63,8 +71,7 @@ class MenuItemController {
         },
       ],
       AND: filters,
-      // branch_id: Number(authUser.employee.branch_id) 
-      
+      NOT: notThis,
     };
     let orderBy: any = {};
     if (updatedAt) {

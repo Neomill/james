@@ -196,6 +196,11 @@ const Layout: React.FC<Props> = ({
   const router = useRouter();
   const { user } = useAuth();
 
+  let branchId = "";
+  if(user){
+    branchId = user.employee.branch.id;
+  }
+
   const links = [
     {
       icon: <BsGrid1X2 />,
@@ -277,7 +282,7 @@ const Layout: React.FC<Props> = ({
         {
           icon: <BsPlusCircle />,
           label: "Add New Order",
-          href: `/order-transaction/add-order/${user.employee.branch.id}`,
+          href: `/order-transaction/add-order/${branchId}`,
           permission: "create-order",
         },
         {
@@ -356,7 +361,7 @@ const Layout: React.FC<Props> = ({
         )
       )
     );
-console.log(user)
+
     return (
       <>
         <div className="flex flex-row h-screen">

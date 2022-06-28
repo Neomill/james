@@ -113,10 +113,26 @@ class PullOutController {
         reason: description,
         qty: qty
       }
-    
+
       const data = await model.create({
         data: validData
       });
+
+      console.log(data)
+
+      let [datum] = await prisma.$transaction([
+        prisma.menuItem.update({
+          where: {
+           id: Number(data.id),
+          },
+          data: {
+            qty: {
+              decrement: Number(qty),
+            },
+          }
+        })
+      ]);  
+
       return res.status(200).send(data);
     } catch (e: any) {
       return res.status(400).send(e.message);

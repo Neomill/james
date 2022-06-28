@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { Button } from "@/components/Button";
@@ -12,15 +12,18 @@ import {
 } from "@/redux/services/employeesAPI";
 import { useGetPositionsQuery } from "@/redux/services/positionsAPI";
 import { toast } from "react-toastify";
+import AsyncAppSelect from "@/components/AsyncAppSelect";
+import { useSearchBranchQuery } from "@/redux/services/branchAPI";
+
 const EmployeeSchema = yup
   .object({
     fname: yup.string().required(),
     lname: yup.string().required(),
     phone: yup.string().required(),
-    branch: yup.string().required(),
     mname: yup.string().required(),
     address: yup.string().required(),
-    position_id: yup.string().required(),
+    branch_id: yup.object().required(),
+    position_id: yup.object().required(),
   })
   .required();
 interface Props {
@@ -40,6 +43,48 @@ export const EmployeeForm: React.VFC<Props> = ({ onClose, id }) => {
   const [update, result] = useUpdateEmployeeMutation();
   const [create, { isLoading: isCreating }] = useCreateEmployeeMutation();
 
+  const [branchPage, setBranchPage] = useState(0);
+  const [branchQuery, setBranchQuery] = useState("");
+
+  const { data: menuItemCategoriesAPI } = useSearchBranchQuery({
+    page: branchPage,
+    query: branchQuery,
+  });
+
+  async function loadBranchOptions(search, loadedOptions, { page }) {
+    setBranchPage(page);
+    setBranchQuery(search);
+    return {
+      options: menuItemCategoriesAPI?.body.map((item) => ({
+        value: item.id,
+        label: item.name,
+      })),
+      hasMore: menuItemCategoriesAPI.hasMore,
+      additional: {
+        page: page + 1,
+      },
+    };
+  }
+
+
+const [positionPage, setPositionPage] = useState(0);
+  const [positionQuery, setPositionQuery] = useState("");
+
+  const { data: positionAPI } = useGetPositionsQuery(
+    { page: 0 }
+  );
+
+  async function loadPositionOptions(search, loadedOptions, { page }) {
+    setPositionPage(page);
+    setPositionQuery(search);
+    return {
+      options: positionAPI?.body.map((item) => ({
+        value: item.id,
+        label: item.name,
+      }))
+    };
+  }
+
   if (id) {
     const { data: employee, isLoading: isUpdating } = useGetEmployeeByIdQuery(
       id,
@@ -57,14 +102,21 @@ export const EmployeeForm: React.VFC<Props> = ({ onClose, id }) => {
         setValue("mname", employee.mname);
         setValue("phone", employee.phone);
         setValue("address", employee.address);
-        setValue("branch_id", employee.branch_id);
-        setValue("position_id", employee.position?.id);
+        setValue("branch_id", {
+          label: employee.branch.name,
+          value: employee.branch.id,
+        });
+        setValue("position_id", {
+          label: employee.position.name,
+          value: employee.position?.id,
+        });
       }
       return () => {};
     }, [id, employee]);
   }
 
   const onSubmit = async (data: any) => {
+    data.position_2 = data.position_id.value
     try {
       if (id) {
         toast.promise(update({ id, ...data }).unwrap(), {
@@ -91,37 +143,40 @@ export const EmployeeForm: React.VFC<Props> = ({ onClose, id }) => {
           <div style={{ width: "100%" }} className="flex flex-row  gap-2 ">
             <Input
               name="fname"
-              label="Employee First Name"
-              placeholder="Employee First Name"
+              label="First Name"
+              placeholder="Juan"
             />
             <Input
               name="mname"
-              label="Employee Middle Name"
-              placeholder="Employee Middle Name"
+              label="Middle Name"
+              placeholder="Fuastino"
             />
             <Input
               name="lname"
-              label="Employee Last Name"
-              placeholder="Employee Last Name"
+              label="Last Name"
+              placeholder="Dela Cruz"
             />
           </div>
 
           <div style={{ width: "100%" }} className=" flex flex-row gap-2 ">
             <Input
               name="phone"
-              label="Employee Phone"
-              placeholder="Employee Phone"
+              label="Phone #"
+              placeholder="Phone #"
             />
-             <Input
-              name="branch_id"
-              label="Branch"
-              placeholder="Branch id"
+            <AsyncAppSelect
+                width={""}
+                name="branch_id"
+                label="Branch"
+                placeholder="Select Branch"
+                loadOptions={loadBranchOptions}
             />
-            <Select
-              options={position?.body}
-              name="position_id"
-              placeholder="Select Employee Position"
-              label="Employee Position"
+            <AsyncAppSelect
+                width={""}
+                name="position_id"
+                label="Position"
+                placeholder="Select Position"
+                loadOptions={loadPositionOptions}
             />
           </div>
 

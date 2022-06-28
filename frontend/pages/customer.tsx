@@ -235,17 +235,6 @@ const Customer = ({}) => {
             title="List of Customers"
             onSubmit={onSubmitSearch}
           >
-            {checkPermissions(["create-customer"], user.roles) && (
-              <>
-                <Button
-                  data-modal="new-customer-modal"
-                  onClick={onModalOpen}
-                  icon={<BsPlusCircle />}
-                  size="medium"
-                  label="Add Customer"
-                />
-              </>
-            )}
           </ActionTableMenu>
         </form>
       </FormProvider>

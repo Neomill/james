@@ -143,15 +143,25 @@ class InvoiceController {
             name: true,
           },
         });
+        console.log("menu_item")
+        console.log(menu_item)
 
         const orderQty = Number(order?.qty)
         const menuItemQty = Number(menu_item?.qty)
+
+        console.log()
+        console.log("order")
+        console.log(order?.qty)
         
         if (orderQty > menuItemQty) {
           // set orderQty to available menuItemQty in current branch
           order.qty = menuItemQty
 
           const qtyToFind = orderQty - menuItemQty 
+
+          console.log()
+          console.log("qtyToFind")
+          console.log(qtyToFind)
 
           const sufficientItem = await prisma.menuItem.findFirst({
               where: {
@@ -179,6 +189,16 @@ class InvoiceController {
               },
             })
 
+            if (!sufficientItem) {
+              return res.send(
+                `Out of Stock`
+              );
+            }
+
+            console.log()
+            console.log("sufficientItem")
+            console.log(sufficientItem)
+
             // let reqOrderData = {
             //   qty : Number(qtyToFind),
             //   price: Number(sufficientItem?.selling_price),
@@ -196,7 +216,7 @@ class InvoiceController {
               }
             })
 
-            const reqOrderTO = await prisma.order.create({
+            const reqOrderTo = await prisma.order.create({
               data: {
                 qty : Number(qtyToFind),
                 price: Number(sufficientItem?.selling_price),
@@ -207,6 +227,10 @@ class InvoiceController {
                 },
               }
             })
+
+            console.log()
+            console.log("order to other")
+            console.log(reqOrderTo)
 
             const reqOrderFrom = await prisma.order.create({
               data: {
@@ -220,7 +244,11 @@ class InvoiceController {
               }
             })
 
-            const reqInvoiceTO = await model.create({
+            console.log()
+            console.log("requesed to other branch you copy")
+            console.log(reqOrderFrom)
+
+            const reqInvoiceTo = await model.create({
               data: {
                 orders: {
                   connect: {
@@ -234,33 +262,46 @@ class InvoiceController {
               },
             });
 
-            console.log(sufficientItem?.branch_id)
-
             const reqInvoice = await model.create({
               data: {
                 orders: {
                   connect: {
-                    id : Number(reqOrderTO?.id),
+                    id : Number(reqOrderTo?.id),
                   }
                 },
                 branch_id: branch_id,
                 status: "REQUESTING_TO_OTHER_BRANCH",
                 request_to_branch: sufficientItem?.branch_id,
-                link_invoice: reqInvoiceTO.id,
+                link_invoice: reqInvoiceTo.id,
                 request_to_branch_NAME: `request to ${sufficientItem?.branch?.name}`,
               },
             });
 
-            const updateLink = await model.update({
+            const updateLinkTo = await model.update({
               where: {
-                id: Number(reqInvoiceTO.id),
+                id: Number(reqInvoiceTo.id),
               },
               data: {
                 link_invoice: Number(reqInvoice.id)
               },
             });
 
+            const updateLinkFrom = await model.update({
+              where: {
+                id: Number(reqInvoice.id),
+              },
+              data: {
+                link_invoice: Number(reqInvoiceTo.id)
+              },
+            });
 
+            console.log()
+            console.log("create invoice to")
+            console.log(updateLinkTo)
+
+            console.log()
+            console.log("create invoice from")
+            console.log(updateLinkFrom)
 
             // const reqInvoiceTo = await prisma.requestInvoice.create({
             //   data : {
@@ -301,6 +342,8 @@ class InvoiceController {
         },
       });
 
+      console.log()
+      console.log("customer invoice from current branch")
       console.log(invoice)
 
       return res.status(200).send(invoice);

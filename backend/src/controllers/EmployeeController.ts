@@ -171,32 +171,57 @@ class EmployeeController {
   };
 
   static createEmployee = async (req: Request, res: Response) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+    if(req.body.position_id === NaN){
+      delete req.body["position_id"]
     }
-    const { fname, lname, mname, phone, address, position_id, branch_id = "N/A" } = req.body;
+    console.log(req.body)
+
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) {
+    //   return res.status(400).json({ errors: errors.array() });
+    // }
+
+    const { fname, lname, mname, phone, address, position_2, branch_id} = req.body;
     try {
       const data = await model.create({
         data: {
-          fname,
           lname,
+          fname,
           mname,
           phone,
-          address, 
-          branch_id: Number(branch_id),
-          position_id: Number(position_id),
+          address,
+          position: {
+            connect: {
+              id: position_2
+            }
+          },
+          branch: {
+            connect: {
+              id: branch_id.value
+            }
+          }
         },
       });
-      return res.status(200).json(data);
+
+      return res.status(200).json();
     } catch (e: any) {
+      console.log(e)
       return res.status(400).send(e.message);
     }
   };
   static update = async (req: Request, res: Response) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+
+    
+    if(req.body.position_id === NaN){
+      delete req.body["position_id"]
+    }
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) {
+    //   return res.status(400).json({ errors: errors.array() });
+    // }
+
+    if(req.body.position_id === NaN){
+      delete req.body["position_id"]
     }
     try {
       const { fname, lname, mname, phone, address, position_id } = req.body;

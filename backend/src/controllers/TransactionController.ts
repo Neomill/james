@@ -143,7 +143,7 @@ class TransactionController {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
-    const { transaction_code, invoice_id, cash , customer_name, customer_lname, customer_address, customer_phone , branch_id} = req.body;
+    const { transaction_code, invoice_id, cash , customer_name, customer_lname, customer_mname, customer_address, customer_phone , branch_id} = req.body;
     console.log(req.body)
     try {
       const invoice = await prisma.invoice.findFirst({
@@ -163,6 +163,7 @@ class TransactionController {
       let createCustomer = await prisma.customer.create({
         data: {
           fname: customer_name,
+          mname: customer_mname,
           lname: customer_lname,
           phone: customer_phone,
           address: customer_address
@@ -185,24 +186,19 @@ class TransactionController {
       let price = 0;
       if (invoice?.orders) {
         for (const order of invoice?.orders) {
-          if (Number(order?.qty) > Number(order?.menu_item.qty)) {
-            return res.send(
-              `${order?.menu_item.name} qty ${order?.menu_item.qty} less the than the qty of the order ${order?.qty}`
-            );
-          }
           if (order.menu_item.selling_price) {
             price += Number(order.menu_item.selling_price) * Number(order.qty);
           }
-          // await prisma.menuItem.update({
-          //   where: {
-          //     id: Number(order?.menu_item.id),
-          //   },
-          //   data: {
-          //     qty: {
-          //       decrement: order?.qty,
-          //     },
-          //   },
-          // });
+          await prisma.menuItem.update({
+            where: {
+              id: Number(order?.menu_item.id),
+            },
+            data: {
+              qty: {
+                decrement: order?.qty,
+              },
+            },
+          });
         }
       }
       if (Number(cash) < price) {
@@ -235,7 +231,6 @@ class TransactionController {
             price,
             cash,
             change: Number(cash) - Number(price),
-            branch_id : Number(authUser?.employee?.branch_id)
           },
         }),
         prisma.invoice.update({
@@ -248,6 +243,56 @@ class TransactionController {
         }),
       ]);
 
+      try{
+        const updateLinkInvoice = await prisma.invoice.findFirst({
+          where: {
+            id: Number(invoice_id),
+          },
+          include: {
+            orders: {
+              include: {
+                menu_item: {
+                  select: {
+                    id: true,
+                    name: true,
+                    selling_price: true,
+                  },
+                },
+              },
+            },
+          },
+        })
+
+        if(updateLinkInvoice?.link_invoice !== 0){
+          const updateLinkupdate = await prisma.invoice.update({
+            where: {
+              id: Number(updateLinkInvoice?.link_invoice),
+            },
+            data: {
+              payment_status: "PAID",
+            },
+          })
+
+          const finditemToReduce = await prisma.menuItem.findFirst({
+            where: {
+              id: Number(updateLinkInvoice?.orders[0].menu_item.id),
+            }
+          })
+
+          const reduceItem = await prisma.menuItem.update({
+            where: {
+              id: Number(finditemToReduce?.id),
+            },
+            data: {
+              qty: {
+                decrement: updateLinkInvoice?.orders[0]?.qty,
+              },
+            },
+          })
+        }
+      }catch(e:any){
+        return res.status(404).send(e.message);
+      }
       return res.status(200).send(data);
     } catch (error: any) {
       console.log(error)

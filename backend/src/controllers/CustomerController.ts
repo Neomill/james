@@ -73,6 +73,11 @@ class CustomerController {
         },
       ],
       AND: filters,
+      NOT: {
+        fname: {
+          contains: "BRANCH"
+        }
+      }
     };
     let orderBy: any = {};
     if (updatedAt) {
