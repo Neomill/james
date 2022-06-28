@@ -201,7 +201,7 @@ model Transaction{
   customer                Customer?     @relation(fields: [customer_id], references: [id])
   customer_id             Int?  
   invoice                   Invoice          @relation(fields: [invoice_id], references: [id])
-  invoice_id                Int
+  invoice_id                Int         @unique
   price               Decimal           @db.Decimal(19, 2)
   cash               Decimal           @db.Decimal(19, 2)
   change               Decimal           @db.Decimal(19, 2)
@@ -257,7 +257,7 @@ model MenuItem{
   branch                  Branch?         @relation(fields: [branch_id], references: [id],onDelete: Cascade)
   branch_id               Int?
   pull_out            PullOut?         @relation(fields: [pull_out_id], references: [id],onDelete: Cascade)
-  pull_out_id           Int?
+  pull_out_id           Int?    @unique
 }
 
 model MenuItemStock{
@@ -310,12 +310,12 @@ model Invoice{
   updatedAt            DateTime         @updatedAt
   status InvoiceStatus @default(IN_PROGRESS)
   payment_status InvoicePaymentStatus @default(PENDING)
-  transaction         Transaction?
+  transaction         Transaction[]
   customer            Customer?          @relation(fields: [customer_id], references: [id])
   customer_id         Int?
   branch                  Branch?         @relation(fields: [branch_id], references: [id],onDelete: Cascade)
   branch_id           Int?
-  request_to_branch Int? @default(0)
+  request_to_branch String
   request_to_branch_NAME String? @default("customer")
   link_invoice Int? @default(0)
 

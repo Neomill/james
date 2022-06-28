@@ -28,8 +28,33 @@ class TransactionController {
       branch,
       notbranch,
     } = req.query;
+    const authUser: any = req.user;
     const filters: any = [];
     const notThis: any = [];
+
+    filters.push({
+      branch_id: Number(authUser.employee.branch_id),
+    });
+
+    const findBranch = await prisma.branch.findFirst({
+      where: {
+        id: Number(authUser.employee.branch_id),
+      },
+    })
+
+    let branchName = findBranch?.name
+
+    notThis.push({
+      invoice: {
+        customer: {
+          fname: {
+            equals: branchName
+          }
+        }
+      }
+    });
+
+    
     let where: any = {
       OR: [
         {
@@ -41,10 +66,7 @@ class TransactionController {
       AND: filters,
       NOT: notThis,
     };
-    branch &&
-    filters.push({
-      branch_id: Number(branch)
-    });
+
 
     let orderBy: any = {};
     if (updatedAt) {
@@ -144,7 +166,8 @@ class TransactionController {
       return res.status(400).json({ errors: errors.array() });
     }
     const { transaction_code, invoice_id, cash , customer_name, customer_lname, customer_mname, customer_address, customer_phone , branch_id} = req.body;
-    console.log(req.body)
+    let price = 0;
+
     try {
       const invoice = await prisma.invoice.findFirst({
         where: {
@@ -182,26 +205,60 @@ class TransactionController {
           }
         },
       });
-    
-      let price = 0;
-      if (invoice?.orders) {
-        for (const order of invoice?.orders) {
-          if (order.menu_item.selling_price) {
-            price += Number(order.menu_item.selling_price) * Number(order.qty);
-          }
-          await prisma.menuItem.update({
+
+      try{
+        if(invoice?.link_invoice !== 0){
+          const updateLinkupdate = await prisma.invoice.update({
             where: {
-              id: Number(order?.menu_item.id),
+              id: Number(invoice?.link_invoice),
             },
             data: {
-              qty: {
-                decrement: order?.qty,
-              },
+              payment_status: "PAID",
             },
-          });
+          })
         }
+
+        if (invoice?.orders) {
+          for (const order of invoice?.orders) {
+            console.log("order:")
+            console.log(order)
+            const findMenuItem = await prisma.menuItem.findFirst({
+              where: {
+                id: Number(order.menu_item.id),
+              },
+            })
+
+            price += Number(order.menu_item.selling_price) * Number(order.qty);
+
+            console.log(Number(order.menu_item.selling_price))
+            console.log("orde qty:")
+            console.log(order.qty)
+            console.log("cash:")
+            console.log(cash)
+            console.log("price:")
+            console.log(price)
+
+            // const reduceMenuItem = await prisma.menuItem.update({
+            //   where: {
+            //     id: Number(findMenuItem?.id),
+            //   },
+            //   data: {
+            //     qty: {
+            //       decrement: order.qty,
+            //     },
+            //   },
+            // })
+          }
+        }
+      }catch(e:any){
+        return  res.status(404).send(e.message);
       }
+
       if (Number(cash) < price) {
+        console.log("cash:")
+        console.log(cash)
+        console.log("price:")
+        console.log(price)
         return res.status(400).send("Insufficient cash!");
       }
       const data = await prisma.$transaction([
@@ -243,56 +300,6 @@ class TransactionController {
         }),
       ]);
 
-      try{
-        const updateLinkInvoice = await prisma.invoice.findFirst({
-          where: {
-            id: Number(invoice_id),
-          },
-          include: {
-            orders: {
-              include: {
-                menu_item: {
-                  select: {
-                    id: true,
-                    name: true,
-                    selling_price: true,
-                  },
-                },
-              },
-            },
-          },
-        })
-
-        if(updateLinkInvoice?.link_invoice !== 0){
-          const updateLinkupdate = await prisma.invoice.update({
-            where: {
-              id: Number(updateLinkInvoice?.link_invoice),
-            },
-            data: {
-              payment_status: "PAID",
-            },
-          })
-
-          const finditemToReduce = await prisma.menuItem.findFirst({
-            where: {
-              id: Number(updateLinkInvoice?.orders[0].menu_item.id),
-            }
-          })
-
-          const reduceItem = await prisma.menuItem.update({
-            where: {
-              id: Number(finditemToReduce?.id),
-            },
-            data: {
-              qty: {
-                decrement: updateLinkInvoice?.orders[0]?.qty,
-              },
-            },
-          })
-        }
-      }catch(e:any){
-        return res.status(404).send(e.message);
-      }
       return res.status(200).send(data);
     } catch (error: any) {
       console.log(error)

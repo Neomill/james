@@ -137,31 +137,22 @@ class InvoiceController {
           },
           select: {
             id: true,
+            branch: true,
             branch_id: true,
             selling_price: true,
             qty: true,
             name: true,
           },
         });
-        console.log("menu_item")
-        console.log(menu_item)
 
         const orderQty = Number(order?.qty)
         const menuItemQty = Number(menu_item?.qty)
-
-        console.log()
-        console.log("order")
-        console.log(order?.qty)
         
         if (orderQty > menuItemQty) {
           // set orderQty to available menuItemQty in current branch
           order.qty = menuItemQty
 
           const qtyToFind = orderQty - menuItemQty 
-
-          console.log()
-          console.log("qtyToFind")
-          console.log(qtyToFind)
 
           const sufficientItem = await prisma.menuItem.findFirst({
               where: {
@@ -195,10 +186,6 @@ class InvoiceController {
               );
             }
 
-            console.log()
-            console.log("sufficientItem")
-            console.log(sufficientItem)
-
             // let reqOrderData = {
             //   qty : Number(qtyToFind),
             //   price: Number(sufficientItem?.selling_price),
@@ -222,20 +209,20 @@ class InvoiceController {
                 price: Number(sufficientItem?.selling_price),
                 menu_item: {
                   connect: {
-                    id : Number(order.menu_item_id),
+                    id : Number(sufficientItem?.id),
                   }
                 },
               }
             })
 
-            console.log()
-            console.log("order to other")
-            console.log(reqOrderTo)
+            // console.log()
+            // console.log("reqOrderTo")
+            // console.log(reqOrderTo)
 
             const reqOrderFrom = await prisma.order.create({
               data: {
                 qty : Number(qtyToFind),
-                price: Number(sufficientItem?.selling_price),
+                price: Number(menu_item?.selling_price),
                 menu_item: {
                   connect: {
                     id : Number(order.menu_item_id),
@@ -243,10 +230,6 @@ class InvoiceController {
                 },
               }
             })
-
-            console.log()
-            console.log("requesed to other branch you copy")
-            console.log(reqOrderFrom)
 
             const reqInvoiceTo = await model.create({
               data: {
@@ -257,10 +240,13 @@ class InvoiceController {
                 },
                 branch_id: sufficientItem?.branch_id,
                 status: "REQUESTING_TO_OTHER_BRANCH",
-                request_to_branch: sufficientItem?.branch_id,
+                request_to_branch: sufficientItem?.branch?.name.toString() || "",
                 request_to_branch_NAME: `request from ${branchCurrent?.name}`, 
               },
             });
+
+            console.log("reqInvoiceTo")
+            console.log(reqInvoiceTo)
 
             const reqInvoice = await model.create({
               data: {
@@ -271,11 +257,14 @@ class InvoiceController {
                 },
                 branch_id: branch_id,
                 status: "REQUESTING_TO_OTHER_BRANCH",
-                request_to_branch: sufficientItem?.branch_id,
+                request_to_branch: menu_item?.branch?.name.toString() || "",
                 link_invoice: reqInvoiceTo.id,
                 request_to_branch_NAME: `request to ${sufficientItem?.branch?.name}`,
               },
             });
+
+            console.log("Invoice")
+            console.log(reqInvoice)
 
             const updateLinkTo = await model.update({
               where: {
@@ -294,14 +283,6 @@ class InvoiceController {
                 link_invoice: Number(reqInvoiceTo.id)
               },
             });
-
-            console.log()
-            console.log("create invoice to")
-            console.log(updateLinkTo)
-
-            console.log()
-            console.log("create invoice from")
-            console.log(updateLinkFrom)
 
             // const reqInvoiceTo = await prisma.requestInvoice.create({
             //   data : {
@@ -338,13 +319,10 @@ class InvoiceController {
             connect: {
               id : branch_id,
             }
-          }
+          },
+          request_to_branch: "",
         },
       });
-
-      console.log()
-      console.log("customer invoice from current branch")
-      console.log(invoice)
 
       return res.status(200).send(invoice);
     } catch (error: any) {
@@ -384,8 +362,6 @@ class InvoiceController {
 
       
       if(relatedInvoice?.link_invoice != 0){
-        console.log(relatedInvoice?.link_invoice)
-        console.log("inside")
         const data = await model.update({
           where: {
             id: Number(relatedInvoice?.link_invoice),

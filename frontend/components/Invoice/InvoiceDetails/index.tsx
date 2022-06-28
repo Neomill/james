@@ -40,7 +40,7 @@ export interface InvoiceProps {
   table_id: string | number;
   table: any;
   transaction: any;
-  request_to_branch: number;
+  request_to_branch: string;
   request_to_branch_NAME: string;
   link_invoice: string | number;
 }
@@ -58,7 +58,6 @@ const InvoiceDetails = ({ id, onClose }: Props) => {
     skip: false,
   });
 
-  console.log(data)
   const methods = useForm({
     resolver: yupResolver(InvoiceSchema),
   });
@@ -89,10 +88,7 @@ const InvoiceDetails = ({ id, onClose }: Props) => {
   const router = useRouter();
 
   const handlePayment = async (formVal: any) => {
-    //payment
-    // console.log("id:",id)
-    // console.log("form Val:",formVal)
-    let isAvailabeCustomer = user.employee.branch.name
+    let isAvailabeCustomer = data.request_to_branch
     if(data.request_to_branch_NAME == 'customer'){
       isAvailabeCustomer = formVal.customer_name
     }
@@ -144,6 +140,8 @@ const InvoiceDetails = ({ id, onClose }: Props) => {
   if (!data) {
     return <div>Wow! Such empty.</div>;
   }
+
+  console.log(data)
 
   return (
     <div className="h-full bg-white border rounded-lg   overflow-hidden  sm:grid-cols-3 lg:grid-cols-4 gap-4  w-96 max-w-lg mx-auto">
@@ -255,7 +253,7 @@ const InvoiceDetails = ({ id, onClose }: Props) => {
               </form>
             </FormProvider>
           )}
-          {data.payment_status === "PAID" && (data.customer) && ( 
+          {data.payment_status === "PAID" && (data.customer) && (data.request_to_branch == "") && ( 
             <FormProvider {...methods}>
               <form onSubmit={methods.handleSubmit(handlePayment)}>
                 <div className="sm:grid px-5 pb-4 gap-4">
