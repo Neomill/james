@@ -222,36 +222,7 @@ In the application code, you can access the new endpoint via `fetch` operations 
 
 Clone muna natin yung repo
 
-1. git clone https://github.com/WarayTek-PH/project-shydan.git
-2. cd project-shydan
+1. git clone repo
+2. cd james
 3. git checkout staging
 4. git pull origin staging
-
-After maupdate yung staging branch natin, create tayo bagong branch kung may naka-assign na bagong task satin
-
-Check mo yung issues sa github [Issues · WarayTek-PH/project-shydan (github.com)
-](https://github.com/WarayTek-PH/project-shydan/issues)
-
-Check mo sa issues kung may naka-assign na task sayo
-
-Example naka-assign sayo is "Create a button feature"
-
-1. git checkout -b feat/button
-2. After mo magcreate ng button component, ipush mo na
-3. git push origin feat/button
-4. punta ka sa github -> pull request
-5. Mag pull request ka
-6. Ilagay mo sa title yung title nung feature mo, tas description ng Pull Request mo "Fixes #number-ng-issue" e.g. "Fixes #12" tapos yung message mo kun anong ginawa mo diyan sa branch basta make sure na may Fixes #issue-number para ma automate yung PR at issue mo.
-7. Submit PR
-8. Notify mo yung reviewers tas antayin mo nalang maapprove then merge
-9. After ma merge nung PR mo, balik ka sa staging branch
-   ```
-    git checkout staging
-   ```
-10. ```
-    git pull origin staging
-    ```
-
-## Resource
-
-- [Prisma docs](https://www.prisma.io/docs)
