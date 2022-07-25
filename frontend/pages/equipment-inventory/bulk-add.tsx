@@ -136,7 +136,6 @@ const BulkCreateEquipmentItem = (props: Props) => {
                 if (data.length > 0) {
                   let parsedData = data.map((d) => {
                     const formData = new FormData();
-                    formData.append("image", d.image[0]);
                     formData.append(
                       "equipment_category_id",
                       d.equipment_category_id.value

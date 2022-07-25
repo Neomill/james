@@ -153,9 +153,9 @@ class EquipmentController {
         await unlink("public/" + req.file?.filename + "");
         return res.status(400).json("Please add an API_URL to your env");
       }
-      if (!req.file) {
-        return res.status(400).send("Please upload an image.");
-      }
+      // if (!req.file) {
+      //   return res.status(400).send("Please upload an image.");
+      // }
       const API_URL = process.env.API_URL;
 
       // encode img_url string to base64 to ensure data during transport
@@ -167,7 +167,7 @@ class EquipmentController {
         cost_price: Number(cost_price),
         selling_price: Number(selling_price),
         qty: Number(qty),
-        image_url: API_URL + req.file?.filename
+        // image_url: API_URL + req.file?.filename
       };
 
       if (equipment_category_id) {

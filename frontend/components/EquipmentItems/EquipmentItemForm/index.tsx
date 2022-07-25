@@ -31,17 +31,6 @@ const EquipmentItemSchema = yup
     cost_price: yup.number().positive().required(),
     selling_price: yup.number().positive().required(),
     equipment_category_id: yup.object().required(),
-    image: yup
-      .mixed()
-      .test("fileSize", "File Size is too large", (value) => {
-        if (typeof value === "string") return true;
-        return value[0]?.size <= FILE_SIZE;
-      })
-      .test("fileType", "Unsupported File Format", (value) => {
-        if (typeof value === "string") return true;
-        return SUPPORTED_FORMATS.includes(value[0]?.type);
-      })
-      .required(),
   })
   .required();
 
@@ -248,14 +237,14 @@ export const EquipmentItemForm: React.FC<Props> = ({
                 type="number"
                 step="any"
               />
-              {!id && (
+              {/* {!id && (
                 <Input
                   name="image"
                   label="Image"
                   placeholder="Image"
                   type="file"
                 />
-              )}
+              )} */}
               <div className="col-span-2 flex flex-col mt-6 justify-end md:flex-row gap-3">
                 {isBulkAdd && (
                   <Button
